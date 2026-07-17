@@ -108,6 +108,8 @@ const processed = processVideos(
   min10Minutes
 );
 
+console.log("processed =", processed);
+
 setAverageViews(processed.averageViews);
 setResults(processed.results);
 setTopVideos(processed.topVideos);
@@ -136,6 +138,7 @@ const recommendedChannelsPrompt =
   processed.channels
 );
 setLoadingStep("🤖 AI가 분석 중...");
+console.log("generateAllAI 호출 직전");
 const ai = await generateAllAI({
   reportPrompt: prompt,
   ideaPrompt,
