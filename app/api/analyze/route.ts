@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
       result: response.choices[0].message.content,
     });
   } catch (error) {
-    console.error(error);
+    console.error("OPENAI ERROR");
+console.error(error);
 
     return NextResponse.json(
   {
