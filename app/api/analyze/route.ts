@@ -26,8 +26,11 @@ export async function POST(request: NextRequest) {
     console.error(error);
 
     return NextResponse.json(
-      { error: "AI 분석 실패" },
-      { status: 500 }
-    );
+  {
+    error: "AI 분석 실패",
+    detail: String(error),
+  },
+  { status: 500 }
+);
   }
 }
