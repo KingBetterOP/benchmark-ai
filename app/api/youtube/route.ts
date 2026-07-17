@@ -41,8 +41,10 @@ if (last30Days) {
   const searchResponse = await fetch(searchUrl);
 const searchData = await searchResponse.json();
 
-console.log(searchData);
-console.log(searchData.items);
+
+console.log("Search URL:", searchUrl);
+console.log("Status:", searchResponse.status);
+console.log("Search Data:", searchData);
 
 if (!searchData.items) {
   return NextResponse.json(searchData);
