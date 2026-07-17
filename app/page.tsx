@@ -203,7 +203,7 @@ setRecommendedChannels(ai.recommendedChannels);
   setKeyword={setKeyword}
   order={order}
   setOrder={setOrder}
-  onSearch={handleSearch}
+  onSearch={() => handleSearch()}
 />
 <QuickStats
   results={results}
