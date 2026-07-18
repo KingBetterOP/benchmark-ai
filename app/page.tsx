@@ -5,6 +5,7 @@ import { generateAllAI } from "./lib/ai";
 import { searchYoutube } from "./lib/search";
 import { downloadCSV } from "./lib/downloadCSV";
 import { downloadPDF } from "./lib/downloadPDF";
+
 import {
   saveProject,
   getProjects,
@@ -33,8 +34,11 @@ import ChannelAnalysis from "./components/ChannelAnalysis";
 import QuickStats from "./components/QuickStats";
 import SearchFilters from "./components/SearchFilters";
 import ProjectList from "./components/ProjectList";
-
-
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import AIResultCard from "./components/AIResultCard";
+import Dashboard from "./components/Dashboard";
+import BestVideoCard from "./components/BestVideoCard";
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
@@ -179,14 +183,40 @@ setRecommendedChannels(ai.recommendedChannels);
 };
 
   return (
+    <>
+    <Navbar />
     <main className="min-h-screen bg-black text-white p-4 md:p-10">
-      <h1 className="text-3xl md:text-5xl font-bold text-center">
-        🚀 Benchmark AI
-      </h1>
+      <h1 className="text-center text-5xl font-extrabold md:text-7xl">
+  🚀 Benchmark AI
+</h1>
 
-      <p className="mt-4 text-center text-sm md:text-base text-gray-400">
-        YouTube AI Research Platform
-      </p>
+<p className="mt-6 text-center text-xl text-gray-300">
+  Find Viral YouTube Ideas in Seconds.
+</p>
+
+<p className="mx-auto mt-4 max-w-3xl text-center text-gray-500">
+  AI가 YouTube 경쟁 채널을 분석하고,
+  콘텐츠 아이디어, 제목, 썸네일 전략,
+  경쟁 분석 리포트를 몇 초 만에 생성합니다.
+</p>
+
+<div className="mt-8 flex flex-wrap justify-center gap-3">
+  <div className="rounded-full border border-zinc-700 px-4 py-2">
+    🤖 AI Analysis
+  </div>
+
+  <div className="rounded-full border border-zinc-700 px-4 py-2">
+    📈 Competitor Research
+  </div>
+
+  <div className="rounded-full border border-zinc-700 px-4 py-2">
+    💡 Content Ideas
+  </div>
+
+  <div className="rounded-full border border-zinc-700 px-4 py-2">
+    📄 PDF Export
+  </div>
+</div>
       
 {loading && (
   <div className="mt-8 rounded-xl border border-blue-500 bg-zinc-900 p-6 text-center">
@@ -199,12 +229,26 @@ setRecommendedChannels(ai.recommendedChannels);
     </p>
   </div>
 )}
+<div className="mx-auto mt-10 mb-6 max-w-4xl rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-lg">
+  <h2 className="text-center text-2xl font-bold">
+    🔍 Start Your AI Benchmark
+  </h2>
+
+  <p className="mt-2 text-center text-gray-400">
+    검색어 하나만 입력하면 AI가 YouTube 시장을 분석합니다.
+  </p>
+</div>
       <SearchBar
   keyword={keyword}
   setKeyword={setKeyword}
   order={order}
   setOrder={setOrder}
   onSearch={() => handleSearch()}
+/>
+<Dashboard
+  keyword={keyword}
+  averageViews={averageViews}
+  videoCount={results.length}
 />
 <QuickStats
   results={results}
@@ -319,11 +363,16 @@ setProjects(getProjects());
   }}
 />
 {topVideos.length > 0 && (
+  <>
   <TopVideos
     topVideos={topVideos}
     calculateBenchmarkScore={calculateBenchmarkScore}
     formatDuration={formatDuration}
   />
+  <BestVideoCard
+  video={topVideos[0]}
+/>
+</>
 )}
 
 <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -359,17 +408,45 @@ setProjects(getProjects());
   </div>
 )}
       <ChannelAnalysis channels={channels} />
-      {recommendedChannels && (
-  <div className="mt-8 rounded-xl border border-yellow-500 bg-zinc-900 p-6">
-    <h2 className="mb-4 text-2xl font-bold">
-      🤖 AI 추천 벤치마킹 채널 TOP3
-    </h2>
+     <div className="mt-10 grid gap-6">
+  <AIResultCard
+    title="Benchmark Report"
+    icon="📊"
+    content={report}
+  />
 
-    <pre className="whitespace-pre-wrap text-gray-300">
-      {recommendedChannels}
-    </pre>
-  </div>
-)}
+  <AIResultCard
+    title="Content Ideas"
+    icon="💡"
+    content={idea}
+  />
+
+  <AIResultCard
+    title="Content Strategy"
+    icon="🎯"
+    content={strategy}
+  />
+
+  <AIResultCard
+    title="Competition Analysis"
+    icon="⚔️"
+    content={competition}
+  />
+
+  <AIResultCard
+    title="Video Titles"
+    icon="📝"
+    content={titles}
+  />
+
+  <AIResultCard
+    title="Recommended Channels"
+    icon="📺"
+    content={recommendedChannels}
+  />
+</div>
     </main>
+    <Footer />
+    </>
   );
 }

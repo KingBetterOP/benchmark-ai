@@ -1,7 +1,12 @@
 import { Video } from "../lib/types";
 import { getNativeBadge } from "../lib/badge";
 import { formatDuration } from "../lib/videoUtils";
-type Props = {
+import { calculateViralScore } from "../lib/viralScore";
+import { predictCTR } from "../lib/ctrPredictor";
+import { getCompetition } from "../lib/competition";
+import { getSuccessScore } from "../lib/successScore";
+import { getAIInsight } from "../lib/insight";
+type VideoCardProps = {
   video: Video;
   score: number;
 };
@@ -25,11 +30,51 @@ function getRecommendation(score: number) {
     color: "bg-red-600",
   };
 }
+
 export default function VideoCard({
   video,
   score,
-}: Props) {
-    const recommendation = getRecommendation(score);
+}: VideoCardProps) {
+
+  const viralScore = calculateViralScore(video);
+  const viralColor =
+  viralScore >= 90
+    ? "text-red-400"
+    : viralScore >= 75
+    ? "text-orange-400"
+    : viralScore >= 60
+    ? "text-yellow-400"
+    : "text-zinc-300";
+    const viralGrade =
+  viralScore >= 90
+    ? "★★★★★"
+    : viralScore >= 75
+    ? "★★★★☆"
+    : viralScore >= 60
+    ? "★★★☆☆"
+    : viralScore >= 40
+    ? "★★☆☆☆"
+    : "★☆☆☆☆";
+const ctr = predictCTR(video);
+const successScore = getSuccessScore(video, score);
+const insights = getAIInsight(video);
+const successLevel =
+  successScore >= 90
+    ? "🚀 Excellent"
+    : successScore >= 75
+    ? "🔥 High Potential"
+    : successScore >= 60
+    ? "👍 Good"
+    : "⚠️ Low";
+const competition = getCompetition(video);
+
+const recommendation = getRecommendation(score);
+    const scoreColor =
+  score >= 80
+    ? "bg-green-600"
+    : score >= 60
+    ? "bg-yellow-500"
+    : "bg-red-600";
     const badge = getNativeBadge(video);
   return (
     <a
@@ -38,44 +83,45 @@ export default function VideoCard({
       rel="noopener noreferrer"
       className="rounded-xl border border-gray-700 p-4 hover:border-red-500 transition block"
     >
-      <img
-        src={video.snippet.thumbnails.high.url}
-        alt={video.snippet.title}
-        className="rounded-lg hover:opacity-80 transition"
-      />
-<div
-  className={`mb-3 rounded-lg p-2 text-center font-bold ${
-    score >= 80
-      ? "bg-green-600"
-      : score >= 60
-      ? "bg-yellow-600"
-      : "bg-red-600"
-  }`}
->
-  🤖 AI Benchmark Score : {score}/100
+      <div className="relative overflow-hidden rounded-xl">
+  <img
+    src={video.snippet.thumbnails.high.url}
+    alt={video.snippet.title}
+    className="aspect-video w-full object-cover transition duration-300 hover:scale-105"
+  />
+
+  <div className="absolute bottom-3 right-3 rounded bg-black/80 px-2 py-1 text-xs font-semibold text-white">
+    {formatDuration(video.contentDetails.duration)}
+  </div>
+
   <div
-  className={`${recommendation.color} rounded-lg p-2 mb-3 text-center font-semibold`}
+    className={`absolute left-3 top-3 rounded-full px-3 py-1 text-sm font-bold text-white ${scoreColor}`}
+  >
+    AI {score}
+  </div>
+</div>
+        
+<div className={`mb-3 rounded-lg p-2 text-center font-bold ${scoreColor}`}>
+  🤖 AI Benchmark Score : {score}/100
+</div>
+
+<div
+  className={`${recommendation.color} mb-3 rounded-lg p-2 text-center font-semibold`}
 >
   {recommendation.text}
 </div>
+
 <div
-  className={`${badge.color} rounded-lg p-2 mb-3 text-center font-semibold`}
+  className={`${badge.color} mb-3 rounded-lg p-2 text-center font-semibold`}
 >
   {badge.label}
-</div>
+
 </div>
       <h2 className="mt-3 font-bold">
         {video.snippet.title}
       </h2>
 
       <div className="mt-2 flex items-center gap-3">
-  {video.channel && (
-    <img
-      src={video.channel.thumbnail}
-      alt={video.channel.name}
-      className="h-10 w-10 rounded-full"
-    />
-  )}
 
   <p className="text-gray-400">
     {video.channel ? video.channel.name : video.snippet.channelTitle}
@@ -118,6 +164,82 @@ export default function VideoCard({
     ? Number(video.statistics.commentCount).toLocaleString()
     : "-"}
 </p>
+<div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+  <div className="flex items-center justify-between">
+    <span className="text-sm font-semibold text-red-300">
+      🔥 Viral Score
+    </span>
+
+    <span className={`text-3xl font-extrabold ${viralColor}`}>
+      {viralScore}/100
+    </span>
+  </div>
+
+  <p className="mt-2 text-center text-yellow-300 font-semibold">
+    {viralGrade}
+  </p>
+</div>
+<div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/10 p-4">
+  <div className="flex items-center justify-between">
+    <span className="text-sm font-semibold text-cyan-300">
+      📈 CTR Prediction
+    </span>
+
+    <span className="text-2xl font-bold text-cyan-400">
+      {ctr}%
+    </span>
+  </div>
+</div>
+<div className="mt-3 rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+  <div className="flex items-center justify-between">
+    <span className="text-sm font-semibold text-purple-300">
+      ⚔️ Competition
+    </span>
+
+    <span className={`text-lg font-bold ${competition.color}`}>
+      {competition.text}
+    </span>
+  </div>
+</div>
+<div className="mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-sm font-semibold text-emerald-300">
+        🎯 Success Probability
+      </p>
+
+      <p className="text-xs text-zinc-400">
+        AI 종합 성공 확률
+      </p>
+    </div>
+
+    <div className="text-right">
+      <h3 className="text-3xl font-extrabold text-emerald-400">
+        {successScore}%
+      </h3>
+
+      <p className="text-sm text-emerald-300">
+        {successLevel}
+      </p>
+    </div>
+  </div>
+</div>
+<div className="mt-3 rounded-xl border border-sky-500/30 bg-sky-500/10 p-4">
+  <h3 className="mb-3 text-sm font-bold text-sky-300">
+    🧠 AI Insight
+  </h3>
+
+  <ul className="space-y-2">
+    {insights.map((item, index) => (
+      <li
+        key={index}
+        className="text-sm text-zinc-200"
+      >
+        {item}
+      </li>
+    ))}
+  </ul>
+</div>
       <p className="text-gray-500 text-sm">
         📅 {new Date(video.snippet.publishedAt).toLocaleDateString()}
       </p>
