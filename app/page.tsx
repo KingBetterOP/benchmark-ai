@@ -187,6 +187,7 @@ setRecommendedChannels(ai.recommendedChannels);
       <p className="mt-4 text-center text-sm md:text-base text-gray-400">
         YouTube AI Research Platform
       </p>
+      
 {loading && (
   <div className="mt-8 rounded-xl border border-blue-500 bg-zinc-900 p-6 text-center">
     <div className="text-2xl font-bold animate-pulse">
@@ -278,6 +279,12 @@ setRecommendedChannels(ai.recommendedChannels);
   })
 }
 onSaveProject={() => {
+  if (!keyword) {
+    alert("먼저 검색을 해주세요.");
+    return;
+  }
+
+  
   saveProject({
     id: crypto.randomUUID(),
     createdAt: Date.now(),
