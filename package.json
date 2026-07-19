@@ -10,14 +10,18 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.5.20",
+    "@polar-sh/sdk": "^0.48.1",
+    "@stripe/stripe-js": "^9.10.0",
     "@supabase/supabase-js": "^2.110.7",
     "firebase": "^12.16.0",
+    "firebase-admin": "^14.2.0",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.25.0",
     "next": "16.2.10",
     "openai": "^6.47.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "stripe": "^22.3.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

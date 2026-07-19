@@ -1,3 +1,15 @@
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy,
+} from "firebase/firestore";
+import { db } from "./firebase";
+
 export type SavedProject = {
   id: string;
   createdAt: number;
@@ -10,34 +22,50 @@ export type SavedProject = {
   recommendedChannels: string;
 };
 
-const STORAGE_KEY = "benchmark_projects";
+const COLLECTION_NAME = "projects";
 
-export function getProjects(): SavedProject[] {
-  const saved = localStorage.getItem(STORAGE_KEY);
+export async function getProjects(ownerId: string): Promise<SavedProject[]> {
+  const q = query(
+    collection(db, COLLECTION_NAME),
+    where("ownerId", "==", ownerId),
+    orderBy("createdAt", "desc")
+  );
 
-  if (!saved) return [];
+  const snapshot = await getDocs(q);
 
-  return JSON.parse(saved);
+console.log(
+  "Firestore data:",
+  snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  }))
+);
+
+return snapshot.docs.map((d) => ({
+  ...(d.data() as SavedProject),
+  id: d.id,
+}));
 }
 
-export function saveProject(project: SavedProject) {
-  const projects = getProjects();
+export async function saveProject(
+  ownerId: string,
+  project: SavedProject
+) {
+  try {
+    console.log("Saving project...");
 
-  const updated = [project, ...projects].slice(0, 30);
+    const ref = await addDoc(collection(db, COLLECTION_NAME), {
+      ownerId,
+      ...project,
+    });
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(updated)
-  );
+    console.log("Saved document ID:", ref.id);
+  } catch (error) {
+    console.error("SAVE ERROR:", error);
+    throw error;
+  }
 }
 
-export function deleteProject(id: string) {
-  const projects = getProjects();
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(
-      projects.filter((project) => project.id !== id)
-    )
-  );
+export async function deleteProject(id: string) {
+  await deleteDoc(doc(db, COLLECTION_NAME, id));
 }

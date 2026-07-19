@@ -1,4 +1,3 @@
-const channelMap: Record<string, Channel> = {};
 import { NextRequest, NextResponse } from "next/server";
 import type { Channel } from "@/app/lib/types";
 
@@ -46,8 +45,10 @@ console.log("Search URL:", searchUrl);
 console.log("Status:", searchResponse.status);
 console.log("Search Data:", searchData);
 
-if (!searchData.items) {
-  return NextResponse.json(searchData);
+if (!searchData.items || searchData.items.length === 0) {
+  return NextResponse.json({
+    items: [],
+  });
 }
 
   const ids = searchData.items
@@ -63,9 +64,14 @@ if (!searchData.items) {
 
   const videoResponse = await fetch(videoUrl);
   const videoData = await videoResponse.json();
+  if (!videoData.items) {
+  return NextResponse.json({
+    items: [],
+  });
+}
   const channelIds = [
   ...new Set(
-    videoData.items.map((video: any) => video.snippet.channelId)
+    (videoData.items ?? []).map((video: any) => video.snippet.channelId)
   ),
 ].join(",");
 const channelResponse = await fetch(
@@ -76,7 +82,7 @@ const channelData = await channelResponse.json();
 
 const channelMap: Record<string, Channel> = {};
 
-channelData.items.forEach((channel: any) => {
+(channelData.items ?? []).forEach((channel: any) => {
   channelMap[channel.id] = {
     name: channel.snippet.title,
     subscribers: Number(channel.statistics.subscriberCount),
@@ -86,7 +92,7 @@ channelData.items.forEach((channel: any) => {
   };
 });
 
-videoData.items = videoData.items.map((video: any) => ({
+videoData.items = (videoData.items ?? []).map((video: any) => ({
   ...video,
   channel: channelMap[video.snippet.channelId],
 }));

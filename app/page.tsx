@@ -5,7 +5,7 @@ import { generateAllAI } from "./lib/ai";
 import { searchYoutube } from "./lib/search";
 import { downloadCSV } from "./lib/downloadCSV";
 import { downloadPDF } from "./lib/downloadPDF";
-
+import { useUser } from "@clerk/nextjs";
 import {
   saveProject,
   getProjects,
@@ -41,6 +41,12 @@ import Dashboard from "./components/Dashboard";
 import BestVideoCard from "./components/BestVideoCard";
 
 export default function Home() {
+ const { user, isLoaded, isSignedIn } = useUser();
+
+console.log("isLoaded =", isLoaded);
+console.log("isSignedIn =", isSignedIn);
+console.log("user =", user);
+console.log("user id =", user?.id);
   const [keyword, setKeyword] = useState("");
   const [results, setResults] = useState<Video[]>([]);
   const [averageViews, setAverageViews] = useState(0);
@@ -68,8 +74,17 @@ useEffect(() => {
   if (savedHistory) {
     setSearchHistory(JSON.parse(savedHistory));
   }
-  setProjects(getProjects());
 }, []);
+useEffect(() => {
+  async function loadProjects() {
+    if (!user) return;
+
+    const data = await getProjects(user.id);
+    setProjects(data);
+  }
+
+  loadProjects();
+}, [user]);
   const handleSearch = async (
   searchOrder = order,
   searchKeyword = keyword
@@ -249,6 +264,7 @@ setRecommendedChannels(ai.recommendedChannels);
   keyword={keyword}
   averageViews={averageViews}
   videoCount={results.length}
+  videos={results}
 />
 <QuickStats
   results={results}
@@ -322,14 +338,20 @@ setRecommendedChannels(ai.recommendedChannels);
     recommendedChannels,
   })
 }
-onSaveProject={() => {
+onSaveProject={async () => {
+  alert("버튼 클릭됨");
+  if (!user) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
+
   if (!keyword) {
     alert("먼저 검색을 해주세요.");
     return;
   }
 
-  
-  saveProject({
+  try {
+  await saveProject(user.id, {
     id: crypto.randomUUID(),
     createdAt: Date.now(),
     keyword,
@@ -340,8 +362,15 @@ onSaveProject={() => {
     titles,
     recommendedChannels,
   });
-setProjects(getProjects());
+
+  const updated = await getProjects(user.id);
+  console.log("Projects from Firestore:", updated);
+  setProjects(updated);
   alert("프로젝트가 저장되었습니다.");
+} catch (error) {
+  console.error(error);
+  alert("저장 실패");
+}
 }}
 />
 
@@ -357,10 +386,14 @@ setProjects(getProjects());
     setTitles(project.titles);
     setRecommendedChannels(project.recommendedChannels);
   }}
-  onDelete={(id) => {
-    deleteProject(id);
-    setProjects(getProjects());
-  }}
+  onDelete={async (id) => {
+  if (!user) return;
+
+  await deleteProject(id);
+
+  const updated = await getProjects(user.id);
+  setProjects(updated);
+}}
 />
 {topVideos.length > 0 && (
   <>
@@ -434,7 +467,7 @@ setProjects(getProjects());
   />
 
   <AIResultCard
-    title="Video Titles"
+    title="Video Titles" 
     icon="📝"
     content={titles}
   />

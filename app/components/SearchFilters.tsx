@@ -71,23 +71,28 @@ export default function SearchFilters({
       </button>
 
       <button
-        onClick={onDownloadCSV}
-        className="rounded-lg border border-green-600 bg-green-600 px-4 py-2 hover:bg-green-700"
-      >
-        📄 CSV 다운로드
-        <button
+  onClick={onDownloadCSV}
+  className="rounded-lg border border-green-600 bg-green-600 px-4 py-2 hover:bg-green-700"
+>
+  📄 CSV 다운로드
+</button>
+
+<button
   onClick={onDownloadPDF}
   className="rounded-lg border border-red-600 bg-red-600 px-4 py-2 hover:bg-red-700"
 >
   📕 PDF 다운로드
-  <button
-  onClick={onSaveProject}
+</button>
+
+<button
+  onClick={() => {
+    alert("SearchFilters 버튼");
+    onSaveProject();
+  }}
   className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 hover:bg-blue-700"
 >
   💾 프로젝트 저장
 </button>
-</button>
-      </button>
     </div>
   );
 }

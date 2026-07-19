@@ -10,8 +10,14 @@ export async function askAI(prompt: string) {
   });
 
   if (!response.ok) {
-    throw new Error("AI 요청 실패");
-  }
+  const error = await response.json();
+
+  console.error(error);
+
+  throw new Error(
+    error.detail || error.error || "AI 요청 실패"
+  );
+}
 
   const data = await response.json();
 

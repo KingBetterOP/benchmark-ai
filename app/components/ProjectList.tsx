@@ -30,9 +30,11 @@ export default function ProjectList({
             <div>
               <p className="font-bold">{project.keyword}</p>
 
-              <p className="text-sm text-gray-400">
-                {new Date(project.createdAt).toLocaleString()}
-              </p>
+             <p className="text-sm text-gray-400">
+  {project.createdAt
+    ? new Date(project.createdAt).toLocaleString()
+    : "날짜 없음"}
+</p>
             </div>
 
             <div className="flex gap-2">

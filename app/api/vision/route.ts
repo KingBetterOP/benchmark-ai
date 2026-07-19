@@ -43,7 +43,15 @@ JSON만 출력해.
       ],
     });
 
-    const result = JSON.parse(response.output_text);
+    let text = response.output_text.trim();
+
+text = text
+  .replace(/^```json/, "")
+  .replace(/^```/, "")
+  .replace(/```$/, "")
+  .trim();
+
+const result = JSON.parse(text);
 
 return NextResponse.json(result);
   } catch (error) {
