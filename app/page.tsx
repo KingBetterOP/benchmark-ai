@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { generateAllAI } from "./lib/ai";
 import { searchYoutube } from "./lib/search";
 import { downloadCSV } from "./lib/downloadCSV";
@@ -41,6 +42,7 @@ import Dashboard from "./components/Dashboard";
 import BestVideoCard from "./components/BestVideoCard";
 
 export default function Home() {
+  const router = useRouter();
  const { user, isLoaded, isSignedIn } = useUser();
 
 console.log("isLoaded =", isLoaded);
@@ -177,6 +179,14 @@ setThumbnailPrompt(ai.thumbnail);
 setRecommendedChannels(ai.recommendedChannels);
 } catch (error) {
   console.error(error);
+
+  if (
+    error instanceof Error &&
+    error.message === "UPGRADE_REQUIRED"
+  ) {
+    router.push("/pricing");
+    return;
+  }
 
   alert("❌ 분석 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.");
 } finally {

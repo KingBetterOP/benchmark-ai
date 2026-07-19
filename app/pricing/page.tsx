@@ -7,13 +7,16 @@ export default function PricingPage() {
         method: "POST",
       });
 
+      const body = await res.json();
+
+      console.log(body);
+
       if (!res.ok) {
-        throw new Error("Checkout 생성 실패");
+        alert(JSON.stringify(body));
+        return;
       }
 
-      const data = await res.json();
-
-      window.location.href = data.url;
+      window.location.href = body.url;
     } catch (error) {
       console.error(error);
       alert("결제 페이지를 불러오지 못했습니다.");

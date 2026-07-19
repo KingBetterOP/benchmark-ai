@@ -12,7 +12,9 @@ export async function askAI(prompt: string) {
   if (!response.ok) {
   const error = await response.json();
 
-  console.error(error);
+  if (response.status === 403 && error.upgrade) {
+    throw new Error("UPGRADE_REQUIRED");
+  }
 
   throw new Error(
     error.detail || error.error || "AI 요청 실패"
