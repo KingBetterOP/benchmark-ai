@@ -175,6 +175,7 @@ const ai = await generateAllAI({
 await fetch("/api/usage", {
   method: "POST",
 });
+console.log("/api/usage called")
 setLoadingStep("✅ 결과를 정리하는 중...");
 setReport(ai.report);
 setIdea(ai.idea);
