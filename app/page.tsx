@@ -172,9 +172,13 @@ const ai = await generateAllAI({
   thumbnailPrompt: searchKeyword,
   recommendedChannelsPrompt,
 });
+console.log("BEFORE /api/usage");
+
 await fetch("/api/usage", {
   method: "POST",
 });
+
+console.log("AFTER /api/usage");
 console.log("/api/usage called")
 setLoadingStep("✅ 결과를 정리하는 중...");
 setReport(ai.report);
