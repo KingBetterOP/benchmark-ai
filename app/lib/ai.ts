@@ -19,23 +19,31 @@ export async function generateAllAI({
   thumbnailPrompt,
   recommendedChannelsPrompt,
 }: AIRequest) {
-  const [
-    report,
-    idea,
-    strategy,
-    competition,
-    titles,
-    thumbnail,
-    recommendedChannels,
-  ] = await Promise.all([
-    askAI(reportPrompt),
-    askAI(ideaPrompt),
-    askAI(strategyPrompt),
-    askAI(competitionPrompt),
-    askAI(titlePrompt),
-    askAI(thumbnailPrompt),
-    askAI(recommendedChannelsPrompt),
-  ]);
+
+  console.log("START");
+
+  const report = await askAI(reportPrompt);
+  console.log("report");
+
+  const idea = await askAI(ideaPrompt);
+  console.log("idea");
+
+  const strategy = await askAI(strategyPrompt);
+  console.log("strategy");
+
+  const competition = await askAI(competitionPrompt);
+  console.log("competition");
+
+  const titles = await askAI(titlePrompt);
+  console.log("titles");
+
+  const thumbnail = await askAI(thumbnailPrompt);
+  console.log("thumbnail");
+
+  const recommendedChannels = await askAI(
+    recommendedChannelsPrompt
+  );
+  console.log("recommended");
 
   return {
     report,
