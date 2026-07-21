@@ -62,9 +62,7 @@ if (userData.plan === "free" && userData.dailyUsage >= 3) {
   ],
 });
 
-await userRef.update({
-  dailyUsage: FieldValue.increment(1),
-});
+
 
 return NextResponse.json({
   result: response.choices[0].message.content,

@@ -90,6 +90,11 @@ useEffect(() => {
   searchKeyword = keyword
 ) => {
    if (!searchKeyword.trim()) return;
+   if (!user) {
+  alert("🔒 AI 분석을 이용하려면 로그인해주세요.");
+  router.push("/sign-in");
+  return;
+}
    try {
     setLoading(true);
 setLoadingStep("🔍 YouTube 검색 중...");
@@ -166,6 +171,9 @@ const ai = await generateAllAI({
   titlePrompt,
   thumbnailPrompt: searchKeyword,
   recommendedChannelsPrompt,
+});
+await fetch("/api/usage", {
+  method: "POST",
 });
 setLoadingStep("✅ 결과를 정리하는 중...");
 setReport(ai.report);
