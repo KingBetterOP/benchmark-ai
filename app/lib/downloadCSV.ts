@@ -1,7 +1,8 @@
+import type { Video } from "./types";
 export function downloadCSV(
-  results: any[],
+  results: Video[],
   keyword: string,
-  calculateBenchmarkScore: (video: any) => number
+  calculateBenchmarkScore: (video: Video) => number
 ) {
   if (results.length === 0) {
     alert("다운로드할 데이터가 없습니다.");
@@ -16,7 +17,7 @@ export function downloadCSV(
     "Benchmark Score",
   ];
 
-  const rows = results.map((video: any) => [
+  const rows = results.map((video: Video) => [
     `"${video.snippet.title.replace(/"/g, '""')}"`,
     `"${video.snippet.channelTitle}"`,
     video.statistics?.viewCount ?? 0,

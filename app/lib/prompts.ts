@@ -1,6 +1,10 @@
+import type {
+  Video,
+  Channel,
+} from "./types";
 export function createBenchmarkPrompt(
   keyword: string,
-  rankedVideos: any[]
+  rankedVideos: Video[]
 ) {
   return `
 검색 키워드: ${keyword}
@@ -8,7 +12,7 @@ export function createBenchmarkPrompt(
 상위 5개 영상:
 ${rankedVideos
   .map(
-    (v: any) =>
+    (v: Video) =>
       `- ${v.snippet.title}
 조회수: ${v.statistics.viewCount}
 채널: ${v.snippet.channelTitle}`
@@ -86,7 +90,7 @@ export function createTitlePrompt(keyword: string) {
 
 export function createRecommendedChannelsPrompt(
   keyword: string,
-  channels: any[]
+  channels: Channel[]
 ) {
   return `
 검색 키워드: ${keyword}
@@ -97,7 +101,7 @@ export function createRecommendedChannelsPrompt(
 
 ${channels
   .map(
-    (channel: any) =>
+    (channel: Channel) =>
       `채널명: ${channel.name}
 구독자: ${channel.subscribers}
 영상 수: ${channel.videos}

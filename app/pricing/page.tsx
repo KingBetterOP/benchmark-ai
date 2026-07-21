@@ -9,7 +9,7 @@ export default function PricingPage() {
 
       const body = await res.json();
 
-      console.log(body);
+      
 
       if (!res.ok) {
         alert(JSON.stringify(body));

@@ -16,7 +16,7 @@ export default function TopVideos({
         🏆 AI 추천 벤치마킹 TOP 5
       </h2>
 
-      {topVideos.map((video: Video, index: number) => (
+      {topVideos.map((video, index) => (
         <div
           key={video.id}
           className="mb-3 rounded-lg border border-gray-700 p-4"

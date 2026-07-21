@@ -1,3 +1,4 @@
+import type { Video } from "./types";
 export function formatDuration(duration: string) {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
 
@@ -17,7 +18,11 @@ export function formatDuration(duration: string) {
 }
 
 
-export function calculateBenchmarkScore(video: any) {
+
+
+export function calculateBenchmarkScore(
+  video: Video
+) {
   const views = Number(video.statistics?.viewCount || 0);
 
   const subscribers = Number(

@@ -1,7 +1,6 @@
 import TopVideos from "./TopVideos";
 import { Video } from "../lib/types";
 import ThumbnailGenerator from "./ThumbnailGenerator";
-import { calculateViralScore } from "../lib/benchmark";
 type Props = {
   results: Video[];
   averageViews: number;
@@ -31,10 +30,7 @@ export default function QuickStats({
   calculateBenchmarkScore,
   formatDuration,
 }: Props) {
-    const viralScore = calculateViralScore(
-  averageViews,
-  50
-);
+    
   return (
     <div className="mt-8 rounded-xl border border-gray-700 bg-zinc-900 p-6">
       <h2 className="text-2xl font-bold">🧠 AI Quick Stats</h2>

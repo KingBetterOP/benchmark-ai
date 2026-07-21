@@ -1,7 +1,7 @@
 import {
   collection,
-  addDoc,
   getDocs,
+  addDoc,
   deleteDoc,
   doc,
   query,
@@ -33,13 +33,7 @@ export async function getProjects(ownerId: string): Promise<SavedProject[]> {
 
   const snapshot = await getDocs(q);
 
-console.log(
-  "Firestore data:",
-  snapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
-  }))
-);
+
 
 return snapshot.docs.map((d) => ({
   ...(d.data() as SavedProject),
@@ -52,14 +46,13 @@ export async function saveProject(
   project: SavedProject
 ) {
   try {
-    console.log("Saving project...");
-
+    
     const ref = await addDoc(collection(db, COLLECTION_NAME), {
       ownerId,
       ...project,
     });
 
-    console.log("Saved document ID:", ref.id);
+    
   } catch (error) {
     console.error("SAVE ERROR:", error);
     throw error;

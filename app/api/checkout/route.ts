@@ -12,9 +12,7 @@ export async function POST() {
         { status: 401 }
       );
     }
-console.log("USER:", userId);
-console.log("PRODUCT:", process.env.POLAR_PRODUCT_ID);
-console.log("ENV:", process.env.POLAR_ENVIRONMENT);
+
     const checkout = await polar.checkouts.create({
       products: [process.env.POLAR_PRODUCT_ID!],
       externalCustomerId: userId,
@@ -23,7 +21,7 @@ console.log("ENV:", process.env.POLAR_ENVIRONMENT);
       },
       successUrl: "http://localhost:3000/success",
     });
-    console.log("CHECKOUT:", checkout);
+    
 
     return NextResponse.json({
       url: checkout.url,

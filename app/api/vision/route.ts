@@ -34,10 +34,10 @@ JSON만 출력해.
 `,
             },
             {
-  type: "input_image",
-  image_url: imageUrl,
-  detail: "auto",
-},
+              type: "input_image",
+              image_url: imageUrl,
+              detail: "auto",
+            },
           ],
         },
       ],
@@ -45,21 +45,23 @@ JSON만 출력해.
 
     let text = response.output_text.trim();
 
-text = text
-  .replace(/^```json/, "")
-  .replace(/^```/, "")
-  .replace(/```$/, "")
-  .trim();
+    text = text
+      .replace(/^```json/, "")
+      .replace(/^```/, "")
+      .replace(/```$/, "")
+      .trim();
 
-const result = JSON.parse(text);
+    const result = JSON.parse(text);
 
-return NextResponse.json(result);
+    return NextResponse.json(result);
+
   } catch (error) {
-    console.error(error);
+    console.error("VISION ERROR:", error);
 
     return NextResponse.json(
       {
         error: "Vision API Error",
+        detail: String(error),
       },
       {
         status: 500,

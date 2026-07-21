@@ -1,8 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { Channel } from "@/app/lib/types";
+type SearchItem = {
+  id: {
+    videoId: string;
+  };
+};
+
+type VideoApiItem = {
+  snippet: {
+    channelId: string;
+  };
+  channel?: Channel;
+};
+
+type ChannelApiItem = {
+  id: string;
+  snippet: {
+    title: string;
+    thumbnails: {
+      high: {
+        url: string;
+      };
+    };
+  };
+  statistics: {
+    subscriberCount: string;
+    videoCount: string;
+    viewCount: string;
+  };
+};
 
 export async function GET(request: NextRequest) {
-  console.log("🔥 ROUTE 실행");
+  
   
 
   const keyword = request.nextUrl.searchParams.get("q");
@@ -41,9 +70,7 @@ if (last30Days) {
 const searchData = await searchResponse.json();
 
 
-console.log("Search URL:", searchUrl);
-console.log("Status:", searchResponse.status);
-console.log("Search Data:", searchData);
+
 
 if (!searchData.items || searchData.items.length === 0) {
   return NextResponse.json({
@@ -52,8 +79,8 @@ if (!searchData.items || searchData.items.length === 0) {
 }
 
   const ids = searchData.items
-    .map((item: any) => item.id.videoId)
-    .join(",");
+  .map((item: SearchItem) => item.id.videoId)
+  .join(",");
 
   // 2. 상세정보 가져오기
   const videoUrl =
@@ -71,7 +98,7 @@ if (!searchData.items || searchData.items.length === 0) {
 }
   const channelIds = [
   ...new Set(
-    (videoData.items ?? []).map((video: any) => video.snippet.channelId)
+    (videoData.items ?? []).map((video: VideoApiItem) => video.snippet.channelId)
   ),
 ].join(",");
 const channelResponse = await fetch(
@@ -82,7 +109,7 @@ const channelData = await channelResponse.json();
 
 const channelMap: Record<string, Channel> = {};
 
-(channelData.items ?? []).forEach((channel: any) => {
+(channelData.items ?? []).forEach((channel: ChannelApiItem) => {
   channelMap[channel.id] = {
     name: channel.snippet.title,
     subscribers: Number(channel.statistics.subscriberCount),
@@ -92,7 +119,7 @@ const channelMap: Record<string, Channel> = {};
   };
 });
 
-videoData.items = (videoData.items ?? []).map((video: any) => ({
+videoData.items = (videoData.items ?? []).map((video: VideoApiItem) => ({
   ...video,
   channel: channelMap[video.snippet.channelId],
 }));

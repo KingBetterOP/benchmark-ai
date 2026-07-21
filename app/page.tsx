@@ -45,10 +45,7 @@ export default function Home() {
   const router = useRouter();
  const { user, isLoaded, isSignedIn } = useUser();
 
-console.log("isLoaded =", isLoaded);
-console.log("isSignedIn =", isSignedIn);
-console.log("user =", user);
-console.log("user id =", user?.id);
+
   const [keyword, setKeyword] = useState("");
   const [results, setResults] = useState<Video[]>([]);
   const [averageViews, setAverageViews] = useState(0);
@@ -68,15 +65,16 @@ console.log("user id =", user?.id);
   const [excludeShorts, setExcludeShorts] = useState(false);
   const [min10Minutes, setMin10Minutes] = useState(false);
   const [last30Days, setLast30Days] = useState(false);
-const [searchHistory, setSearchHistory] = useState<string[]>([]);
-const [projects, setProjects] = useState<SavedProject[]>([]);
-useEffect(() => {
-  const savedHistory = localStorage.getItem("searchHistory");
+const [searchHistory, setSearchHistory] =
+  useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
 
-  if (savedHistory) {
-    setSearchHistory(JSON.parse(savedHistory));
-  }
-}, []);
+    const saved = localStorage.getItem("searchHistory");
+
+    return saved ? JSON.parse(saved) : [];
+  });
+const [projects, setProjects] = useState<SavedProject[]>([]);
+
 useEffect(() => {
   async function loadProjects() {
     if (!user) return;
@@ -129,7 +127,7 @@ const processed = processVideos(
   min10Minutes
 );
 
-console.log("processed =", processed);
+
 
 setAverageViews(processed.averageViews);
 setResults(processed.results);
@@ -159,7 +157,7 @@ const recommendedChannelsPrompt =
   processed.channels
 );
 setLoadingStep("🤖 AI가 분석 중...");
-console.log("generateAllAI 호출 직전");
+
 const ai = await generateAllAI({
   reportPrompt: prompt,
   ideaPrompt,
@@ -374,7 +372,7 @@ onSaveProject={async () => {
   });
 
   const updated = await getProjects(user.id);
-  console.log("Projects from Firestore:", updated);
+  
   setProjects(updated);
   alert("프로젝트가 저장되었습니다.");
 } catch (error) {
@@ -419,7 +417,7 @@ onSaveProject={async () => {
 )}
 
 <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
-  {results.map((video: Video) => (
+  {results.map((video) => (
     <div key={video.id}>
       <VideoCard
         video={video}
@@ -444,8 +442,8 @@ onSaveProject={async () => {
 
     <ul className="mt-6 space-y-2 text-left inline-block">
       <li>✔ 다른 키워드로 검색하기</li>
-      <li>✔ "10분 이상" 필터 끄기</li>
-      <li>✔ "최근 30일" 필터 끄기</li>
+      <li>✔ &quot;10분 이상&quot; 필터 끄기</li>
+<li>✔ &quot;최근 30일&quot; 필터 끄기</li>
       <li>✔ Shorts 제외 옵션 확인하기</li>
     </ul>
   </div>

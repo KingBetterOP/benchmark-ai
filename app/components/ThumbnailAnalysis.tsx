@@ -27,26 +27,30 @@ export default function ThumbnailAnalysis({
 
       try {
         const response = await fetch("/api/vision", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            imageUrl: thumbnail,
-          }),
-        });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    imageUrl: thumbnail,
+  }),
+});
 
-        const data = await response.json();
-
-        setAnalysis(data.result);
-        const match = data.result.match(/\d+/);
-
-if (match) {
-  setScore(Number(match[0]));
+if (!response.ok) {
+  throw new Error(`Vision API failed (${response.status})`);
 }
+
+const data = await response.json();
+
+setAnalysis(data);
+setScore(data.score);
+
+setAnalysis(data);
+setScore(data.score);
       } catch (e) {
-        setAnalysis(null);
-      }
+  console.error("Vision Error:", e);
+  setAnalysis(null);
+}
 
       setLoading(false);
     };
