@@ -15,9 +15,13 @@ export async function POST() {
 
   const userRef = adminDb.collection("users").doc(userId);
 
-  await userRef.update({
-    dailyUsage: FieldValue.increment(1),
-  });
+  await userRef.set(
+    {
+      dailyUsage: FieldValue.increment(1),
+      plan: "free",
+    },
+    { merge: true }
+  );
 
   return NextResponse.json({ success: true });
 }

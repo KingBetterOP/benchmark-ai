@@ -9,8 +9,10 @@ export async function askAI(prompt: string) {
     }),
   });
 
-  if (!response.ok) {
+ if (!response.ok) {
   const error = await response.json();
+
+  console.log("API ERROR:", error);
 
   if (response.status === 403 && error.upgrade) {
     throw new Error("UPGRADE_REQUIRED");
