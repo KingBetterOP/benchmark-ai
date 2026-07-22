@@ -40,6 +40,7 @@ import Footer from "./components/Footer";
 import AIResultCard from "./components/AIResultCard";
 import Dashboard from "./components/Dashboard";
 import BestVideoCard from "./components/BestVideoCard";
+import AIChat from "./components/AIChat";
 
 export default function Home() {
   const router = useRouter();
@@ -74,6 +75,8 @@ const [searchHistory, setSearchHistory] =
     return saved ? JSON.parse(saved) : [];
   });
 const [projects, setProjects] = useState<SavedProject[]>([]);
+const [plan, setPlan] = useState("free");
+const [dailyUsage, setDailyUsage] = useState(0);
 
 useEffect(() => {
   async function loadProjects() {
@@ -84,6 +87,19 @@ useEffect(() => {
   }
 
   loadProjects();
+}, [user]);
+useEffect(() => {
+  async function loadUser() {
+    if (!user) return;
+
+    const res = await fetch("/api/me");
+    const data = await res.json();
+
+    setPlan(data.plan);
+    setDailyUsage(data.dailyUsage);
+  }
+
+  loadUser();
 }, [user]);
   const handleSearch = async (
   searchOrder = order,
@@ -177,7 +193,11 @@ const ai = await generateAllAI({
 await fetch("/api/usage", {
   method: "POST",
 });
+const usageRes = await fetch("/api/me");
+const usageData = await usageRes.json();
 
+setPlan(usageData.plan);
+setDailyUsage(usageData.dailyUsage);
 
 setLoadingStep("✅ 결과를 정리하는 중...");
 setReport(ai.report);
@@ -252,7 +272,45 @@ setRecommendedChannels(ai.recommendedChannels);
     📄 PDF Export
   </div>
 </div>
-      
+ <div className="mx-auto mt-6 max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-5 text-center">
+  {plan === "pro" ? (
+    <>
+      <div className="text-2xl font-bold text-yellow-400">
+        💎 PRO
+      </div>
+
+      <p className="mt-2 text-gray-300">
+        Unlimited AI Analysis
+      </p>
+    </>
+  ) : (
+    <>
+      <div className="text-2xl font-bold">
+        ⭐ FREE PLAN
+      </div>
+
+      <p className="mt-2 text-gray-300">
+        {dailyUsage} / 3 analyses used today
+      </p>
+
+      <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-700">
+        <div
+          className="h-full rounded-full bg-blue-500 transition-all"
+          style={{
+            width: `${Math.min(
+              (dailyUsage / 3) * 100,
+              100
+            )}%`,
+          }}
+        />
+      </div>
+
+      <p className="mt-2 text-sm text-gray-500">
+        {Math.max(3 - dailyUsage, 0)} analyses remaining
+      </p>
+    </>
+  )}
+</div>     
 {loading && (
   <div className="mt-8 rounded-xl border border-blue-500 bg-zinc-900 p-6 text-center">
     <div className="text-2xl font-bold animate-pulse">
@@ -279,6 +337,7 @@ setRecommendedChannels(ai.recommendedChannels);
   order={order}
   setOrder={setOrder}
   onSearch={() => handleSearch()}
+  loading={loading}
 />
 <Dashboard
   keyword={keyword}
@@ -498,6 +557,21 @@ onSaveProject={async () => {
     content={recommendedChannels}
   />
 </div>
+<AIChat
+  context={`
+${report}
+
+${idea}
+
+${strategy}
+
+${competition}
+
+${titles}
+
+${recommendedChannels}
+`}
+/>
     </main>
     <Footer />
     </>

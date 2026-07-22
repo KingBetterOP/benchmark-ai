@@ -13,8 +13,6 @@ export async function POST() {
     );
   }
 
-  console.log("USAGE API CALLED", userId);
-
   const userRef = adminDb.collection("users").doc(userId);
 
   await userRef.set(

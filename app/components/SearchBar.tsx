@@ -8,6 +8,7 @@ type SearchBarProps = {
   order: string;
   setOrder: (value: string) => void;
   onSearch: () => void;
+  loading: boolean;
 };
 
 export default function SearchBar({
@@ -16,6 +17,7 @@ export default function SearchBar({
   order,
   setOrder,
   onSearch,
+  loading,
 }: SearchBarProps) {
   return (
     <section className="mx-auto mt-12 max-w-6xl">
@@ -66,12 +68,21 @@ export default function SearchBar({
           </select>
 
           <button
-            onClick={onSearch}
-            className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-orange-500 px-8 py-4 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-500/30 active:translate-y-0"
-          >
-            <Sparkles size={18} />
-            Analyze
-          </button>
+  onClick={onSearch}
+  disabled={loading}
+  className={`flex items-center justify-center gap-2 rounded-2xl px-8 py-4 font-semibold text-white transition-all duration-300 ${
+    loading
+      ? "cursor-not-allowed opacity-60 bg-zinc-700"
+      : "bg-gradient-to-r from-red-600 via-red-500 to-orange-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-500/30 active:translate-y-0"
+  }`}
+>
+  <Sparkles
+    size={18}
+    className={loading ? "animate-spin" : ""}
+  />
+
+  {loading ? "Analyzing..." : "Analyze"}
+</button>
         </div>
 
         <div className="mt-6 flex flex-wrap justify-center gap-3">
