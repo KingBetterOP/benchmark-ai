@@ -75,6 +75,12 @@ const [searchHistory, setSearchHistory] =
     return saved ? JSON.parse(saved) : [];
   });
 const [projects, setProjects] = useState<SavedProject[]>([]);
+const [messages, setMessages] = useState<
+  {
+    role: "user" | "assistant";
+    content: string;
+  }[]
+>([]);
 const [plan, setPlan] = useState("free");
 const [dailyUsage, setDailyUsage] = useState(0);
 
@@ -113,6 +119,7 @@ useEffect(() => {
 }
    try {
     setLoading(true);
+    setMessages([]);
 setLoadingStep("🔍 YouTube 검색 중...");
 setSearchHistory((prev) => {
   const history = [
@@ -440,6 +447,7 @@ onSaveProject={async () => {
     competition,
     titles,
     recommendedChannels,
+    chatMessages: messages,
   });
 
   const updated = await getProjects(user.id);
@@ -464,6 +472,7 @@ onSaveProject={async () => {
     setCompetition(project.competition);
     setTitles(project.titles);
     setRecommendedChannels(project.recommendedChannels);
+    setMessages(project.chatMessages ?? []);
   }}
   onDelete={async (id) => {
   if (!user) return;
@@ -571,6 +580,8 @@ ${titles}
 
 ${recommendedChannels}
 `}
+  messages={messages}
+  setMessages={setMessages}
 />
     </main>
     <Footer />

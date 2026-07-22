@@ -4,16 +4,26 @@ import { useState } from "react";
 
 type Props = {
   context: string;
-};
-
-export default function AIChat({ context }: Props) {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<
-  {
+  messages: {
     role: "user" | "assistant";
     content: string;
-  }[]
->([]);
+  }[];
+  setMessages: React.Dispatch<
+    React.SetStateAction<
+      {
+        role: "user" | "assistant";
+        content: string;
+      }[]
+    >
+  >;
+};
+
+export default function AIChat({
+  context,
+  messages,
+  setMessages,
+}: Props) {
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function askAI() {

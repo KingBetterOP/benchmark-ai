@@ -20,6 +20,10 @@ export type SavedProject = {
   competition: string;
   titles: string;
   recommendedChannels: string;
+  chatMessages?: {
+  role: "user" | "assistant";
+  content: string;
+}[];
 };
 
 const COLLECTION_NAME = "projects";
