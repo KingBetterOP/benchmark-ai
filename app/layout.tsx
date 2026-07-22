@@ -54,7 +54,9 @@ category: "Technology",
 icons: {
   icon: "/favicon.ico",
 },
-
+verification: {
+  google: "ZqUw3XijKLfCyff-rXTlLD9YDoKYfL0FO5aR20uJ7Ko",
+},
 openGraph: {
     title: "Benchmark AI",
     description:
