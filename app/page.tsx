@@ -88,7 +88,7 @@ useEffect(() => {
   async function loadProjects() {
     if (!user) return;
 
-    const data = await getProjects(user.id);
+    const data = await getProjects();
     setProjects(data);
   }
 
@@ -437,20 +437,19 @@ onSaveProject={async () => {
   }
 
   try {
-  await saveProject(user.id, {
-    id: crypto.randomUUID(),
-    createdAt: Date.now(),
-    keyword,
-    report,
-    idea,
-    strategy,
-    competition,
-    titles,
-    recommendedChannels,
-    chatMessages: messages,
-  });
+  await saveProject({
+  createdAt: Date.now(),
+  keyword,
+  report,
+  idea,
+  strategy,
+  competition,
+  titles,
+  recommendedChannels,
+  chatMessages: messages,
+});
 
-  const updated = await getProjects(user.id);
+  const updated = await getProjects();
   
   setProjects(updated);
   alert("프로젝트가 저장되었습니다.");
@@ -479,7 +478,7 @@ onSaveProject={async () => {
 
   await deleteProject(id);
 
-  const updated = await getProjects(user.id);
+const updated = await getProjects();
   setProjects(updated);
 }}
 />

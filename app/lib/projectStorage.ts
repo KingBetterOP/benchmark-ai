@@ -1,15 +1,3 @@
-import {
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  query,
-  where,
-  orderBy,
-} from "firebase/firestore";
-import { db } from "./firebase";
-
 export type SavedProject = {
   id: string;
   createdAt: number;
@@ -21,48 +9,48 @@ export type SavedProject = {
   titles: string;
   recommendedChannels: string;
   chatMessages?: {
-  role: "user" | "assistant";
-  content: string;
-}[];
+    role: "user" | "assistant";
+    content: string;
+  }[];
 };
 
-const COLLECTION_NAME = "projects";
+export async function getProjects(): Promise<SavedProject[]> {
+  const res = await fetch("/api/projects", {
+    method: "GET",
+    cache: "no-store",
+  });
 
-export async function getProjects(ownerId: string): Promise<SavedProject[]> {
-  const q = query(
-    collection(db, COLLECTION_NAME),
-    where("ownerId", "==", ownerId),
-    orderBy("createdAt", "desc")
-  );
+  if (!res.ok) {
+    throw new Error("Failed to load projects");
+  }
 
-  const snapshot = await getDocs(q);
-
-
-
-return snapshot.docs.map((d) => ({
-  ...(d.data() as SavedProject),
-  id: d.id,
-}));
+  return res.json();
 }
 
 export async function saveProject(
-  ownerId: string,
-  project: SavedProject
+  project: Omit<SavedProject, "id">
 ) {
-  try {
-    
-    const ref = await addDoc(collection(db, COLLECTION_NAME), {
-      ownerId,
-      ...project,
-    });
+  const res = await fetch("/api/projects", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(project),
+  });
 
-    
-  } catch (error) {
-    console.error("SAVE ERROR:", error);
-    throw error;
+  if (!res.ok) {
+    throw new Error("Failed to save project");
   }
+
+  return res.json();
 }
 
 export async function deleteProject(id: string) {
-  await deleteDoc(doc(db, COLLECTION_NAME, id));
+  const res = await fetch(`/api/projects/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to delete project");
+  }
 }

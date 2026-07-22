@@ -14,40 +14,63 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://benchmark-ai.vercel.app"),
+  metadataBase: new URL("https://benchmark-ai-indol.vercel.app"),
 
   title: {
-    default: "Benchmark AI",
+    default: "Benchmark AI - AI YouTube Competitor Analysis Platform",
     template: "%s | Benchmark AI",
   },
 
   description:
-    "AI-powered YouTube benchmarking platform. Analyze competitors, discover winning strategies, and grow your channel faster.",
+  "Analyze YouTube competitors, discover viral content ideas, predict high-performing videos, and grow your channel faster with AI.",
 
   keywords: [
-    "YouTube",
-    "Benchmark",
-    "AI",
-    "Analytics",
-    "SEO",
-    "Competitor Analysis",
-    "Content Strategy",
-  ],
+  "YouTube AI",
+  "YouTube Analytics",
+  "YouTube Competitor Analysis",
+  "YouTube SEO",
+  "YouTube Growth",
+  "AI YouTube Tool",
+  "Content Strategy",
+  "Video Analytics",
+  "Thumbnail Analysis",
+  "Viral Videos",
+  "Benchmark AI",
+],
 
   authors: [
-    {
-      name: "Benchmark AI",
-    },
-  ],
+  {
+    name: "Benchmark AI",
+  },
+],
 
-  openGraph: {
+robots: {
+  index: true,
+  follow: true,
+},
+
+category: "Technology",
+
+icons: {
+  icon: "/favicon.ico",
+},
+
+openGraph: {
     title: "Benchmark AI",
     description:
       "Analyze YouTube competitors with AI and discover what actually works.",
-    url: "https://benchmark-ai.vercel.app",
+    url: "https://benchmark-ai-indol.vercel.app",
     siteName: "Benchmark AI",
-    locale: "ko_KR",
+    locale: "en_US",
     type: "website",
+    images: [
+  {
+    url: "/og-image.png",
+    width: 1200,
+    height: 630,
+    alt: "Benchmark AI",
+  },
+],
   },
 
   twitter: {
