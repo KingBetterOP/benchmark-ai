@@ -14,21 +14,22 @@ export default function ContactPage() {
           <div className="mb-6">
             <h2 className="text-xl font-semibold">📧 Email</h2>
             <p className="mt-2 text-gray-400">
-              your-email@example.com
+              benchmarkayi@gmail.com
             </p>
           </div>
 
           <div className="mb-6">
             <h2 className="text-xl font-semibold">💻 GitHub</h2>
             <p className="mt-2 text-gray-400">
-              https://github.com/your-github
+              https://github.com/KingBetterOP
             </p>
           </div>
 
           <div>
             <h2 className="text-xl font-semibold">🚀 Benchmark AI</h2>
             <p className="mt-2 text-gray-400">
-              AI-powered YouTube research platform built with Next.js and OpenAI.
+              AI-powered YouTube benchmarking platform for creators.
+Analyze competitors, discover viral ideas, and generate content strategies in seconds.
             </p>
           </div>
         </div>
