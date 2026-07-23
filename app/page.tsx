@@ -425,16 +425,15 @@ setRecommendedChannels(ai.recommendedChannels);
   })
 }
 onSaveProject={async () => {
-  alert("버튼 클릭됨");
   if (!user) {
     alert("로그인이 필요합니다.");
     return;
   }
 
-  if (!keyword) {
-    alert("먼저 검색을 해주세요.");
-    return;
-  }
+  if (!user) {
+  router.push("/sign-in");
+  return;
+}
 
   try {
   await saveProject({

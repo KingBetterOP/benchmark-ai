@@ -58,8 +58,12 @@ export default function SearchFilters({
       <button
         onClick={() =>
           runSearchWithNextState(() => {
-            setOrder("viewCount");
-          })
+  setOrder((prev) =>
+    prev === "viewCount"
+      ? "relevance"
+      : "viewCount"
+  );
+})
         }
         className={
           order === "viewCount"
@@ -67,7 +71,7 @@ export default function SearchFilters({
             : "rounded-lg border border-gray-700 px-4 py-2 hover:bg-zinc-800"
         }
       >
-        🔥 조회수순
+        🔥 조회수순 {order === "viewCount" ? "ON" : "OFF"}
       </button>
 
       <button
@@ -85,10 +89,7 @@ export default function SearchFilters({
 </button>
 
 <button
-  onClick={() => {
-    alert("SearchFilters 버튼");
-    onSaveProject();
-  }}
+  onClick={onSaveProject}
   className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 hover:bg-blue-700"
 >
   💾 프로젝트 저장
