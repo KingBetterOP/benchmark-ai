@@ -1,13 +1,24 @@
+import {
+  BenchmarkReport,
+  ContentIdea,
+  Strategy,
+  CompetitionAnalysis,
+  TitleSuggestion,
+} from "./types";
+
 export type SavedProject = {
   id: string;
   createdAt: number;
   keyword: string;
-  report: string;
-  idea: string;
-  strategy: string;
-  competition: string;
-  titles: string;
+
+  report: BenchmarkReport | null;
+  idea: ContentIdea[];
+  strategy: Strategy[];
+  competition: CompetitionAnalysis | null;
+  titles: TitleSuggestion[];
+
   recommendedChannels: string;
+
   chatMessages?: {
     role: "user" | "assistant";
     content: string;

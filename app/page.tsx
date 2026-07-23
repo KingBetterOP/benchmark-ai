@@ -17,7 +17,16 @@ import {
   formatDuration,
   calculateBenchmarkScore,
 } from "./lib/videoUtils";
-import { Video, Channel } from "./lib/types";
+import {
+  Video,
+  Channel,
+  BenchmarkReport,
+  ContentIdea,
+  Strategy,
+  CompetitionAnalysis,
+  TitleSuggestion,
+  ThumbnailPlan,
+} from "./lib/types";
 import { processVideos } from "./lib/processVideos";
 import {
   createBenchmarkPrompt,
@@ -37,10 +46,15 @@ import SearchFilters from "./components/SearchFilters";
 import ProjectList from "./components/ProjectList";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import AIResultCard from "./components/AIResultCard";
 import Dashboard from "./components/Dashboard";
 import BestVideoCard from "./components/BestVideoCard";
 import AIChat from "./components/AIChat";
+import BenchmarkReportCard from "./components/BenchmarkReportCard";
+import ContentIdeasCard from "./components/ContentIdeasCard";
+import GrowthStrategyCard from "./components/GrowthStrategyCard";
+import CompetitionCard from "./components/CompetitionCard";
+import TitleGeneratorCard from "./components/TitleGeneratorCard";
+import ThumbnailPlanCard from "./components/ThumbnailPlanCard";
 
 export default function Home() {
   const router = useRouter();
@@ -48,19 +62,35 @@ export default function Home() {
 
 
   const [keyword, setKeyword] = useState("");
-  const [results, setResults] = useState<Video[]>([]);
-  const [averageViews, setAverageViews] = useState(0);
-  const [report, setReport] = useState("");
-  const [idea, setIdea] = useState("");
-  const [strategy, setStrategy] = useState("");
-  const [competition, setCompetition] = useState("");
-  const [titles, setTitles] = useState("");
-  const [topVideos, setTopVideos] = useState<Video[]>([]);
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [thumbnailPrompt, setThumbnailPrompt] = useState("");
-  const [recommendedChannels, setRecommendedChannels] =
+const [results, setResults] = useState<Video[]>([]);
+const [averageViews, setAverageViews] = useState(0);
+
+const [report, setReport] =
+  useState<BenchmarkReport | null>(null);
+
+const [idea, setIdea] =
+  useState<ContentIdea[]>([]);
+
+const [strategy, setStrategy] =
+  useState<Strategy[]>([]);
+
+const [competition, setCompetition] =
+  useState<CompetitionAnalysis | null>(null);
+
+const [titles, setTitles] =
+  useState<TitleSuggestion[]>([]);
+
+const [topVideos, setTopVideos] = useState<Video[]>([]);
+
+const [channels, setChannels] = useState<Channel[]>([]);
+
+const [thumbnailPrompt, setThumbnailPrompt] =
+  useState<ThumbnailPlan[]>([]);
+
+const [recommendedChannels, setRecommendedChannels] =
   useState("");
-  const [loading, setLoading] = useState(false);
+
+const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState("");
   const [order, setOrder] = useState("relevance");
   const [excludeShorts, setExcludeShorts] = useState(false);
@@ -528,56 +558,34 @@ const updated = await getProjects();
 )}
       <ChannelAnalysis channels={channels} />
      <div className="mt-10 grid gap-6">
-  <AIResultCard
-    title="Benchmark Report"
-    icon="📊"
-    content={report}
-  />
+   <BenchmarkReportCard report={report} />
+<ContentIdeasCard content={idea} />
+<GrowthStrategyCard strategy={strategy} />
+<CompetitionCard competition={competition} />
+<TitleGeneratorCard titles={titles} />
+<ThumbnailPlanCard thumbnail={thumbnailPrompt} /> 
 
-  <AIResultCard
-    title="Content Ideas"
-    icon="💡"
-    content={idea}
-  />
+  
 
-  <AIResultCard
-    title="Content Strategy"
-    icon="🎯"
-    content={strategy}
-  />
+  
 
-  <AIResultCard
-    title="Competition Analysis"
-    icon="⚔️"
-    content={competition}
-  />
+  
 
-  <AIResultCard
-    title="Video Titles" 
-    icon="📝"
-    content={titles}
-  />
-
-  <AIResultCard
-    title="Recommended Channels"
-    icon="📺"
-    content={recommendedChannels}
-  />
+  
 </div>
 <AIChat
-  context={`
-${report}
-
-${idea}
-
-${strategy}
-
-${competition}
-
-${titles}
-
-${recommendedChannels}
-`}
+  context={JSON.stringify(
+  {
+    report,
+    idea,
+    strategy,
+    competition,
+    titles,
+    recommendedChannels,
+  },
+  null,
+  2
+)}
   messages={messages}
   setMessages={setMessages}
 />

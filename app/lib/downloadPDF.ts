@@ -1,12 +1,19 @@
 import jsPDF from "jspdf";
+import {
+  BenchmarkReport,
+  ContentIdea,
+  Strategy,
+  CompetitionAnalysis,
+  TitleSuggestion,
+} from "./types";
 
 type DownloadPDFOptions = {
   keyword: string;
-  report: string;
-  idea: string;
-  strategy: string;
-  competition: string;
-  titles: string;
+  report: BenchmarkReport | null;
+  idea: ContentIdea[];
+  strategy: Strategy[];
+  competition: CompetitionAnalysis | null;
+  titles: TitleSuggestion[];
   recommendedChannels: string;
 };
 
@@ -23,14 +30,19 @@ export function downloadPDF({
 
   let y = 20;
 
-  const addSection = (title: string, content: string) => {
+  const addSection = (title: string, content: unknown) => {
     doc.setFontSize(16);
     doc.text(title, 10, y);
     y += 8;
 
     doc.setFontSize(11);
 
-    const lines = doc.splitTextToSize(content || "-", 180);
+    const text =
+  typeof content === "string"
+    ? content
+    : JSON.stringify(content, null, 2);
+
+const lines = doc.splitTextToSize(text, 180);
 
     doc.text(lines, 10, y);
 

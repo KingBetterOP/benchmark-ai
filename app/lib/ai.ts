@@ -1,5 +1,14 @@
 import { askAI } from "./openai";
 
+function parseAIJson(text: string) {
+  const cleaned = text
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+
+  return JSON.parse(cleaned);
+}
+
 type AIRequest = {
   reportPrompt: string;
   ideaPrompt: string;
@@ -38,12 +47,12 @@ export async function generateAllAI({
   ]);
 
   return {
-    report,
-    idea,
-    strategy,
-    competition,
-    titles,
-    thumbnail,
+    report: parseAIJson(report),
+    idea: parseAIJson(idea),
+    strategy: parseAIJson(strategy),
+    competition: parseAIJson(competition),
+    titles: parseAIJson(titles),
+    thumbnail: parseAIJson(thumbnail),
     recommendedChannels,
   };
 }

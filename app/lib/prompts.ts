@@ -2,89 +2,118 @@ import type {
   Video,
   Channel,
 } from "./types";
+
 export function createBenchmarkPrompt(
   keyword: string,
   rankedVideos: Video[]
 ) {
   return `
-검색 키워드: ${keyword}
+You are Benchmark AI.
 
-상위 5개 영상:
+Analyze these YouTube videos.
+
+Keyword:
+${keyword}
+
+Videos:
 ${rankedVideos
   .map(
-    (v: Video) =>
-      `- ${v.snippet.title}
-조회수: ${v.statistics.viewCount}
-채널: ${v.snippet.channelTitle}`
+    (v) => `
+Title: ${v.snippet.title}
+Views: ${v.statistics.viewCount}
+Channel: ${v.snippet.channelTitle}
+`
   )
-  .join("\n\n")}
+  .join("\n")}
 
-이 영상들의 공통점을 분석하고
-왜 조회수가 높은지,
-썸네일, 제목, 주제, 업로드 전략을 분석해서
-한국어로 상세하게 설명해줘.
+Return ONLY valid JSON.
+
+{
+  "score": 0,
+  "overview": {
+    "avgViews": "",
+    "avgDuration": "",
+    "uploadFrequency": "",
+    "bestVideo": ""
+  },
+  "insights": [],
+  "actionPlan": [],
+  "analysis": ""
+}
+
+ONLY return JSON.
 `;
 }
 
 export function createIdeaPrompt(keyword: string) {
   return `
-검색 키워드: ${keyword}
+Keyword: ${keyword}
 
-상위 영상들을 참고해서
+Generate 10 YouTube content ideas.
 
-조회수가 잘 나올 만한
-유튜브 영상 아이디어를
+Return ONLY JSON.
 
-10개 만들어줘.
-
-각 아이디어는
-
-- 제목
-- 왜 잘 될지
-- 추천 썸네일
-
-까지 설명해줘.
+[
+  {
+    "title":"",
+    "expectedViews":"",
+    "difficulty":"",
+    "trendScore":95,
+    "reason":"",
+    "thumbnail":""
+  }
+]
 `;
 }
 
 export function createStrategyPrompt(keyword: string) {
   return `
-검색 키워드: ${keyword}
+Keyword: ${keyword}
 
-이 키워드에서 성공하기 위한 전략을 알려줘.
+Return ONLY JSON.
 
-포함할 내용
-- 업로드 주기
-- 영상 길이
-- 편집 스타일
-- 썸네일 전략
-- 제목 전략
-- 시청자 유지 전략
+[
+  {
+    "title":"",
+    "impact":90,
+    "difficulty":"Easy",
+    "description":""
+  }
+]
 `;
 }
 
 export function createCompetitionPrompt(keyword: string) {
   return `
-검색 키워드: ${keyword}
+Keyword: ${keyword}
 
-이 키워드의 경쟁도를 분석해줘.
+Return ONLY JSON.
 
-포함할 내용
-- 경쟁 강도
-- 진입 난이도
-- 성공 가능성
-- 추천 여부
+{
+  "competitionScore":80,
+  "difficulty":"Medium",
+  "successProbability":70,
+  "recommendation":"Good",
+  "strengths":[],
+  "weaknesses":[]
+}
 `;
 }
 
 export function createTitlePrompt(keyword: string) {
   return `
-검색 키워드: ${keyword}
+Keyword: ${keyword}
 
-클릭률이 높을 만한
-유튜브 제목을
+Return ONLY JSON.
 
-10개 만들어줘.
+[
+  {
+    "title":"",
+    "ctr":9,
+    "seo":90,
+    "emotion":90
+  }
+]
 `;
 }
 
@@ -93,31 +122,21 @@ export function createRecommendedChannelsPrompt(
   channels: Channel[]
 ) {
   return `
-검색 키워드: ${keyword}
+Keyword: ${keyword}
 
-아래 채널들을 분석해서
-
-가장 벤치마킹하기 좋은 채널 TOP3를 추천해줘.
+Recommend the best 3 channels.
 
 ${channels
   .map(
-    (channel: Channel) =>
-      `채널명: ${channel.name}
-구독자: ${channel.subscribers}
-영상 수: ${channel.videos}
-총 조회수: ${channel.views}`
+    (channel) => `
+Channel: ${channel.name}
+Subscribers: ${channel.subscribers}
+Videos: ${channel.videos}
+Views: ${channel.views}
+`
   )
-  .join("\n\n")}
+  .join("\n")}
 
-다음 형식으로 답변해.
-
-🥇 채널명
-이유:
-
-🥈 채널명
-이유:
-
-🥉 채널명
-이유:
+Return ONLY text.
 `;
 }
