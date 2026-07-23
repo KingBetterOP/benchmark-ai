@@ -17,6 +17,7 @@ type AIRequest = {
   titlePrompt: string;
   thumbnailPrompt: string;
   recommendedChannelsPrompt: string;
+  opportunityPrompt: string; 
 };
 
 export async function generateAllAI({
@@ -27,6 +28,7 @@ export async function generateAllAI({
   titlePrompt,
   thumbnailPrompt,
   recommendedChannelsPrompt,
+  opportunityPrompt, 
 }: AIRequest) {
   const [
     report,
@@ -36,6 +38,7 @@ export async function generateAllAI({
     titles,
     thumbnail,
     recommendedChannels,
+    opportunities, 
   ] = await Promise.all([
     askAI(reportPrompt),
     askAI(ideaPrompt),
@@ -44,6 +47,7 @@ export async function generateAllAI({
     askAI(titlePrompt),
     askAI(thumbnailPrompt),
     askAI(recommendedChannelsPrompt),
+    askAI(opportunityPrompt), 
   ]);
 
   return {
@@ -54,5 +58,6 @@ export async function generateAllAI({
     titles: parseAIJson(titles),
     thumbnail: parseAIJson(thumbnail),
     recommendedChannels,
+    opportunities: parseAIJson(opportunities), 
   };
 }

@@ -96,3 +96,10 @@ export interface ThumbnailPlan {
   color: string;
   reason: string;
 }
+export interface Opportunity {
+  keyword: string;
+  competition: string;
+  growth: string;
+  expectedViews: string;
+  reason: string;
+}

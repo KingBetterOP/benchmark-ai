@@ -140,3 +140,22 @@ Views: ${channel.views}
 Return ONLY text.
 `;
 }
+export function createOpportunityPrompt() {
+  return `
+You are a YouTube growth expert.
+
+Recommend the 5 best YouTube opportunities RIGHT NOW.
+
+Return ONLY valid JSON.
+
+[
+  {
+    "keyword":"...",
+    "competition":"Low",
+    "growth":"+180%",
+    "expectedViews":"250K",
+    "reason":"..."
+  }
+]
+`;
+}

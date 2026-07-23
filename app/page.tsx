@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { generateAllAI } from "./lib/ai";
-import { searchYoutube } from "./lib/search";
 import { downloadCSV } from "./lib/downloadCSV";
 import { downloadPDF } from "./lib/downloadPDF";
 import { useUser } from "@clerk/nextjs";
@@ -26,20 +24,10 @@ import {
   CompetitionAnalysis,
   TitleSuggestion,
   ThumbnailPlan,
+  Opportunity,
 } from "./lib/types";
-import { processVideos } from "./lib/processVideos";
-import {
-  createBenchmarkPrompt,
-  createIdeaPrompt,
-  createStrategyPrompt,
-  createCompetitionPrompt,
-  createTitlePrompt,
-  createRecommendedChannelsPrompt,
-} from "./lib/prompts";
 import SearchBar from "./components/SearchBar";
-import VideoCard from "./components/VideoCard";
 import TopVideos from "./components/TopVideos";
-import ThumbnailAnalysis from "./components/ThumbnailAnalysis";
 import ChannelAnalysis from "./components/ChannelAnalysis";
 import QuickStats from "./components/QuickStats";
 import SearchFilters from "./components/SearchFilters";
@@ -55,21 +43,46 @@ import GrowthStrategyCard from "./components/GrowthStrategyCard";
 import CompetitionCard from "./components/CompetitionCard";
 import TitleGeneratorCard from "./components/TitleGeneratorCard";
 import ThumbnailPlanCard from "./components/ThumbnailPlanCard";
+import AnalyticsCharts from "./components/AnalyticsCharts";
+import OpportunityFinder from "./components/OpportunityFinder";
+import LoadingProgress from "./components/LoadingProgress";
+import { executeBenchmarkSearch } from "./hooks/useSearch";
+import RecentSearches from "./components/RecentSearches";
+import VideoGrid from "./components/VideoGrid";
+import HeroSection from "./components/HeroSection";
+import PlanCard from "./components/PlanCard";
+import SearchSummary from "./components/SearchSummary";
+import AIResultsSection from "./components/AIResultsSection";
+import SearchSection from "./components/SearchSection";
+import AnalysisSection from "./components/AnalysisSection";
+import { validateSearch } from "./hooks/searchValidation";
+import { useBenchmarkState } from "./hooks/useBenchmarkState";
+import {
+  startLoading,
+  finishLoading,
+} from "./hooks/loadingState";
 
 export default function Home() {
   const router = useRouter();
  const { user, isLoaded, isSignedIn } = useUser();
 
 
-  const [keyword, setKeyword] = useState("");
-const [results, setResults] = useState<Video[]>([]);
-const [averageViews, setAverageViews] = useState(0);
+  const {
+  keyword,
+  setKeyword,
 
-const [report, setReport] =
-  useState<BenchmarkReport | null>(null);
+  results,
+  setResults,
 
-const [idea, setIdea] =
-  useState<ContentIdea[]>([]);
+  averageViews,
+  setAverageViews,
+
+  report,
+  setReport,
+
+  idea,
+  setIdea,
+} = useBenchmarkState();
 
 const [strategy, setStrategy] =
   useState<Strategy[]>([]);
@@ -86,12 +99,15 @@ const [channels, setChannels] = useState<Channel[]>([]);
 
 const [thumbnailPrompt, setThumbnailPrompt] =
   useState<ThumbnailPlan[]>([]);
+  const [opportunities, setOpportunities] =
+  useState<Opportunity[]>([]);
 
 const [recommendedChannels, setRecommendedChannels] =
   useState("");
 
 const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState("");
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [order, setOrder] = useState("relevance");
   const [excludeShorts, setExcludeShorts] = useState(false);
   const [min10Minutes, setMin10Minutes] = useState(false);
@@ -137,113 +153,121 @@ useEffect(() => {
 
   loadUser();
 }, [user]);
-  const handleSearch = async (
+const updateSearchHistory = (searchKeyword: string) => {
+  setSearchHistory((prev) => {
+    const history = [
+      searchKeyword,
+      ...prev.filter((item) => item !== searchKeyword),
+    ].slice(0, 10);
+
+    localStorage.setItem(
+      "searchHistory",
+      JSON.stringify(history)
+    );
+
+    return history;
+  });
+};
+
+const refreshUsage = async () => {
+  await fetch("/api/usage", {
+    method: "POST",
+  });
+
+  const usageRes = await fetch("/api/me");
+  const usageData = await usageRes.json();
+
+  setPlan(usageData.plan);
+  setDailyUsage(usageData.dailyUsage);
+};
+const applyProcessedResults = (processed: {
+  averageViews: number;
+  results: Video[];
+  topVideos: Video[];
+  channels: Channel[];
+}) => {
+  setAverageViews(processed.averageViews);
+  setResults(processed.results);
+  setTopVideos(processed.topVideos);
+  setChannels(processed.channels);
+};
+const applyAIResults = (ai: {
+  report: BenchmarkReport | null;
+  idea: ContentIdea[];
+  strategy: Strategy[];
+  competition: CompetitionAnalysis | null;
+  titles: TitleSuggestion[];
+  thumbnail: ThumbnailPlan[];
+  recommendedChannels: string;
+  opportunities: Opportunity[];
+}) => {
+  setReport(ai.report);
+  setIdea(ai.idea);
+  setStrategy(ai.strategy);
+  setCompetition(ai.competition);
+  setTitles(ai.titles);
+  setThumbnailPrompt(ai.thumbnail);
+  setRecommendedChannels(ai.recommendedChannels);
+  setOpportunities(ai.opportunities);
+};
+const applySearchResults = async (
+  processed: {
+    averageViews: number;
+    results: Video[];
+    topVideos: Video[];
+    channels: Channel[];
+  },
+  ai: {
+    report: BenchmarkReport | null;
+    idea: ContentIdea[];
+    strategy: Strategy[];
+    competition: CompetitionAnalysis | null;
+    titles: TitleSuggestion[];
+    thumbnail: ThumbnailPlan[];
+    recommendedChannels: string;
+    opportunities: Opportunity[];
+  }
+) => {
+  applyProcessedResults(processed);
+
+  await refreshUsage();
+
+  applyAIResults(ai);
+};
+const handleSearch = async (
   searchOrder = order,
   searchKeyword = keyword
 ) => {
-   if (!searchKeyword.trim()) return;
-   if (!user) {
-  alert("🔒 AI 분석을 이용하려면 로그인해주세요.");
-  router.push("/sign-in");
-  return;
-}
-   try {
-    setLoading(true);
-    setMessages([]);
-setLoadingStep("🔍 YouTube 검색 중...");
-setSearchHistory((prev) => {
-  const history = [
-  searchKeyword,
-  ...prev.filter((item) => item !== searchKeyword),
-].slice(0, 10);
+  const canSearch = validateSearch({
+    keyword: searchKeyword,
+    user,
+    router,
+  });
 
-  localStorage.setItem(
-    "searchHistory",
-    JSON.stringify(history)
-  );
+  if (!canSearch) return;
 
-  return history;
+  try {
+    startLoading({
+  setLoading,
+  setLoadingStep,
+  setLoadingProgress,
 });
+
+setMessages([]);
+updateSearchHistory(searchKeyword);
 setLoadingStep("🔍 YouTube 데이터를 가져오는 중...");
-const data = await searchYoutube({
-  keyword: searchKeyword,
-  order: searchOrder,
-  last30Days,
-});
+const { processed, ai } =
+  await executeBenchmarkSearch({
+    keyword: searchKeyword,
+    order: searchOrder,
+    excludeShorts,
+    min10Minutes,
+    last30Days,
+    onStep: setLoadingStep,
+    onProgress: setLoadingProgress,
+  });
 
-
-
-if (!data.items) {
-  throw new Error("YouTube API 응답 오류");
-}
-
-
-setLoadingStep("📊 검색 결과 분석 중...");
-const processed = processVideos(
-  data.items || [],
-  excludeShorts,
-  min10Minutes
-);
-
-
-
-setAverageViews(processed.averageViews);
-setResults(processed.results);
-setTopVideos(processed.topVideos);
-setChannels(processed.channels);
-
-const prompt = createBenchmarkPrompt(
-  searchKeyword,
-  processed.topVideos
-);
-
-const ideaPrompt =
-  createIdeaPrompt(searchKeyword);
-
-const strategyPrompt =
-  createStrategyPrompt(searchKeyword);
-
-const competitionPrompt =
-  createCompetitionPrompt(searchKeyword);
-
-const titlePrompt =
-  createTitlePrompt(searchKeyword);
-
-const recommendedChannelsPrompt =
-  createRecommendedChannelsPrompt(
-  searchKeyword,
-  processed.channels
-);
-setLoadingStep("🤖 AI가 분석 중...");
-
-const ai = await generateAllAI({
-  reportPrompt: prompt,
-  ideaPrompt,
-  strategyPrompt,
-  competitionPrompt,
-  titlePrompt,
-  thumbnailPrompt: searchKeyword,
-  recommendedChannelsPrompt,
-});
-
-
-await fetch("/api/usage", {
-  method: "POST",
-});
-const usageRes = await fetch("/api/me");
-const usageData = await usageRes.json();
-
-setPlan(usageData.plan);
-setDailyUsage(usageData.dailyUsage);
-
-setLoadingStep("✅ 결과를 정리하는 중...");
-setReport(ai.report);
-setIdea(ai.idea);
-setStrategy(ai.strategy);
-setCompetition(ai.competition);
-setTitles(ai.titles);
-setThumbnailPrompt(ai.thumbnail);
-setRecommendedChannels(ai.recommendedChannels);
+await applySearchResults(processed, ai);
 } catch (error) {
   console.error(error);
 
@@ -257,8 +281,10 @@ setRecommendedChannels(ai.recommendedChannels);
 
   alert("❌ 분석 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.");
 } finally {
-  setLoading(false);
-  setLoadingStep("");
+  finishLoading({
+    setLoading,
+    setLoadingStep,
+  });
 }
 
 
@@ -273,119 +299,116 @@ setRecommendedChannels(ai.recommendedChannels);
     handleSearch(order, keyword);
   }, 0);
 };
+const reloadProjects = async () => {
+  const updated = await getProjects();
+  setProjects(updated);
+};
+const handleSaveProject = async () => {
+  if (!user) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
 
+  try {
+    const projectData = {
+  createdAt: Date.now(),
+  keyword,
+  report,
+  idea,
+  strategy,
+  competition,
+  titles,
+  recommendedChannels,
+  chatMessages: messages,
+};
+
+await saveProject(projectData);
+
+    await reloadProjects();
+
+    alert("프로젝트가 저장되었습니다.");
+  } catch (error) {
+    console.error(error);
+    alert("저장 실패");
+  }
+};
+const handleLoadProject = (project: SavedProject) => {
+  setKeyword(project.keyword);
+  setReport(project.report);
+  setIdea(project.idea);
+  setStrategy(project.strategy);
+  setCompetition(project.competition);
+  setTitles(project.titles);
+  setRecommendedChannels(project.recommendedChannels);
+  setMessages(project.chatMessages ?? []);
+};
+const handleDeleteProject = async (id: string) => {
+  if (!user) return;
+
+  await deleteProject(id);
+
+  await reloadProjects();
+};
+const aiContext = useMemo(
+  () =>
+    JSON.stringify(
+      {
+        report,
+        idea,
+        strategy,
+        competition,
+        titles,
+        recommendedChannels,
+      },
+      null,
+      2
+    ),
+  [
+    report,
+    idea,
+    strategy,
+    competition,
+    titles,
+    recommendedChannels,
+  ]
+);
   return (
     <>
     <Navbar />
-    <main className="min-h-screen bg-black text-white p-4 md:p-10">
-      <h1 className="text-center text-5xl font-extrabold md:text-7xl">
-  🚀 Benchmark AI
-</h1>
+    <main className="min-h-screen bg-gradient-to-b from-[#09090B] via-[#111827] to-[#09090B] text-white p-4 md:p-10">
+      <LoadingProgress
+  loading={loading}
+  loadingProgress={loadingProgress}
+  loadingStep={loadingStep}
+/>
+<HeroSection
+  onStart={() => handleSearch()}
+/>      
+<OpportunityFinder
+  opportunities={opportunities}
+  onSelect={(keyword) => {
+    setKeyword(keyword);
+    handleSearch(order, keyword);
+  }}
+  onRefresh={() => {
+    handleSearch(order, keyword);
+  }}
+/>
+  
+ <PlanCard
+  plan={plan}
+  dailyUsage={dailyUsage}
+/>
 
-<p className="mt-6 text-center text-xl text-gray-300">
-  Find Viral YouTube Ideas in Seconds.
-</p>
-
-<p className="mx-auto mt-4 max-w-3xl text-center text-gray-500">
-  AI가 YouTube 경쟁 채널을 분석하고,
-  콘텐츠 아이디어, 제목, 썸네일 전략,
-  경쟁 분석 리포트를 몇 초 만에 생성합니다.
-</p>
-
-<div className="mt-8 flex flex-wrap justify-center gap-3">
-  <div className="rounded-full border border-zinc-700 px-4 py-2">
-    🤖 AI Analysis
-  </div>
-
-  <div className="rounded-full border border-zinc-700 px-4 py-2">
-    📈 Competitor Research
-  </div>
-
-  <div className="rounded-full border border-zinc-700 px-4 py-2">
-    💡 Content Ideas
-  </div>
-
-  <div className="rounded-full border border-zinc-700 px-4 py-2">
-    📄 PDF Export
-  </div>
-</div>
- <div className="mx-auto mt-6 max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-5 text-center">
-  {plan === "pro" ? (
-    <>
-      <div className="text-2xl font-bold text-yellow-400">
-        💎 PRO
-      </div>
-
-      <p className="mt-2 text-gray-300">
-        Unlimited AI Analysis
-      </p>
-    </>
-  ) : (
-    <>
-      <div className="text-2xl font-bold">
-        ⭐ FREE PLAN
-      </div>
-
-      <p className="mt-2 text-gray-300">
-        {dailyUsage} / 3 analyses used today
-      </p>
-
-      <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-700">
-        <div
-          className="h-full rounded-full bg-blue-500 transition-all"
-          style={{
-            width: `${Math.min(
-              (dailyUsage / 3) * 100,
-              100
-            )}%`,
-          }}
-        />
-      </div>
-
-      <p className="mt-2 text-sm text-gray-500">
-        {Math.max(3 - dailyUsage, 0)} analyses remaining
-      </p>
-    </>
-  )}
-</div>     
-{loading && (
-  <div className="mt-8 rounded-xl border border-blue-500 bg-zinc-900 p-6 text-center">
-    <div className="text-2xl font-bold animate-pulse">
-      {loadingStep}
-    </div>
-
-    <p className="mt-3 text-gray-400">
-      잠시만 기다려주세요. AI가 벤치마킹 데이터를 분석하고 있습니다.
-    </p>
-  </div>
-)}
-<div className="mx-auto mt-10 mb-6 max-w-4xl rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-lg">
-  <h2 className="text-center text-2xl font-bold">
-    🔍 Start Your AI Benchmark
-  </h2>
-
-  <p className="mt-2 text-center text-gray-400">
-    검색어 하나만 입력하면 AI가 YouTube 시장을 분석합니다.
-  </p>
-</div>
-      <SearchBar
+<SearchSection
   keyword={keyword}
   setKeyword={setKeyword}
   order={order}
   setOrder={setOrder}
   onSearch={() => handleSearch()}
   loading={loading}
-/>
-<Dashboard
-  keyword={keyword}
   averageViews={averageViews}
-  videoCount={results.length}
-  videos={results}
-/>
-<QuickStats
   results={results}
-  averageViews={averageViews}
-  loading={loading}
   report={report}
   idea={idea}
   strategy={strategy}
@@ -393,40 +416,14 @@ setRecommendedChannels(ai.recommendedChannels);
   titles={titles}
   topVideos={topVideos}
   thumbnailPrompt={thumbnailPrompt}
+  history={searchHistory}
+  onHistorySelect={(item) => {
+    setKeyword(item);
+    handleSearch(order, item);
+  }}
   calculateBenchmarkScore={calculateBenchmarkScore}
   formatDuration={formatDuration}
 />
-{results.length > 0 && !loading && (
-  <div className="mt-6 rounded-xl border border-zinc-700 bg-zinc-900 p-4">
-    <div className="flex flex-wrap gap-6 text-sm">
-      <span>🔎 <strong>{keyword}</strong></span>
-      <span>🎥 {results.length}개 영상 분석</span>
-      <span>👀 평균 조회수 {averageViews.toLocaleString()}</span>
-    </div>
-  </div>
-)}
-{searchHistory.length > 0 && (
-  <div className="mt-6">
-    <h2 className="mb-3 text-xl font-bold">
-      🕒 최근 검색
-    </h2>
-
-    <div className="flex flex-wrap gap-2">
-      {searchHistory.map((item) => (
-        <button
-          key={item}
-         onClick={() => {
-  setKeyword(item);
-  handleSearch(order, item);
-}}
-          className="rounded-lg border border-gray-700 px-3 py-2 hover:bg-zinc-800"
-        >
-          {item}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
       <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
        <SearchFilters
   min10Minutes={min10Minutes}
@@ -454,138 +451,34 @@ setRecommendedChannels(ai.recommendedChannels);
     recommendedChannels,
   })
 }
-onSaveProject={async () => {
-  if (!user) {
-    alert("로그인이 필요합니다.");
-    return;
-  }
-
-  if (!user) {
-  router.push("/sign-in");
-  return;
-}
-
-  try {
-  await saveProject({
-  createdAt: Date.now(),
-  keyword,
-  report,
-  idea,
-  strategy,
-  competition,
-  titles,
-  recommendedChannels,
-  chatMessages: messages,
-});
-
-  const updated = await getProjects();
-  
-  setProjects(updated);
-  alert("프로젝트가 저장되었습니다.");
-} catch (error) {
-  console.error(error);
-  alert("저장 실패");
-}
-}}
+onSaveProject={handleSaveProject}
 />
 
       </div>
       <ProjectList
   projects={projects}
-  onLoad={(project) => {
-    setKeyword(project.keyword);
-    setReport(project.report);
-    setIdea(project.idea);
-    setStrategy(project.strategy);
-    setCompetition(project.competition);
-    setTitles(project.titles);
-    setRecommendedChannels(project.recommendedChannels);
-    setMessages(project.chatMessages ?? []);
-  }}
-  onDelete={async (id) => {
-  if (!user) return;
-
-  await deleteProject(id);
-
-const updated = await getProjects();
-  setProjects(updated);
-}}
+  onLoad={handleLoadProject}
+  onDelete={handleDeleteProject}
 />
-{topVideos.length > 0 && (
-  <>
-  <TopVideos
-    topVideos={topVideos}
-    calculateBenchmarkScore={calculateBenchmarkScore}
-    formatDuration={formatDuration}
-  />
-  <BestVideoCard
-  video={topVideos[0]}
+<AnalysisSection
+  topVideos={topVideos}
+  results={results}
+  channels={channels}
+  keyword={keyword}
+  loading={loading}
+  calculateBenchmarkScore={calculateBenchmarkScore}
+  formatDuration={formatDuration}
 />
-</>
-)}
 
-<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
-  {results.map((video) => (
-    <div key={video.id}>
-      <VideoCard
-        video={video}
-        score={calculateBenchmarkScore(video)}
-      />
 
-      <ThumbnailAnalysis
-        thumbnail={video.snippet.thumbnails.high.url}
-      />
-    </div>
-  ))}
-</div>
-{!loading && keyword && results.length === 0 && (
-  <div className="mt-8 rounded-xl border border-yellow-500 bg-zinc-900 p-8 text-center">
-    <h2 className="text-2xl font-bold">
-      😥 검색 결과가 없습니다.
-    </h2>
-
-    <p className="mt-4 text-gray-400">
-      아래 방법을 시도해 보세요.
-    </p>
-
-    <ul className="mt-6 space-y-2 text-left inline-block">
-      <li>✔ 다른 키워드로 검색하기</li>
-      <li>✔ &quot;10분 이상&quot; 필터 끄기</li>
-<li>✔ &quot;최근 30일&quot; 필터 끄기</li>
-      <li>✔ Shorts 제외 옵션 확인하기</li>
-    </ul>
-  </div>
-)}
-      <ChannelAnalysis channels={channels} />
-     <div className="mt-10 grid gap-6">
-   <BenchmarkReportCard report={report} />
-<ContentIdeasCard content={idea} />
-<GrowthStrategyCard strategy={strategy} />
-<CompetitionCard competition={competition} />
-<TitleGeneratorCard titles={titles} />
-<ThumbnailPlanCard thumbnail={thumbnailPrompt} /> 
-
-  
-
-  
-
-  
-
-  
-</div>
-<AIChat
-  context={JSON.stringify(
-  {
-    report,
-    idea,
-    strategy,
-    competition,
-    titles,
-    recommendedChannels,
-  },
-  null,
-  2
-)}
+     <AIResultsSection
+  report={report}
+  idea={idea}
+  strategy={strategy}
+  competition={competition}
+  titles={titles}
+  thumbnailPrompt={thumbnailPrompt}
+  aiContext={aiContext}
   messages={messages}
   setMessages={setMessages}
 />
