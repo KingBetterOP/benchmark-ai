@@ -62,9 +62,10 @@ export default function CompetitionCard({
           </h3>
 
           <ul className="space-y-2">
-            {competition.strengths.map((item, index) => (
-              <li key={index}>• {item}</li>
-            ))}
+            {Array.isArray(competition.strengths) &&
+  competition.strengths.map((item, index) => (
+    <li key={index}>• {item}</li>
+))}
           </ul>
         </div>
 
@@ -74,9 +75,10 @@ export default function CompetitionCard({
           </h3>
 
           <ul className="space-y-2">
-            {competition.weaknesses.map((item, index) => (
-              <li key={index}>• {item}</li>
-            ))}
+            {Array.isArray(competition.weaknesses) &&
+  competition.weaknesses.map((item, index) => (
+    <li key={index}>• {item}</li>
+))}
           </ul>
         </div>
       </div>

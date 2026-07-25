@@ -55,16 +55,13 @@ if (userData.plan === "free" && userData.dailyUsage >= 3) {
     const response = await openai.chat.completions.create({
   model: "gpt-4.1-mini",
   messages: [
-  {
-    role: "system",
-    content:
-      "Return ONLY valid JSON. Do not use markdown, do not wrap the JSON in ```json fences, and do not include any explanation.",
-  },
+  
   {
     role: "user",
     content: prompt,
   },
 ],
+
 });
 
 
