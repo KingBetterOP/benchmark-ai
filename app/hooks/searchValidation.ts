@@ -8,8 +8,8 @@ type ValidateSearchParams = {
 
 
 export function validateSearch({
-  keyword,
-  user,
+  keyword, 
+  user, 
   router,
 }: ValidateSearchParams) {
   if (!keyword.trim()) {
