@@ -1,12 +1,25 @@
 import { askAI } from "./openai";
 
 function parseAIJson(text: string) {
+  console.log("===== RAW AI RESPONSE =====");
+  console.log(text);
+
   const cleaned = text
     .replace(/```json/g, "")
     .replace(/```/g, "")
     .trim();
 
-  return JSON.parse(cleaned);
+  console.log("===== CLEANED =====");
+  console.log(cleaned);
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
+    console.error("❌ JSON PARSE FAILED");
+    console.error(cleaned);
+
+    throw e;
+  }
 }
 
 type AIRequest = {
@@ -17,7 +30,7 @@ type AIRequest = {
   titlePrompt: string;
   thumbnailPrompt: string;
   recommendedChannelsPrompt: string;
-  opportunityPrompt: string; 
+  opportunityPrompt: string;
 };
 
 export async function generateAllAI({
@@ -28,8 +41,32 @@ export async function generateAllAI({
   titlePrompt,
   thumbnailPrompt,
   recommendedChannelsPrompt,
-  opportunityPrompt, 
+  opportunityPrompt,
 }: AIRequest) {
+  console.log("🚨 generateAllAI START");
+  console.log("REPORT PROMPT");
+console.log(reportPrompt);
+
+console.log("IDEA PROMPT");
+console.log(ideaPrompt);
+
+console.log("STRATEGY PROMPT");
+console.log(strategyPrompt);
+
+console.log("COMPETITION PROMPT");
+console.log(competitionPrompt);
+
+console.log("TITLE PROMPT");
+console.log(titlePrompt);
+
+console.log("THUMBNAIL PROMPT");
+console.log(thumbnailPrompt);
+
+console.log("RECOMMENDED CHANNELS PROMPT");
+console.log(recommendedChannelsPrompt);
+
+console.log("OPPORTUNITY PROMPT");
+console.log(opportunityPrompt);
   const [
     report,
     idea,
@@ -38,7 +75,7 @@ export async function generateAllAI({
     titles,
     thumbnail,
     recommendedChannels,
-    opportunities, 
+    opportunities,
   ] = await Promise.all([
     askAI(reportPrompt),
     askAI(ideaPrompt),
@@ -47,17 +84,28 @@ export async function generateAllAI({
     askAI(titlePrompt),
     askAI(thumbnailPrompt),
     askAI(recommendedChannelsPrompt),
-    askAI(opportunityPrompt), 
+    askAI(opportunityPrompt),
   ]);
 
+  console.log("========== AI RESPONSES ==========");
+  console.log("REPORT:", report);
+  console.log("IDEA:", idea);
+  console.log("STRATEGY:", strategy);
+  console.log("COMPETITION:", competition);
+  console.log("TITLES:", titles);
+  console.log("THUMBNAIL:", thumbnail);
+  console.log("RECOMMENDED:", recommendedChannels);
+  console.log("OPPORTUNITIES:", opportunities);
+  console.log("==================================");
+
   return {
-    report: parseAIJson(report),
-    idea: parseAIJson(idea),
-    strategy: parseAIJson(strategy),
-    competition: parseAIJson(competition),
-    titles: parseAIJson(titles),
-    thumbnail: parseAIJson(thumbnail),
-    recommendedChannels,
-    opportunities: parseAIJson(opportunities), 
-  };
+  report: parseAIJson(report),
+  idea: parseAIJson(idea),
+  strategy: parseAIJson(strategy),
+  competition: parseAIJson(competition),
+  titles: parseAIJson(titles),
+  thumbnail: parseAIJson(thumbnail),
+  recommendedChannels,
+  opportunities: parseAIJson(opportunities),
+};
 }

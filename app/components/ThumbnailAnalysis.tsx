@@ -36,17 +36,24 @@ export default function ThumbnailAnalysis({
   }),
 });
 
+console.log(response.status);
+console.log(response.url);
+
 if (!response.ok) {
   throw new Error(`Vision API failed (${response.status})`);
 }
 
-const data = await response.json();
+const text = await response.text();
+
+console.log("VISION RESPONSE");
+console.log(text);
+
+const data = JSON.parse(text);
 
 setAnalysis(data);
 setScore(data.score);
 
-setAnalysis(data);
-setScore(data.score);
+
       } catch (e) {
   console.error("Vision Error:", e);
   setAnalysis(null);

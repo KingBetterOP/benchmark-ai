@@ -54,11 +54,11 @@ export default function AIResultsSection({
     <>
       <div className="mt-10 grid gap-6">
         <BenchmarkReportCard report={report} />
-        <ContentIdeasCard content={idea} />
-        <GrowthStrategyCard strategy={strategy} />
-        <CompetitionCard competition={competition} />
-        <TitleGeneratorCard titles={titles} />
-        <ThumbnailPlanCard thumbnail={thumbnailPrompt} />
+        {/* <ContentIdeasCard content={idea} /> */}
+{/* <GrowthStrategyCard strategy={strategy} /> */}
+{/* <CompetitionCard competition={competition} /> */}
+{/* <TitleGeneratorCard titles={titles} /> */}
+{/* <ThumbnailPlanCard thumbnail={thumbnailPrompt} /> */}
       </div>
 
       <AIChat

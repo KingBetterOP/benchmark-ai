@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useSearchHistory() {
   const [searchHistory, setSearchHistory] =
-    useState<string[]>(() => {
-      if (typeof window === "undefined") return [];
+    useState<string[]>([]);
 
-      const saved =
-        localStorage.getItem("searchHistory");
+  useEffect(() => {
+    const saved = localStorage.getItem("searchHistory");
 
-      return saved ? JSON.parse(saved) : [];
-    });
+    if (saved) {
+      setSearchHistory(JSON.parse(saved));
+    }
+  }, []);
 
   const updateSearchHistory = (
     keyword: string

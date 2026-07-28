@@ -113,13 +113,14 @@ const [loading, setLoading] = useState(false);
   const [min10Minutes, setMin10Minutes] = useState(false);
   const [last30Days, setLast30Days] = useState(false);
 const [searchHistory, setSearchHistory] =
-  useState<string[]>(() => {
-    if (typeof window === "undefined") return [];
+  useState<string[]>([]);
+  useEffect(() => {
+  const saved = localStorage.getItem("searchHistory");
 
-    const saved = localStorage.getItem("searchHistory");
-
-    return saved ? JSON.parse(saved) : [];
-  });
+  if (saved) {
+    setSearchHistory(JSON.parse(saved));
+  }
+}, []);
 const [projects, setProjects] = useState<SavedProject[]>([]);
 const [messages, setMessages] = useState<
   {

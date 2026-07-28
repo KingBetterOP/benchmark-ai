@@ -10,6 +10,7 @@ import {
   createTitlePrompt,
   createRecommendedChannelsPrompt,
   createOpportunityPrompt,
+  createThumbnailPrompt,
 } from "./prompts";
 
 type Params = {
@@ -84,6 +85,9 @@ export async function benchmarkService({
   const opportunityPrompt =
     createOpportunityPrompt();
 
+    const thumbnailPrompt =
+  createThumbnailPrompt(keyword);
+
   onStep?.("🤖 AI 분석 중...");
   onProgress?.(60);
 
@@ -100,7 +104,7 @@ export async function benchmarkService({
 
       titlePrompt,
 
-      thumbnailPrompt: keyword,
+      thumbnailPrompt,
 
       recommendedChannelsPrompt,
 

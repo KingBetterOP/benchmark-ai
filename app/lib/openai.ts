@@ -1,4 +1,7 @@
 export async function askAI(prompt: string) {
+  console.log("===== ASK AI =====");
+  console.log(prompt);
+
   const response = await fetch("/api/analyze", {
     method: "POST",
     headers: {
@@ -9,22 +12,24 @@ export async function askAI(prompt: string) {
     }),
   });
 
- if (!response.ok) {
-  const error = await response.json();
+  if (!response.ok) {
+    const error = await response.json();
 
-  console.log("API ERROR:", error);
+    console.log("API ERROR:", error);
 
-  if (response.status === 403 && error.upgrade) {
-    throw new Error("UPGRADE_REQUIRED");
+    if (response.status === 403 && error.upgrade) {
+      throw new Error("UPGRADE_REQUIRED");
+    }
+
+    throw new Error(
+      error.detail || error.error || "AI 요청 실패"
+    );
   }
-
-  throw new Error(
-    error.detail || error.error || "AI 요청 실패"
-  );
-}
 
   const data = await response.json();
 
+  console.log("===== AI RESULT =====");
+  console.log(data.result);
+
   return data.result;
 }
-

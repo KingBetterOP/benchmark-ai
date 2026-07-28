@@ -159,3 +159,21 @@ Return ONLY valid JSON.
 ]
 `;
 }
+export function createThumbnailPrompt(keyword: string) {
+  return `
+Keyword: ${keyword}
+
+Generate 5 YouTube thumbnail ideas.
+
+Return ONLY JSON.
+
+[
+  {
+    "title":"",
+    "visual":"",
+    "emotion":"",
+    "colors":""
+  }
+]
+`;
+}

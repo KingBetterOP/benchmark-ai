@@ -9,76 +9,80 @@ const openai = new OpenAI({
 });
 
 export async function POST(request: NextRequest) {
+  console.log("🔥 /api/analyze called");
+
   const { userId } = await auth();
 
-if (!userId) {
-  return NextResponse.json(
-    { error: "Unauthorized" },
-    { status: 401 }
-  );
-}
-const userRef = adminDb.collection("users").doc(userId);
-const userSnap = await userRef.get();
+  if (!userId) {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
 
-if (!userSnap.exists) {
-  await userRef.set({
-  plan: "free",
-  dailyUsage: 0,
-  lastReset: new Date().toISOString().split("T")[0],
-  createdAt: FieldValue.serverTimestamp(),
-});
-}
+  const userRef = adminDb.collection("users").doc(userId);
+  const userSnap = await userRef.get();
 
-const userData = (await userRef.get()).data()!;
-const today = new Date().toISOString().split("T")[0];
+  if (!userSnap.exists) {
+    await userRef.set({
+      plan: "free",
+      dailyUsage: 0,
+      lastReset: new Date().toISOString().split("T")[0],
+      createdAt: FieldValue.serverTimestamp(),
+    });
+  }
 
-if (userData.lastReset !== today) {
-  await userRef.update({
-    dailyUsage: 0,
-    lastReset: today,
-  });
+  const userData = (await userRef.get()).data()!;
+  const today = new Date().toISOString().split("T")[0];
 
-  userData.dailyUsage = 0;
-}
-if (userData.plan === "free" && userData.dailyUsage >= 3) {
-  return NextResponse.json(
-    {
-      error: "Daily limit reached",
-      upgrade: true,
-    },
-    { status: 403 }
-  );
-}
+  if (userData.lastReset !== today) {
+    await userRef.update({
+      dailyUsage: 0,
+      lastReset: today,
+    });
+
+    userData.dailyUsage = 0;
+  }
+
+  if (userData.plan === "free" && userData.dailyUsage >= 3) {
+    return NextResponse.json(
+      {
+        error: "Daily limit reached",
+        upgrade: true,
+      },
+      { status: 403 }
+    );
+  }
+
   try {
     const { prompt } = await request.json();
+    console.log("========== PROMPT ==========");
+console.log(prompt);
+console.log("============================");
 
     const response = await openai.chat.completions.create({
-  model: "gpt-4.1-mini",
-  messages: [
-  
-  {
-    role: "user",
-    content: prompt,
-  },
-],
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
 
-});
-
-
-
-return NextResponse.json({
-  result: response.choices[0].message.content,
-});
+    return NextResponse.json({
+      result: response.choices[0].message.content,
+    });
   } catch (error) {
     console.error("OPENAI ERROR");
-console.error(error);
+    console.error(error);
 
     return NextResponse.json(
-  {
-    error: "AI 분석 실패",
-    detail: String(error),
-  },
-  { status: 500 }
-);
+      {
+        error: "AI 분석 실패",
+        detail: String(error),
+      },
+      { status: 500 }
+    );
   }
 }
