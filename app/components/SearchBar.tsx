@@ -5,10 +5,18 @@ import { Search, Sparkles } from "lucide-react";
 type SearchBarProps = {
   keyword: string;
   setKeyword: (value: string) => void;
+
   order: string;
   setOrder: (value: string) => void;
-  onSearch: () => void;
+
   loading: boolean;
+  onSearch: () => void;
+
+  min10Minutes: boolean;
+  setMin10Minutes: (value: boolean) => void;
+
+  last30Days: boolean;
+  setLast30Days: (value: boolean) => void;
 };
 
 export default function SearchBar({
@@ -18,6 +26,10 @@ export default function SearchBar({
   setOrder,
   onSearch,
   loading,
+  min10Minutes,
+  setMin10Minutes,
+  last30Days,
+  setLast30Days,
 }: SearchBarProps) {
   return (
     <section className="mx-auto mt-12 max-w-6xl">

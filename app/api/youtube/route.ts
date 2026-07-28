@@ -69,28 +69,60 @@ if (last30Days) {
   const searchResponse = await fetch(searchUrl);
 const searchData = await searchResponse.json();
 
-
-
-
 if (!searchData.items || searchData.items.length === 0) {
   return NextResponse.json({
     items: [],
   });
 }
 
-  const ids = searchData.items
-  .map((item: SearchItem) => item.id.videoId)
-  .join(",");
+let allItems = [...searchData.items];
 
-  // 2. 상세정보 가져오기
+if (searchData.nextPageToken) {
+  const secondSearchUrl =
+    `https://www.googleapis.com/youtube/v3/search` +
+    `?part=snippet` +
+    `&maxResults=50` +
+    `&order=${order}` +
+    `&q=${encodeURIComponent(keyword)}` +
+    `&type=video` +
+    `${publishedAfter}` +
+    `&pageToken=${searchData.nextPageToken}` +
+    `&key=${apiKey}`;
+
+  const secondResponse = await fetch(secondSearchUrl);
+  const secondData = await secondResponse.json();
+
+  if (secondData.items) {
+    allItems.push(...secondData.items);
+  }
+}
+
+  const videoIds = allItems.map(
+  (item: SearchItem) => item.id.videoId
+);
+
+let videoItems: VideoApiItem[] = [];
+
+for (let i = 0; i < videoIds.length; i += 50) {
+  const ids = videoIds.slice(i, i + 50).join(",");
+
   const videoUrl =
     `https://www.googleapis.com/youtube/v3/videos` +
     `?part=snippet,statistics,contentDetails` +
     `&id=${ids}` +
     `&key=${apiKey}`;
 
-  const videoResponse = await fetch(videoUrl);
-  const videoData = await videoResponse.json();
+  const response = await fetch(videoUrl);
+  const data = await response.json();
+
+  if (data.items) {
+    videoItems.push(...data.items);
+  }
+}
+
+const videoData = {
+  items: videoItems,
+};
   if (!videoData.items) {
   return NextResponse.json({
     items: [],

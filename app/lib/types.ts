@@ -4,8 +4,10 @@ export interface Thumbnail {
 
 export interface VideoSnippet {
   title: string;
+  description: string;
   channelTitle: string;
   publishedAt: string;
+  channelId: string;
   thumbnails: {
     high: Thumbnail;
   };

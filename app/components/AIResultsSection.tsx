@@ -7,6 +7,7 @@ import CompetitionCard from "./CompetitionCard";
 import TitleGeneratorCard from "./TitleGeneratorCard";
 import ThumbnailPlanCard from "./ThumbnailPlanCard";
 import AIChat from "./AIChat";
+import Accordion from "./Accordion";
 
 import {
   BenchmarkReport,
@@ -53,19 +54,39 @@ export default function AIResultsSection({
   return (
     <>
       <div className="mt-10 grid gap-6">
-        <BenchmarkReportCard report={report} />
-        {/* <ContentIdeasCard content={idea} /> */}
-{/* <GrowthStrategyCard strategy={strategy} /> */}
-{/* <CompetitionCard competition={competition} /> */}
-{/* <TitleGeneratorCard titles={titles} /> */}
-{/* <ThumbnailPlanCard thumbnail={thumbnailPrompt} /> */}
+        <Accordion
+  title="📊 Benchmark Report"
+  defaultOpen={true}
+>
+  <BenchmarkReportCard report={report} />
+</Accordion>
+        <Accordion title="💡 Content Ideas">
+  <ContentIdeasCard content={idea} />
+</Accordion>
+<Accordion title="🚀 Growth Strategy">
+  <GrowthStrategyCard strategy={strategy} />
+</Accordion>
+<Accordion title="⚔️ Competition">
+  <CompetitionCard competition={competition} />
+</Accordion>
+<Accordion title="✍️ AI Titles">
+  <TitleGeneratorCard titles={titles} />
+</Accordion>
+<Accordion title="🖼 Thumbnail Strategy">
+  <ThumbnailPlanCard thumbnail={thumbnailPrompt} />
+</Accordion>
       </div>
 
-      <AIChat
-        context={aiContext}
-        messages={messages}
-        setMessages={setMessages}
-      />
+      <Accordion
+  title="🤖 AI Chat"
+  defaultOpen={false}
+>
+  <AIChat
+    context={aiContext}
+    messages={messages}
+    setMessages={setMessages}
+  />
+</Accordion>
     </>
   );
 }

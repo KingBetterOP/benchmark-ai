@@ -6,8 +6,17 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/nextjs";
+import LanguageSelector from "./LanguageSelector";
 
-export default function Navbar() {
+type Props = {
+  language: string;
+  setLanguage: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export default function Navbar({
+  language,
+  setLanguage,
+}: Props) {
   return (
     <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
@@ -70,6 +79,10 @@ export default function Navbar() {
           <div className="hidden rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-300 lg:flex">
             ⭐ Trusted by Creators
           </div>
+          <LanguageSelector
+  value={language}
+  onChange={setLanguage}
+/>
 
           <Show when="signed-out">
             <SignInButton mode="modal">

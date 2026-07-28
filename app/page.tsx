@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { downloadCSV } from "./lib/downloadCSV";
 import { downloadPDF } from "./lib/downloadPDF";
 import { useUser } from "@clerk/nextjs";
+import { validateSearch } from "./hooks/searchValidation";
+import { useBenchmarkState } from "./hooks/useBenchmarkState";
 import {
   saveProject,
   getProjects,
@@ -55,8 +57,13 @@ import SearchSummary from "./components/SearchSummary";
 import AIResultsSection from "./components/AIResultsSection";
 import SearchSection from "./components/SearchSection";
 import AnalysisSection from "./components/AnalysisSection";
-import { validateSearch } from "./hooks/searchValidation";
-import { useBenchmarkState } from "./hooks/useBenchmarkState";
+import QuickNavigation from "./components/QuickNavigation";
+import KeywordSuggestionsCard from "./components/KeywordSuggestionsCard";
+import AIScriptGeneratorCard from "./components/AIScriptGeneratorCard";
+import AICreatorToolkit from "./components/AICreatorToolkit";
+import CreatorKitCard from "./components/CreatorKitCard";
+
+
 import {
   startLoading,
   finishLoading,
@@ -112,6 +119,7 @@ const [loading, setLoading] = useState(false);
   const [excludeShorts, setExcludeShorts] = useState(false);
   const [min10Minutes, setMin10Minutes] = useState(false);
   const [last30Days, setLast30Days] = useState(false);
+  const [language, setLanguage] = useState("en");
 const [searchHistory, setSearchHistory] =
   useState<string[]>([]);
   useEffect(() => {
@@ -121,6 +129,16 @@ const [searchHistory, setSearchHistory] =
     setSearchHistory(JSON.parse(saved));
   }
 }, []);
+useEffect(() => {
+  const saved = localStorage.getItem("language");
+
+  if (saved) {
+    setLanguage(saved);
+  }
+}, []);
+useEffect(() => {
+  localStorage.setItem("language", language);
+}, [language]);
 const [projects, setProjects] = useState<SavedProject[]>([]);
 const [messages, setMessages] = useState<
   {
@@ -130,6 +148,7 @@ const [messages, setMessages] = useState<
 >([]);
 const [plan, setPlan] = useState("free");
 const [dailyUsage, setDailyUsage] = useState(0);
+
 
 useEffect(() => {
   async function loadProjects() {
@@ -375,7 +394,10 @@ const aiContext = useMemo(
 );
   return (
     <>
-    <Navbar />
+    <Navbar
+  language={language}
+  setLanguage={setLanguage}
+/>
     <main className="min-h-screen bg-gradient-to-b from-[#09090B] via-[#111827] to-[#09090B] text-white p-4 md:p-10">
       <LoadingProgress
   loading={loading}
@@ -384,7 +406,10 @@ const aiContext = useMemo(
 />
 <HeroSection
   onStart={() => handleSearch()}
-/>      
+/>
+
+<QuickNavigation />
+
 <OpportunityFinder
   opportunities={opportunities}
   onSelect={(keyword) => {
@@ -400,14 +425,18 @@ const aiContext = useMemo(
   plan={plan}
   dailyUsage={dailyUsage}
 />
-
-<SearchSection
+<section id="search">
+  <SearchSection
   keyword={keyword}
   setKeyword={setKeyword}
   order={order}
   setOrder={setOrder}
   onSearch={() => handleSearch()}
   loading={loading}
+  min10Minutes={min10Minutes}
+  setMin10Minutes={setMin10Minutes}
+  last30Days={last30Days}
+  setLast30Days={setLast30Days}
   averageViews={averageViews}
   results={results}
   report={report}
@@ -425,7 +454,10 @@ const aiContext = useMemo(
   calculateBenchmarkScore={calculateBenchmarkScore}
   formatDuration={formatDuration}
 />
-      <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+</section>
+
+
+<div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
        <SearchFilters
   min10Minutes={min10Minutes}
   setMin10Minutes={setMin10Minutes}
@@ -456,33 +488,50 @@ onSaveProject={handleSaveProject}
 />
 
       </div>
-      <ProjectList
-  projects={projects}
-  onLoad={handleLoadProject}
-  onDelete={handleDeleteProject}
-/>
-<AnalysisSection
-  topVideos={topVideos}
-  results={results}
-  channels={channels}
+      <section id="videos">
+  <AnalysisSection
+    topVideos={topVideos}
+    results={results}
+    channels={channels}
+    keyword={keyword}
+    loading={loading}
+    calculateBenchmarkScore={calculateBenchmarkScore}
+    formatDuration={formatDuration}
+  />
+</section>
+
+<section id="ai">
+  <AIResultsSection
+    report={report}
+    idea={idea}
+    strategy={strategy}
+    competition={competition}
+    titles={titles}
+    thumbnailPrompt={thumbnailPrompt}
+    aiContext={aiContext}
+    messages={messages}
+    setMessages={setMessages}
+  />
+  <div className="mt-10">
+  <CreatorKitCard
+    keyword={keyword}
+  />
+</div>
+  <AICreatorToolkit
   keyword={keyword}
-  loading={loading}
-  calculateBenchmarkScore={calculateBenchmarkScore}
-  formatDuration={formatDuration}
+/>
+</section>
+<AIScriptGeneratorCard
+  keyword={keyword}
 />
 
-
-     <AIResultsSection
-  report={report}
-  idea={idea}
-  strategy={strategy}
-  competition={competition}
-  titles={titles}
-  thumbnailPrompt={thumbnailPrompt}
-  aiContext={aiContext}
-  messages={messages}
-  setMessages={setMessages}
-/>
+<section id="projects">
+  <ProjectList
+    projects={projects}
+    onLoad={handleLoadProject}
+    onDelete={handleDeleteProject}
+  />
+</section>
     </main>
     <Footer />
     </>
