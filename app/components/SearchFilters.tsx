@@ -1,3 +1,4 @@
+import { translations } from "../lib/translations";
 type SearchFiltersProps = {
   min10Minutes: boolean;
   setMin10Minutes: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,6 +10,7 @@ type SearchFiltersProps = {
   onDownloadCSV: () => void;
   onDownloadPDF: () => void;
   onSaveProject: () => void;
+  language: string;
 };
 
 export default function SearchFilters({
@@ -22,7 +24,10 @@ export default function SearchFilters({
   onDownloadCSV,
   onDownloadPDF,
   onSaveProject,
+  language,
 }: SearchFiltersProps) {
+  const t =
+  translations[language as keyof typeof translations];
   return (
     <div className="mt-8 flex flex-wrap justify-center gap-3">
       <button
@@ -37,7 +42,7 @@ export default function SearchFilters({
             : "rounded-lg border border-gray-700 px-4 py-2 hover:bg-zinc-800"
         }
       >
-        ⏱️ 10분 이상 {min10Minutes ? "ON" : "OFF"}
+        ⏱️ {t.moreThan10Minutes} {min10Minutes ? "ON" : "OFF"}
       </button>
 
       <button
@@ -52,7 +57,7 @@ export default function SearchFilters({
             : "rounded-lg border border-gray-700 px-4 py-2 hover:bg-zinc-800"
         }
       >
-        📅 최근 30일 {last30Days ? "ON" : "OFF"}
+        📅 {t.last30Days} {last30Days ? "ON" : "OFF"}
       </button>
 
       <button
@@ -71,28 +76,28 @@ export default function SearchFilters({
             : "rounded-lg border border-gray-700 px-4 py-2 hover:bg-zinc-800"
         }
       >
-        🔥 조회수순 {order === "viewCount" ? "ON" : "OFF"}
+        🔥 {t.viewCountOrder} {order === "viewCount" ? "ON" : "OFF"}
       </button>
 
       <button
   onClick={onDownloadCSV}
   className="rounded-lg border border-green-600 bg-green-600 px-4 py-2 hover:bg-green-700"
 >
-  📄 CSV 다운로드
+  📄 {t.csvDownload}
 </button>
 
 <button
   onClick={onDownloadPDF}
   className="rounded-lg border border-red-600 bg-red-600 px-4 py-2 hover:bg-red-700"
 >
-  📕 PDF 다운로드
+  📕 {t.pdfDownload}
 </button>
 
 <button
   onClick={onSaveProject}
   className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 hover:bg-blue-700"
 >
-  💾 프로젝트 저장
+  💾 {t.saveProject}
 </button>
     </div>
   );

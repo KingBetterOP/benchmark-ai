@@ -500,6 +500,7 @@ const aiContext = useMemo(
   })
 }
 onSaveProject={handleSaveProject}
+language={language}
 />
 
       </div>

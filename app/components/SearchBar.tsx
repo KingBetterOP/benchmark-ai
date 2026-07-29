@@ -43,8 +43,10 @@ export default function SearchBar({
 
         <div className="mb-6 text-center">
           <p className="text-sm uppercase tracking-[0.3em] text-red-400">
-            AI Benchmark Engine
-          </p>
+  {language === "ko"
+    ? "AI 벤치마크 엔진"
+    : "AI Benchmark Engine"}
+</p>
 
           <h2 className="mt-2 text-3xl font-bold">
             {t.heroTitle}
@@ -79,9 +81,23 @@ export default function SearchBar({
             onChange={(e) => setOrder(e.target.value)}
             className="rounded-2xl border border-zinc-700 bg-black/40 px-5 py-4 transition-all duration-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/20 outline-none"
           >
-            <option value="relevance">🔥 Relevance</option>
-            <option value="viewCount">👀 View Count</option>
-            <option value="date">🆕 Latest</option>
+            <option value="relevance">
+  {language === "ko"
+    ? "🔥 관련도"
+    : "🔥 Relevance"}
+</option>
+
+<option value="viewCount">
+  {language === "ko"
+    ? "👀 조회수"
+    : "👀 View Count"}
+</option>
+
+<option value="date">
+  {language === "ko"
+    ? "🆕 최신순"
+    : "🆕 Latest"}
+</option>
           </select>
 
           <button
@@ -105,13 +121,13 @@ export default function SearchBar({
         <div className="mt-6 flex flex-wrap justify-center gap-3">
 
           {[
-            "AI Analysis",
-            "Benchmark Score",
-            "Competitor Research",
-            "Content Ideas",
-            "Thumbnail Strategy",
-            "PDF Export",
-          ].map((item) => (
+  t.featureAI,
+  "Benchmark Score",
+  t.featureCompetitor,
+  t.featureIdeas,
+  "Thumbnail Strategy",
+  t.featurePDF,
+].map((item) => (
             <span
               key={item}
               className="rounded-full border border-zinc-700 bg-zinc-800/40 px-4 py-2 text-sm text-zinc-300 transition hover:border-red-500 hover:text-white"

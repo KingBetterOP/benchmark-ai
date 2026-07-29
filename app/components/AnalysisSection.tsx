@@ -41,9 +41,13 @@ return (
             topVideos={topVideos}
             calculateBenchmarkScore={calculateBenchmarkScore}
             formatDuration={formatDuration}
+            language={language}
           />
 
-          <BestVideoCard video={topVideos[0]} />
+          <BestVideoCard
+  video={topVideos[0]}
+  language={language}
+/>
 
           <AnalyticsCharts videos={results} />
         </>

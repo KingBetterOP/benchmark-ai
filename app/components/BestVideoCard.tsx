@@ -1,40 +1,67 @@
 import { Video } from "../lib/types";
+import { translations } from "../lib/translations";
 
 type BestVideoCardProps = {
   video?: Video;
+  language: string;
 };
 
 export default function BestVideoCard({
   video,
+  language,
 }: BestVideoCardProps) {
   if (!video) return null;
+  const t =
+  translations[language as keyof typeof translations];
 
   return (
-    <div className="mt-8 rounded-2xl border border-yellow-500 bg-zinc-900 p-6 shadow-lg">
+    <div className="
+mt-6
+overflow-hidden
+rounded-3xl
+border
+border-yellow-500/40
+bg-gradient-to-br
+from-zinc-900
+via-zinc-900
+to-black
+p-8
+shadow-2xl
+shadow-yellow-500/10
+">
       <div className="mb-4 flex items-center gap-3">
         <span className="text-3xl">🏆</span>
 
         <h2 className="text-2xl font-bold">
-          Best Performing Video
+          {t.bestVideo}
         </h2>
       </div>
 
-      <img
-        src={video.snippet.thumbnails.high.url}
-        alt={video.snippet.title}
-        className="mb-4 w-full rounded-xl"
-      />
+      <div className="mb-5 overflow-hidden rounded-2xl">
+  <img
+    src={video.snippet.thumbnails.high.url}
+    alt={video.snippet.title}
+    className="
+      h-[220px]
+      w-full
+      object-cover
+      transition
+      duration-500
+      hover:scale-105
+    "
+  />
+</div>
 
-      <h3 className="text-xl font-bold">
+      <h3 className="line-clamp-2 text-2xl font-bold leading-tight">
         {video.snippet.title}
       </h3>
 
-      <p className="mt-2 text-gray-400">
+      <p className="mt-2 text-lg text-zinc-400">
         {video.snippet.channelTitle}
       </p>
 
-      <p className="mt-4 text-lg font-semibold">
-        👀 {video.statistics.viewCount.toLocaleString()} views
+      <p className="mt-4 text-2xl font-bold text-yellow-300">
+        👀 {video.statistics.viewCount.toLocaleString()} {t.views}
       </p>
     </div>
   );

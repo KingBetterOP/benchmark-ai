@@ -114,8 +114,18 @@ averageViews,
   <div className="mt-6 rounded-xl border border-zinc-700 bg-zinc-900 p-4">
     <div className="flex flex-wrap gap-6 text-sm">
       <span>🔎 <strong>{keyword}</strong></span>
-      <span>🎥 {results.length}개 영상 분석</span>
-      <span>👀 평균 조회수 {averageViews.toLocaleString()}</span>
+      <span>
+  🎥{" "}
+  {language === "ko"
+    ? `${results.length}개 영상 분석`
+    : `${results.length} videos analyzed`}
+</span>
+      <span>
+  👀{" "}
+  {language === "ko"
+    ? `평균 조회수 ${averageViews.toLocaleString()}`
+    : `Average Views ${averageViews.toLocaleString()}`}
+</span>
     </div>
   </div>
 )}

@@ -88,20 +88,53 @@ export default function AnalyticsCharts({
               width="100%"
               height="100%"
             >
-              <BarChart data={viewsData}>
-                <CartesianGrid strokeDasharray="3 3" />
+              <BarChart
+  data={viewsData}
+  margin={{
+    top: 10,
+    right: 20,
+    left: 20,
+    bottom: 40,
+  }}
+>
+                <CartesianGrid
+  stroke="#3f3f46"
+  strokeDasharray="3 3"
+/>
 
-                <XAxis dataKey="title" />
+                <XAxis
+  dataKey="title"
+  tick={{
+    fill: "#d4d4d8",
+    fontSize: 12,
+  }}
+  angle={-20}
+  textAnchor="end"
+/>
 
-                <YAxis />
+                <YAxis
+  tick={{
+    fill: "#d4d4d8",
+  }}
+/>
 
-                <Tooltip />
+                <Tooltip
+  contentStyle={{
+    backgroundColor: "#18181b",
+    border: "1px solid #3f3f46",
+    borderRadius: "12px",
+    color: "#fff",
+  }}
+  labelStyle={{
+    color: "#fff",
+  }}
+/>
 
                 <Bar
-                  dataKey="views"
-                  radius={[8, 8, 0, 0]}
-                />
-
+  dataKey="views"
+  radius={[8, 8, 0, 0]}
+  fill="#06B6D4"
+/>
               </BarChart>
             </ResponsiveContainer>
 
@@ -126,12 +159,14 @@ export default function AnalyticsCharts({
               <PieChart>
 
                 <Pie
-                  data={durationData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={100}
-                  label
-                >
+  data={durationData}
+  dataKey="value"
+  nameKey="name"
+  outerRadius={100}
+  label
+  stroke="#27272a"
+  strokeWidth={2}
+>
                   {durationData.map((_, index) => (
                     <Cell
                       key={index}
@@ -142,7 +177,17 @@ export default function AnalyticsCharts({
                   ))}
                 </Pie>
 
-                <Tooltip />
+                <Tooltip
+  contentStyle={{
+    backgroundColor: "#18181b",
+    border: "1px solid #3f3f46",
+    borderRadius: "12px",
+    color: "#fff",
+  }}
+  labelStyle={{
+    color: "#fff",
+  }}
+/>
 
               </PieChart>
             </ResponsiveContainer>

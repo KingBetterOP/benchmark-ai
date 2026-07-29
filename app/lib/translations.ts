@@ -192,6 +192,15 @@ analyzeThumbnail:
 
 closeThumbnail:
   "❌ Close Thumbnail Analysis",
+  last30Days: "Last 30 Days",
+
+viewCountOrder: "View Count",
+
+csvDownload: "CSV Export",
+
+pdfDownload: "PDF Export",
+
+saveProject: "Save Project",
   views: "views",
 
 noViewData: "No view data",
@@ -220,6 +229,31 @@ competitionLabel: "🟢 Competition",
 viralChanceLabel: "🔥 Viral Chance",
 
 growthLabel: "📈 Growth",
+bestVideos: "🏆 AI Benchmark Top 5",
+
+aiScore: "AI Score",
+
+uploadDate: "Upload",
+
+duration: "Duration",
+
+moreThan10Minutes: "10+ Minutes",
+
+last30Days: "Last 30 Days",
+
+downloadCSV: "Download CSV",
+
+downloadPDF: "Download PDF",
+
+saveProject: "Save Project",
+
+showing: "Showing",
+
+previous: "Previous",
+
+next: "Next",
+
+bestVideo: "Best Performing Video",
   },
 
   ko: {
@@ -415,6 +449,15 @@ analyzeThumbnail:
 
 closeThumbnail:
   "❌ 썸네일 분석 닫기",
+  last30Days: "최근 30일",
+
+viewCountOrder: "조회수순",
+
+csvDownload: "CSV 다운로드",
+
+pdfDownload: "PDF 다운로드",
+
+saveProject: "프로젝트 저장",
   views: "조회",
 
 noViewData: "조회수 정보 없음",
@@ -443,5 +486,30 @@ competitionLabel: "🟢 경쟁도",
 viralChanceLabel: "🔥 바이럴 가능성",
 
 growthLabel: "📈 성장성",
+bestVideos: "🏆 AI 추천 벤치마킹 TOP 5",
+
+aiScore: "AI 점수",
+
+uploadDate: "업로드",
+
+duration: "영상 길이",
+
+moreThan10Minutes: "10분 이상",
+
+last30Days: "최근 30일",
+
+downloadCSV: "CSV 다운로드",
+
+downloadPDF: "PDF 다운로드",
+
+saveProject: "프로젝트 저장",
+
+showing: "표시 중",
+
+previous: "이전",
+
+next: "다음",
+
+bestVideo: "최고 성과 영상",
   },
 };
