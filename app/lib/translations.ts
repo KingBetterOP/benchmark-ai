@@ -239,13 +239,11 @@ duration: "Duration",
 
 moreThan10Minutes: "10+ Minutes",
 
-last30Days: "Last 30 Days",
 
 downloadCSV: "Download CSV",
 
 downloadPDF: "Download PDF",
 
-saveProject: "Save Project",
 
 showing: "Showing",
 
@@ -496,13 +494,11 @@ duration: "영상 길이",
 
 moreThan10Minutes: "10분 이상",
 
-last30Days: "최근 30일",
 
 downloadCSV: "CSV 다운로드",
 
 downloadPDF: "PDF 다운로드",
 
-saveProject: "프로젝트 저장",
 
 showing: "표시 중",
 

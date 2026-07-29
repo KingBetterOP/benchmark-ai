@@ -14,6 +14,7 @@ thumbnailPrompt: ThumbnailPlan[];
   topVideos: Video[];
   calculateBenchmarkScore: (video: Video) => number;
   formatDuration: (duration: string) => string;
+  language: string;
 };
 
 export default function QuickStats({
@@ -24,6 +25,7 @@ export default function QuickStats({
   thumbnailPrompt,
   calculateBenchmarkScore,
   formatDuration,
+  language,
 }: Props) {
     
   return (
@@ -56,6 +58,7 @@ export default function QuickStats({
     topVideos={topVideos}
     calculateBenchmarkScore={calculateBenchmarkScore}
     formatDuration={formatDuration}
+    language={language}
   />
 )}
 {/* {thumbnailPrompt.length > 0 && (

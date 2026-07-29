@@ -143,6 +143,7 @@ averageViews,
   thumbnailPrompt={thumbnailPrompt}
   calculateBenchmarkScore={calculateBenchmarkScore}
   formatDuration={formatDuration}
+  language={language}
 />
 
 <RecentSearches
