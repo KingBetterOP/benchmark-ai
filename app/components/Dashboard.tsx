@@ -3,12 +3,14 @@ import { calculateOpportunityScore } from "@/app/lib/opportunityScore";
 import PredictionCard from "./PredictionCard";
 import { calculateTrendingScore } from "@/app/lib/trendingScore";
 import { calculateRevenue } from "@/app/lib/revenueEstimator";
+import { translations } from "../lib/translations";
 
 type DashboardProps = {
   keyword: string;
   averageViews: number;
   videoCount: number;
   videos: Video[];
+  language: string;
 };
 
 export default function Dashboard({
@@ -16,33 +18,36 @@ export default function Dashboard({
   averageViews,
   videoCount,
   videos,
+  language,
 }: DashboardProps) {
   if (!keyword || videoCount === 0) return null;
+  const t =
+  translations[language as keyof typeof translations];
 const opportunity = calculateOpportunityScore(videos);
 const trendingScore = calculateTrendingScore(videos);
 const revenue = calculateRevenue(videos);
   const stats = [
     {
       icon: "🔍",
-      title: "Keyword",
+      title: t.keyword,
       value: keyword,
       color: "from-cyan-500/20 to-blue-500/5",
     },
     {
       icon: "👀",
-      title: "Average Views",
+      title: t.averageViewsCard,
       value: averageViews.toLocaleString(),
       color: "from-emerald-500/20 to-green-500/5",
     },
     {
       icon: "🎥",
-      title: "Videos",
+      title: t.videosCard,
       value: videoCount.toLocaleString(),
       color: "from-orange-500/20 to-red-500/5",
     },
     {
   icon: "⚔️",
-  title: "Competition",
+  title: t.competition,
   value: opportunity.competition,
   color: "from-purple-500/20 to-violet-500/5",
 },
@@ -56,25 +61,25 @@ const revenue = calculateRevenue(videos);
         <div className="flex flex-col gap-6 border-b border-zinc-800 p-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-400">
-              Live Dashboard
+              {t.dashboardLive}
             </span>
 
             <h2 className="mt-2 text-2xl font-bold">
-  Benchmark Overview
+  {t.dashboardOverview}
 </h2>
 
 <p className="mt-1 text-sm text-zinc-400">
-  AI analysis completed.
+  {t.analysisComplete}
 </p>
           </div>
 
           <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-6 py-4 text-center">
             <p className="text-xs uppercase tracking-widest text-emerald-300">
-              STATUS
+              {t.status}
             </p>
 
             <h3 className="mt-2 text-xl font-bold text-emerald-400">
-              ● Analysis Complete
+              {t.statusComplete}
             </h3>
           </div>
         </div>
@@ -82,7 +87,7 @@ const revenue = calculateRevenue(videos);
   <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
     <div>
       <p className="text-sm uppercase tracking-[0.25em] text-cyan-400">
-        🚀 Opportunity Score
+        {t.opportunityScore}
       </p>
 
       <h2 className="mt-2 text-4xl font-extrabold">
@@ -96,9 +101,17 @@ const revenue = calculateRevenue(videos);
     </div>
 
     <div className="space-y-3 text-lg">
-      <p>🟢 Competition: <strong>{opportunity.competition}</strong></p>
-      <p>🔥 Viral Chance: <strong>{opportunity.viralChance}</strong></p>
-      <p>📈 Growth: <strong>{opportunity.growth}</strong></p>
+      <p>
+  {t.competitionLabel}: <strong>{opportunity.competition}</strong>
+</p>
+
+<p>
+  {t.viralChanceLabel}: <strong>{opportunity.viralChance}</strong>
+</p>
+
+<p>
+  {t.growthLabel}: <strong>{opportunity.growth}</strong>
+</p>
     </div>
   </div>
 </div>
@@ -107,7 +120,7 @@ const revenue = calculateRevenue(videos);
   <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
     <div>
       <p className="text-sm uppercase tracking-[0.25em] text-orange-400">
-        🔥 Trending Score
+        {t.trendingScore}
       </p>
 
       <h2 className="mt-2 text-4xl font-extrabold">
@@ -117,10 +130,10 @@ const revenue = calculateRevenue(videos);
 
       <p className="mt-3 text-zinc-300">
         {trendingScore >= 80
-          ? "📈 This keyword is currently trending strongly."
-          : trendingScore >= 50
-          ? "➡️ This keyword has stable interest."
-          : "📉 Interest in this keyword is decreasing."}
+  ? t.trendingHigh
+  : trendingScore >= 50
+  ? t.trendingMedium
+  : t.trendingLow}
       </p>
     </div>
 
@@ -138,7 +151,7 @@ const revenue = calculateRevenue(videos);
 
     <div>
       <p className="text-sm uppercase tracking-[0.25em] text-emerald-400">
-        💰 Estimated Revenue
+        {t.estimatedRevenue}
       </p>
 
       <h2 className="mt-2 text-3xl font-extrabold">
@@ -146,14 +159,14 @@ const revenue = calculateRevenue(videos);
       </h2>
 
       <p className="mt-2 text-zinc-300">
-        Estimated revenue per video based on average views.
+        {t.estimatedRevenueDescription}
       </p>
     </div>
 
     <div className="space-y-2 text-right">
-      <p>📉 Low: ₩{revenue.low.toLocaleString()}</p>
-      <p>📊 Average: ₩{revenue.average.toLocaleString()}</p>
-      <p>🚀 High: ₩{revenue.high.toLocaleString()}</p>
+      <p>{t.low}: ₩{revenue.low.toLocaleString()}</p>
+      <p>{t.average}: ₩{revenue.average.toLocaleString()}</p>
+      <p>{t.high}: ₩{revenue.high.toLocaleString()}</p>
     </div>
 
   </div>

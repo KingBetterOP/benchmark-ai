@@ -53,9 +53,12 @@ export async function POST(request: NextRequest) {
       { status: 403 }
     );
   }
-
+let language = "en";
   try {
-    const { prompt } = await request.json();
+    const body = await request.json();
+
+const prompt = body.prompt;
+language = body.language ?? "en";
     console.log("========== PROMPT ==========");
 console.log(prompt);
 console.log("============================");
@@ -63,11 +66,32 @@ console.log("============================");
     const response = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
+  {
+    role: "system",
+    content:
+      language === "ko"
+        ? `
+You must answer ONLY in Korean.
+
+Never answer in English.
+
+Return valid JSON only.
+
+Do not use markdown.
+`
+        : `
+You must answer ONLY in English.
+
+Return valid JSON only.
+
+Do not use markdown.
+`,
+  },
+  {
+    role: "user",
+    content: prompt,
+  },
+],
     });
 
     return NextResponse.json({
@@ -79,7 +103,10 @@ console.log("============================");
 
     return NextResponse.json(
       {
-        error: "AI 분석 실패",
+        error:
+  language === "ko"
+    ? "AI 분석 실패"
+    : "AI Analysis Failed",
         detail: String(error),
       },
       { status: 500 }

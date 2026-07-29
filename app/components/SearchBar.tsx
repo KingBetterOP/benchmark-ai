@@ -1,6 +1,8 @@
 "use client";
 
 import { Search, Sparkles } from "lucide-react";
+import { translations } from "../lib/translations";
+
 
 type SearchBarProps = {
   keyword: string;
@@ -17,6 +19,7 @@ type SearchBarProps = {
 
   last30Days: boolean;
   setLast30Days: (value: boolean) => void;
+  language: string;
 };
 
 export default function SearchBar({
@@ -30,7 +33,10 @@ export default function SearchBar({
   setMin10Minutes,
   last30Days,
   setLast30Days,
+  language,
 }: SearchBarProps) {
+  const t =
+  translations[language as keyof typeof translations];
   return (
     <section className="mx-auto mt-12 max-w-6xl">
       <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-6 shadow-2xl backdrop-blur-xl">
@@ -41,12 +47,11 @@ export default function SearchBar({
           </p>
 
           <h2 className="mt-2 text-3xl font-bold">
-            Analyze any YouTube keyword
+            {t.heroTitle}
           </h2>
 
           <p className="mt-2 text-zinc-400">
-            Get competitor analysis, AI reports, content ideas and benchmark
-            scores in seconds.
+            {t.heroSubtitle}
           </p>
         </div>
 
@@ -64,7 +69,7 @@ export default function SearchBar({
               onKeyDown={(e) => {
                 if (e.key === "Enter") onSearch();
               }}
-              placeholder="Search YouTube keyword..."
+              placeholder={t.searchPlaceholder}
               className="w-full rounded-2xl border border-zinc-700 bg-black/40 py-4 pl-14 pr-5 text-white placeholder:text-zinc-500 transition-all duration-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/20 outline-none"
             />
           </div>
@@ -93,7 +98,7 @@ export default function SearchBar({
     className={loading ? "animate-spin" : ""}
   />
 
-  {loading ? "Analyzing..." : "Analyze"}
+  {loading ? t.loading : t.analyze}
 </button>
         </div>
 

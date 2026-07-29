@@ -5,6 +5,7 @@ import { benchmarkService } from "../lib/benchmarkService";
 type SearchOptions = {
   keyword: string;
   order: string;
+  language: string;
   excludeShorts: boolean;
   min10Minutes: boolean;
   last30Days: boolean;
@@ -16,6 +17,7 @@ type SearchOptions = {
 export async function executeBenchmarkSearch({
   keyword,
   order,
+  language,
   excludeShorts,
   min10Minutes,
   last30Days,
@@ -25,6 +27,7 @@ export async function executeBenchmarkSearch({
   return benchmarkService({
     keyword,
     order,
+    language,
     excludeShorts,
     min10Minutes,
     last30Days,

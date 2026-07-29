@@ -16,7 +16,7 @@ import {
 type Params = {
   keyword: string;
   order: string;
-
+language: string;
   excludeShorts: boolean;
   min10Minutes: boolean;
   last30Days: boolean;
@@ -28,7 +28,7 @@ type Params = {
 export async function benchmarkService({
   keyword,
   order,
-
+language,
   excludeShorts,
   min10Minutes,
   last30Days,
@@ -49,14 +49,16 @@ export async function benchmarkService({
     throw new Error("YouTube API 응답 오류");
   }
 
-  onStep?.("📊 검색 결과 분석 중...");
-  onProgress?.(30);
+  onStep?.("📊 영상 데이터를 분석하는 중...");
+onProgress?.(25);
 
   const processed = processVideos(
     data.items,
     excludeShorts,
     min10Minutes
   );
+  onStep?.("🧠 AI 프롬프트 생성 중...");
+onProgress?.(50);
 
   const prompt =
     createBenchmarkPrompt(
@@ -88,12 +90,12 @@ export async function benchmarkService({
     const thumbnailPrompt =
   createThumbnailPrompt(keyword);
 
-  onStep?.("🤖 AI 분석 중...");
-  onProgress?.(60);
+  onStep?.("🤖 AI 리포트를 생성하는 중...");
+onProgress?.(75);
 
   const ai =
     await generateAllAI({
-
+language,
       reportPrompt: prompt,
 
       ideaPrompt,
@@ -112,8 +114,8 @@ export async function benchmarkService({
 
     });
 
-  onStep?.("✅ 결과 정리 중...");
-  onProgress?.(100);
+  onStep?.("📄 Benchmark Dashboard를 생성하는 중...");
+onProgress?.(100);
 
   return {
 

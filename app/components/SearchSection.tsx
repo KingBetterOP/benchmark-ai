@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import QuickStats from "./QuickStats";
 import RecentSearches from "./RecentSearches";
 import KeywordSuggestionsCard from "./KeywordSuggestionsCard";
+import BenchmarkSummaryCard from "./BenchmarkSummaryCard";
 
 import {
   Video,
@@ -26,6 +27,7 @@ type Props = {
   onSearch: () => void;
 
   loading: boolean;
+  language: string;
   min10Minutes: boolean;
 setMin10Minutes: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -78,6 +80,7 @@ averageViews,
   onHistorySelect,
   calculateBenchmarkScore,
   formatDuration,
+  language,
 }: Props) {
   return (
     <>
@@ -94,15 +97,17 @@ averageViews,
   setMin10Minutes={setMin10Minutes}
   last30Days={last30Days}
   setLast30Days={setLast30Days}
+  language={language}
 />
 
 <section id="dashboard">
-  <Dashboard
-    keyword={keyword}
-    averageViews={averageViews}
-    videoCount={results.length}
-    videos={results}
-  />
+<Dashboard
+  keyword={keyword}
+  averageViews={averageViews}
+  videoCount={results.length}
+  videos={results}
+  language={language}
+/>
 </section>
 
 {results.length > 0 && !loading && (

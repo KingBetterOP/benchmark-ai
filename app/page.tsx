@@ -62,6 +62,7 @@ import KeywordSuggestionsCard from "./components/KeywordSuggestionsCard";
 import AIScriptGeneratorCard from "./components/AIScriptGeneratorCard";
 import AICreatorToolkit from "./components/AICreatorToolkit";
 import CreatorKitCard from "./components/CreatorKitCard";
+import ErrorCard from "./components/ErrorCard";
 
 
 import {
@@ -113,6 +114,7 @@ const [recommendedChannels, setRecommendedChannels] =
   useState("");
 
 const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
   const [loadingStep, setLoadingStep] = useState("");
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [order, setOrder] = useState("relevance");
@@ -267,6 +269,7 @@ const handleSearch = async (
   if (!canSearch) return;
 
   try {
+    setError("");
     startLoading({
   setLoading,
   setLoadingStep,
@@ -280,6 +283,7 @@ const { processed, ai } =
   await executeBenchmarkSearch({
     keyword: searchKeyword,
     order: searchOrder,
+    language,
     excludeShorts,
     min10Minutes,
     last30Days,
@@ -299,7 +303,9 @@ await applySearchResults(processed, ai);
     return;
   }
 
-  alert("❌ 분석 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.");
+  setError(
+  "Something went wrong while analyzing this keyword. Please try again."
+);
 } finally {
   finishLoading({
     setLoading,
@@ -399,13 +405,21 @@ const aiContext = useMemo(
   setLanguage={setLanguage}
 />
     <main className="min-h-screen bg-gradient-to-b from-[#09090B] via-[#111827] to-[#09090B] text-white p-4 md:p-10">
-      <LoadingProgress
+     <LoadingProgress
   loading={loading}
   loadingProgress={loadingProgress}
   loadingStep={loadingStep}
+  language={language}
 />
+{error && (
+  <ErrorCard
+    message={error}
+    onRetry={() => handleSearch()}
+  />
+)}
 <HeroSection
   onStart={() => handleSearch()}
+  language={language}
 />
 
 <QuickNavigation />
@@ -433,6 +447,7 @@ const aiContext = useMemo(
   setOrder={setOrder}
   onSearch={() => handleSearch()}
   loading={loading}
+  language={language}
   min10Minutes={min10Minutes}
   setMin10Minutes={setMin10Minutes}
   last30Days={last30Days}
@@ -495,6 +510,7 @@ onSaveProject={handleSaveProject}
     channels={channels}
     keyword={keyword}
     loading={loading}
+    language={language}
     calculateBenchmarkScore={calculateBenchmarkScore}
     formatDuration={formatDuration}
   />
@@ -511,6 +527,7 @@ onSaveProject={handleSaveProject}
     aiContext={aiContext}
     messages={messages}
     setMessages={setMessages}
+    language={language}
   />
   <div className="mt-10">
   <CreatorKitCard
@@ -533,7 +550,9 @@ onSaveProject={handleSaveProject}
   />
 </section>
     </main>
-    <Footer />
+    <Footer
+  language={language}
+/>
     </>
   );
 }

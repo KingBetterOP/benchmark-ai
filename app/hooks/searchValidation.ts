@@ -13,8 +13,13 @@ export function validateSearch({
   router,
 }: ValidateSearchParams) {
   if (!keyword.trim()) {
-    return false;
-  }
+  alert("🔍 검색어를 입력해주세요.");
+  return false;
+}
+if (keyword.trim().length < 2) {
+  alert("🔍 검색어는 2글자 이상 입력해주세요.");
+  return false;
+}
 
   if (!user) {
     alert("🔒 AI 분석을 이용하려면 로그인해주세요.");

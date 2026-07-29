@@ -23,6 +23,7 @@ function parseAIJson(text: string) {
 }
 
 type AIRequest = {
+  language: string;
   reportPrompt: string;
   ideaPrompt: string;
   strategyPrompt: string;
@@ -34,6 +35,7 @@ type AIRequest = {
 };
 
 export async function generateAllAI({
+  language,
   reportPrompt,
   ideaPrompt,
   strategyPrompt,
@@ -68,24 +70,24 @@ console.log(recommendedChannelsPrompt);
 console.log("OPPORTUNITY PROMPT");
 console.log(opportunityPrompt);
   const [
-    report,
-    idea,
-    strategy,
-    competition,
-    titles,
-    thumbnail,
-    recommendedChannels,
-    opportunities,
-  ] = await Promise.all([
-    askAI(reportPrompt),
-    askAI(ideaPrompt),
-    askAI(strategyPrompt),
-    askAI(competitionPrompt),
-    askAI(titlePrompt),
-    askAI(thumbnailPrompt),
-    askAI(recommendedChannelsPrompt),
-    askAI(opportunityPrompt),
-  ]);
+  report,
+  idea,
+  strategy,
+  competition,
+  titles,
+  thumbnail,
+  recommendedChannels,
+  opportunities,
+] = await Promise.all([
+  askAI(reportPrompt, language),
+  askAI(ideaPrompt, language),
+  askAI(strategyPrompt, language),
+  askAI(competitionPrompt, language),
+  askAI(titlePrompt, language),
+  askAI(thumbnailPrompt, language),
+  askAI(recommendedChannelsPrompt, language),
+  askAI(opportunityPrompt, language),
+]);
 
   console.log("========== AI RESPONSES ==========");
   console.log("REPORT:", report);

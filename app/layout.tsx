@@ -43,6 +43,8 @@ export const metadata: Metadata = {
     name: "Benchmark AI",
   },
 ],
+creator: "Benchmark AI",
+publisher: "Benchmark AI",
 
 robots: {
   index: true,
@@ -50,12 +52,17 @@ robots: {
 },
 
 category: "Technology",
+applicationName: "Benchmark AI",
 
 icons: {
   icon: "/favicon.ico",
+  apple: "/apple-touch-icon.png",
 },
 verification: {
   google: "ZqUw3XijKLfCyff-rXTlLD9YDoKYfL0FO5aR20uJ7Ko",
+},
+alternates: {
+  canonical: "https://benchmark-ai-indol.vercel.app",
 },
 openGraph: {
     title: "Benchmark AI",
@@ -76,11 +83,16 @@ openGraph: {
   },
 
   twitter: {
-    card: "summary_large_image",
-    title: "Benchmark AI",
-    description:
-      "AI-powered YouTube Benchmarking Platform",
-  },
+  card: "summary_large_image",
+  title: "Benchmark AI",
+  description:
+    "AI-powered YouTube Benchmarking Platform",
+
+  images: ["/og-image.png"],
+},
+};
+export const viewport = {
+  themeColor: "#09090b",
 };
 
 export default function RootLayout({

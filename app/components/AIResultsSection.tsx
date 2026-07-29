@@ -17,6 +17,7 @@ import {
   TitleSuggestion,
   ThumbnailPlan,
 } from "../lib/types";
+import { translations } from "../lib/translations";
 
 type Props = {
   report: BenchmarkReport | null;
@@ -25,6 +26,7 @@ type Props = {
   competition: CompetitionAnalysis | null;
   titles: TitleSuggestion[];
   thumbnailPrompt: ThumbnailPlan[];
+  language: string;
   aiContext: string;
   messages: {
     role: "user" | "assistant";
@@ -47,38 +49,41 @@ export default function AIResultsSection({
   competition,
   titles,
   thumbnailPrompt,
+  language,
   aiContext,
   messages,
   setMessages,
 }: Props) {
+  const t =
+  translations[language as keyof typeof translations];
   return (
     <>
       <div className="mt-10 grid gap-6">
         <Accordion
-  title="📊 Benchmark Report"
+  title={t.benchmarkReportTitle}
   defaultOpen={true}
 >
   <BenchmarkReportCard report={report} />
 </Accordion>
-        <Accordion title="💡 Content Ideas">
+        <Accordion title={t.contentIdeasTitle}>
   <ContentIdeasCard content={idea} />
 </Accordion>
-<Accordion title="🚀 Growth Strategy">
+<Accordion title={t.growthStrategyTitle}>
   <GrowthStrategyCard strategy={strategy} />
 </Accordion>
-<Accordion title="⚔️ Competition">
+<Accordion title={t.competitionTitle}>
   <CompetitionCard competition={competition} />
 </Accordion>
-<Accordion title="✍️ AI Titles">
+<Accordion title={t.aiTitlesTitle}>
   <TitleGeneratorCard titles={titles} />
 </Accordion>
-<Accordion title="🖼 Thumbnail Strategy">
+<Accordion title={t.thumbnailStrategyTitle}>
   <ThumbnailPlanCard thumbnail={thumbnailPrompt} />
 </Accordion>
       </div>
 
       <Accordion
-  title="🤖 AI Chat"
+  title={t.aiChatTitle}
   defaultOpen={false}
 >
   <AIChat

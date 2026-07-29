@@ -6,9 +6,11 @@ import { predictCTR } from "../lib/ctrPredictor";
 import { getCompetition } from "../lib/competition";
 import { getSuccessScore } from "../lib/successScore";
 import { getAIInsight } from "../lib/insight";
+import { translations } from "../lib/translations";
 type VideoCardProps = {
   video: Video;
   score: number;
+  language: string;
 };
 function getRecommendation(score: number) {
   if (score >= 80) {
@@ -34,7 +36,11 @@ function getRecommendation(score: number) {
 export default function VideoCard({
   video,
   score,
+  language,
 }: VideoCardProps) {
+
+  const t =
+    translations[language as keyof typeof translations];
 
   const viralScore = calculateViralScore(video);
   const viralColor =
@@ -128,28 +134,28 @@ const recommendation = getRecommendation(score);
   </p>
 </div>
      <p className="text-cyan-400 text-sm">
-  👥 구독자{" "}
+  👥 {t.subscribers}{" "}
   {video.channel
     ? video.channel.subscribers.toLocaleString()
     : "-"}
 </p>
 
 <p className="text-orange-400 text-sm">
-  📈 조회수/구독자{" "}
+  📈 {t.viewsPerSubscriber}{" "}
   {video.channel
     ? (
         Number(video.statistics?.viewCount || 0) /
         video.channel.subscribers
       ).toFixed(1)
     : "-"}
-  배
+  {t.times}
 </p>
 
       <p className="text-green-400 font-semibold mt-2">
         👀{" "}
         {video.statistics?.viewCount
-          ? `${Number(video.statistics.viewCount).toLocaleString()} views`
-          : "조회수 정보 없음"}
+          ? `${Number(video.statistics.viewCount).toLocaleString()} ${t.views}`
+          : t.noViewData}
       </p>
 <p className="text-pink-400">
   👍{" "}
@@ -167,7 +173,7 @@ const recommendation = getRecommendation(score);
 <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
   <div className="flex items-center justify-between">
     <span className="text-sm font-semibold text-red-300">
-      🔥 Viral Score
+      {t.viralScore}
     </span>
 
     <span className={`text-3xl font-extrabold ${viralColor}`}>
@@ -182,7 +188,7 @@ const recommendation = getRecommendation(score);
 <div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/10 p-4">
   <div className="flex items-center justify-between">
     <span className="text-sm font-semibold text-cyan-300">
-      📈 CTR Prediction
+      {t.ctrPrediction}
     </span>
 
     <span className="text-2xl font-bold text-cyan-400">
@@ -193,7 +199,7 @@ const recommendation = getRecommendation(score);
 <div className="mt-3 rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
   <div className="flex items-center justify-between">
     <span className="text-sm font-semibold text-purple-300">
-      ⚔️ Competition
+      {t.competitionCard}
     </span>
 
     <span className={`text-lg font-bold ${competition.color}`}>
@@ -205,11 +211,11 @@ const recommendation = getRecommendation(score);
   <div className="flex items-center justify-between">
     <div>
       <p className="text-sm font-semibold text-emerald-300">
-        🎯 Success Probability
+        {t.successProbability}
       </p>
 
       <p className="text-xs text-zinc-400">
-        AI 종합 성공 확률
+        {t.successDescription}
       </p>
     </div>
 
@@ -226,7 +232,7 @@ const recommendation = getRecommendation(score);
 </div>
 <div className="mt-3 rounded-xl border border-sky-500/30 bg-sky-500/10 p-4">
   <h3 className="mb-3 text-sm font-bold text-sky-300">
-    🧠 AI Insight
+    {t.aiInsight}
   </h3>
 
   <ul className="space-y-2">

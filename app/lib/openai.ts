@@ -1,4 +1,7 @@
-export async function askAI(prompt: string) {
+export async function askAI(
+  prompt: string,
+  language: string
+) {
   console.log("===== ASK AI =====");
   console.log(prompt);
 
@@ -8,8 +11,9 @@ export async function askAI(prompt: string) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      prompt,
-    }),
+  prompt,
+  language,
+}),
   });
 
   if (!response.ok) {
