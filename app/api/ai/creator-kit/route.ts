@@ -7,7 +7,7 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { keyword } = await req.json();
+    const { keyword, language } = await req.json();
 
     const response = await openai.responses.create({
       model: "gpt-5.1-mini",
@@ -53,7 +53,7 @@ Return ONLY valid JSON.
     "..."
   ],
   "thumbnailPrompt":"",
-"uploadStrategy":""
+"uploadStrategy":"",
 "uploadTime":"",
 "targetAudience":"",
 "seoKeywords":[
@@ -68,13 +68,28 @@ Return ONLY valid JSON.
 
 Topic:
 ${keyword}
-Also generate:
 
-- The best upload strategy
-- The best upload time
-- The ideal audience
-- The expected performance
-English only.
+Write the ENTIRE response in ${
+  language === "ko" ? "Korean" : "English"
+}.
+
+Requirements:
+- Return ONLY valid JSON
+- Do NOT use markdown
+- Do NOT wrap JSON in code blocks
+- Generate 10 highly clickable YouTube titles
+- Generate a strong 5-second hook
+- Generate a complete 60-90 second script
+- Generate an SEO-optimized description
+- Generate exactly 20 hashtags
+- Generate a high-CTR thumbnail prompt
+- Generate the best upload strategy
+- Recommend the best upload time
+- Identify the ideal target audience
+- Generate SEO keywords
+- Generate a pinned comment
+- Generate a community post
+- Estimate a viral score from 0 to 100
 `,
     });
 

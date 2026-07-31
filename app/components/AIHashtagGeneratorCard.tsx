@@ -1,17 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { translations } from "../lib/translations";
 
 type Props = {
   keyword: string;
+  language: string;
 };
 
 export default function AIHashtagGeneratorCard({
   keyword,
+  language,
 }: Props) {
   const [hashtags, setHashtags] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const t =
+    translations[language as keyof typeof translations];
   const generateHashtags = async () => {
     if (!keyword) return;
 
@@ -42,7 +47,7 @@ export default function AIHashtagGeneratorCard({
     <div className="rounded-2xl border border-purple-500/30 bg-purple-500/10 p-6">
 
       <h2 className="text-2xl font-bold">
-        🏷 AI Hashtag Generator
+        {t.aiHashtagGenerator}
       </h2>
 
       <button
@@ -51,8 +56,8 @@ export default function AIHashtagGeneratorCard({
         className="mt-5 w-full rounded-xl bg-purple-600 py-3 font-bold transition hover:bg-purple-700 disabled:opacity-50"
       >
         {loading
-          ? "Generating..."
-          : "Generate Hashtags"}
+  ? t.generating
+  : t.generateHashtags}
       </button>
 
       {hashtags && (

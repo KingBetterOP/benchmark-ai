@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -107,10 +108,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="min-h-screen bg-zinc-950 text-white antialiased">
-        <ClerkProvider>
-          {children}
-        </ClerkProvider>
-      </body>
+  <ClerkProvider>
+    {children}
+  </ClerkProvider>
+
+  <GoogleAnalytics
+  gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!}
+/>
+</body>
     </html>
   );
 }

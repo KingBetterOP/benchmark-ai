@@ -538,14 +538,17 @@ language={language}
   <div className="mt-10">
   <CreatorKitCard
     keyword={keyword}
+    language={language}
   />
 </div>
   <AICreatorToolkit
   keyword={keyword}
+  language={language}
 />
 </section>
 <AIScriptGeneratorCard
   keyword={keyword}
+  language={language}
 />
 
 <section id="projects">

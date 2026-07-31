@@ -7,21 +7,28 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { keyword } = await req.json();
+    const { keyword, language } = await req.json();
 
     const response = await openai.responses.create({
       model: "gpt-5.1-mini",
       input: `
-Write a highly engaging YouTube script.
+You are a professional YouTube script writer.
+
+Write the ENTIRE response in ${
+  language === "ko" ? "Korean" : "English"
+}.
 
 Topic:
 ${keyword}
 
 Requirements:
-- Hook in first 5 seconds
-- 60~90 seconds
-- Natural spoken English
+- Hook in the first 5 seconds
+- Length: 60-90 seconds
+- Natural spoken style
 - Strong ending
+- No markdown
+- No explanations
+- Only output the final script
 `,
     });
 

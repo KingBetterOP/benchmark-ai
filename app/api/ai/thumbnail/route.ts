@@ -7,25 +7,39 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { keyword } = await req.json();
+    const { keyword, language } = await req.json();
 
     const response = await openai.responses.create({
       model: "gpt-5.1-mini",
       input: `
-Generate a professional AI image prompt for a YouTube thumbnail.
+You are the world's best YouTube thumbnail designer.
+
+Write the ENTIRE response in ${
+  language === "ko" ? "Korean" : "English"
+}.
+
+Generate ONE AI image prompt for a YouTube thumbnail.
 
 Topic:
 ${keyword}
 
 Requirements:
-- Cinematic
+- Photorealistic
+- Cinematic composition
 - Ultra realistic
-- High CTR
-- Bright colors
-- Detailed
-- English only
-
-Return only the prompt.
+- High click-through-rate (CTR)
+- Strong emotional expression
+- Bright vibrant colors
+- High contrast
+- Professional lighting
+- Modern YouTube style
+- 16:9 composition
+- Leave room for large title text
+- Extremely detailed
+- No camera settings
+- No markdown
+- No explanations
+- Output ONLY the final image prompt
 `,
     });
 

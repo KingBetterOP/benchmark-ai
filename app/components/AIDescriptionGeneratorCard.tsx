@@ -1,16 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { translations } from "../lib/translations";
 
 type Props = {
   keyword: string;
+  language: string;
 };
 
 export default function AIDescriptionGeneratorCard({
   keyword,
+  language,
 }: Props) {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const t =
+  translations[language as keyof typeof translations];
 
   const generateDescription = async () => {
     if (!keyword) return;
@@ -47,11 +52,11 @@ export default function AIDescriptionGeneratorCard({
     <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-6">
 
       <h2 className="text-2xl font-bold">
-        📝 AI Description Generator
+        {t.aiDescriptionGenerator}
       </h2>
 
       <p className="mt-2 text-sm text-zinc-400">
-        Generate an SEO-optimized YouTube description.
+        {t.aiDescriptionDescription}
       </p>
 
       <button
@@ -60,8 +65,8 @@ export default function AIDescriptionGeneratorCard({
         className="mt-5 w-full rounded-xl bg-blue-600 py-3 font-bold transition hover:bg-blue-700 disabled:opacity-50"
       >
         {loading
-          ? "Generating..."
-          : "Generate Description"}
+  ? t.generating
+  : t.generateDescription}
       </button>
 
       {description && (

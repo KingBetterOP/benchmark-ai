@@ -1,17 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { translations } from "../lib/translations";
 
 type Props = {
   keyword: string;
+  language: string;
 };
 
 export default function AIThumbnailPromptCard({
   keyword,
+  language,
 }: Props) {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const t =
+    translations[language as keyof typeof translations];
   const generatePrompt = async () => {
     if (!keyword) return;
 
@@ -47,11 +52,11 @@ export default function AIThumbnailPromptCard({
     <div className="rounded-2xl border border-pink-500/30 bg-pink-500/10 p-6">
 
       <h2 className="text-2xl font-bold">
-        🖼 AI Thumbnail Prompt
+        {t.aiThumbnailGenerator}
       </h2>
 
       <p className="mt-2 text-sm text-zinc-400">
-        Generate a high-converting thumbnail prompt for AI image generators.
+        {t.aiThumbnailDescription}
       </p>
 
       <button
@@ -59,7 +64,9 @@ export default function AIThumbnailPromptCard({
         disabled={loading}
         className="mt-5 w-full rounded-xl bg-pink-600 py-3 font-bold transition hover:bg-pink-700 disabled:opacity-50"
       >
-        {loading ? "Generating..." : "Generate Prompt"}
+        {loading
+  ? t.generating
+  : t.generateThumbnail}
       </button>
 
       {prompt && (

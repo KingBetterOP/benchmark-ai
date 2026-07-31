@@ -2,23 +2,28 @@
 
 import { useState } from "react";
 import { CreatorKit } from "../lib/creatorKit";
+import { translations } from "../lib/translations";
 
 type Props = {
   keyword: string;
+  language: string;
 };
 
 export default function CreatorKitCard({
   keyword,
+  language,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const t =
+  translations[language as keyof typeof translations];
   const [loadingStep, setLoadingStep] =
-  useState("Preparing AI...");
+  useState(t.preparingAI);
   const loadingSteps = [
-  "🔍 Researching YouTube...",
-  "📈 Finding viral trends...",
-  "📝 Writing your script...",
-  "🎨 Creating thumbnail strategy...",
-  "🚀 Finalizing Creator Kit...",
+  t.researchingYoutube,
+  t.findingViralTrends,
+  t.writingScript,
+  t.creatingThumbnail,
+  t.finalizingCreatorKit,
 ];
   const [result, setResult] =
   useState<CreatorKit | null>(null);
@@ -28,7 +33,7 @@ export default function CreatorKitCard({
 
     try {
       setLoading(true);
-      setLoadingStep("🔍 Researching YouTube...");
+      setLoadingStep(t.researchingYoutube);
 
       const res = await fetch("/api/ai/creator-kit", {
         method: "POST",
@@ -42,13 +47,13 @@ export default function CreatorKitCard({
 
       const data = await res.json();
 
-setLoadingStep("✍️ Writing your script...");
+setLoadingStep(t.writingScript);
 await new Promise((r) => setTimeout(r, 500));
 
-setLoadingStep("🎨 Creating thumbnail...");
+setLoadingStep(t.creatingThumbnail);
 await new Promise((r) => setTimeout(r, 500));
 
-setLoadingStep("🚀 Finalizing Creator Kit...");
+setLoadingStep(t.finalizingCreatorKit);
 await new Promise((r) => setTimeout(r, 500));
 
 setResult(data);
@@ -86,18 +91,18 @@ const downloadResult = () => {
     JSON.stringify(result, null, 2)
   );
 
-  alert("Creator Kit copied!");
+  alert(t.creatorKitCopied);
 };
 
   return (
     <div className="rounded-3xl border border-emerald-500/30 bg-emerald-500/10 p-8">
 
       <h2 className="text-3xl font-extrabold">
-        🚀 AI Creator Kit
+        {t.aiCreatorKit}
       </h2>
 
       <p className="mt-2 text-zinc-400">
-        Generate everything you need with one click.
+        {t.aiCreatorKitDescription}
       </p>
       {loading && (
   <p className="mt-4 text-sm text-emerald-300 animate-pulse">
@@ -111,15 +116,15 @@ const downloadResult = () => {
         className="mt-6 w-full rounded-xl bg-emerald-600 py-4 text-lg font-bold transition hover:bg-emerald-700 disabled:opacity-50"
       >
         {loading
-          ? "AI is building your video..."
-          : "Generate Everything"}
+  ? t.generating
+  : t.generateEverything}
       </button>
 {result && (
   <button
     onClick={downloadResult}
     className="mt-6 w-full rounded-xl bg-blue-600 py-4 text-lg font-bold transition hover:bg-blue-700"
   >
-    📥 Download Creator Kit (.json)
+    {t.downloadCreatorKit}
   </button>
 )}
 
@@ -129,7 +134,7 @@ const downloadResult = () => {
 
     <div className="rounded-xl bg-zinc-900 p-5">
       <h3 className="mb-3 text-xl font-bold">
-        🚀 Viral Titles
+        {t.viralTitles}
       </h3>
 
       <ul className="space-y-2">
@@ -143,7 +148,7 @@ const downloadResult = () => {
 
     <div className="rounded-xl bg-zinc-900 p-5">
       <h3 className="mb-3 text-xl font-bold">
-        🎣 Hook
+        {t.hook}
       </h3>
 
       <p>{result.hook}</p>
@@ -151,7 +156,7 @@ const downloadResult = () => {
 
     <div className="rounded-xl bg-zinc-900 p-5">
       <h3 className="mb-3 text-xl font-bold">
-        📝 Script
+        {t.script}
       </h3>
 
       <p className="whitespace-pre-wrap">
@@ -161,7 +166,7 @@ const downloadResult = () => {
 
     <div className="rounded-xl bg-zinc-900 p-5">
       <h3 className="mb-3 text-xl font-bold">
-        📄 Description
+        {t.description}
       </h3>
 
       <p className="whitespace-pre-wrap">
@@ -171,7 +176,7 @@ const downloadResult = () => {
 
     <div className="rounded-xl bg-zinc-900 p-5">
       <h3 className="mb-3 text-xl font-bold">
-        🏷 Hashtags
+        {t.hashtags}
       </h3>
 
       <div className="flex flex-wrap gap-2">
@@ -188,7 +193,7 @@ const downloadResult = () => {
 
     <div className="rounded-xl bg-zinc-900 p-5">
       <h3 className="mb-3 text-xl font-bold">
-        🖼 Thumbnail Prompt
+        {t.thumbnailPrompt}
       </h3>
 
       <p className="whitespace-pre-wrap">

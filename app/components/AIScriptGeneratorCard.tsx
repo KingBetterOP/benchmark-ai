@@ -1,16 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { translations } from "../lib/translations";
 
 type Props = {
   keyword: string;
+  language: string;
 };
 
 export default function AIScriptGeneratorCard({
   keyword,
+  language,
 }: Props) {
   const [script, setScript] = useState("");
   const [loading, setLoading] = useState(false);
+  const t =
+  translations[language as keyof typeof translations];
 
   const generateScript = async () => {
     if (!keyword) return;
@@ -42,7 +47,7 @@ export default function AIScriptGeneratorCard({
     <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6">
 
       <h2 className="text-2xl font-bold">
-        🤖 AI Script Generator
+        {t.aiDescriptionGenerator}
       </h2>
 
       <p className="mt-2 text-sm text-zinc-400">
@@ -56,7 +61,7 @@ export default function AIScriptGeneratorCard({
       >
         {loading
           ? "Generating..."
-          : "Generate Script"}
+          : t.generateScript}
       </button>
 
       {script && (

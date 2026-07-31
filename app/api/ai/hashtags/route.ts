@@ -7,21 +7,32 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { keyword } = await req.json();
+    const { keyword, language } = await req.json();
 
     const response = await openai.responses.create({
       model: "gpt-5.1-mini",
       input: `
-Generate the best YouTube hashtags.
+You are a YouTube SEO expert.
+
+Write the ENTIRE response in ${
+  language === "ko" ? "Korean" : "English"
+}.
+
+Generate the best YouTube hashtags for this topic.
 
 Topic:
 ${keyword}
 
 Requirements:
-- 20 hashtags
-- SEO optimized
-- English
-- Return only hashtags
+- Generate exactly 20 hashtags
+- Prioritize high-search-volume YouTube keywords
+- Mix broad and niche hashtags
+- Avoid duplicates
+- Every hashtag must start with #
+- Return ONLY hashtags
+- One hashtag per line
+- No numbering
+- No explanations
 `,
     });
 

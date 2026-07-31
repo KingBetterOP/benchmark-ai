@@ -7,21 +7,31 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { keyword } = await req.json();
+    const { keyword, language } = await req.json();
 
     const response = await openai.responses.create({
       model: "gpt-5.1-mini",
       input: `
-Write a professional YouTube description.
+You are a professional YouTube SEO expert.
+
+Write the ENTIRE response in ${
+  language === "ko" ? "Korean" : "English"
+}.
+
+Create an SEO-optimized YouTube description for this topic.
 
 Topic:
 ${keyword}
 
 Requirements:
-- SEO optimized
-- Natural English
-- Include call-to-action
-- Around 150 words
+- Around 150-200 words
+- Natural and engaging
+- Include important keywords naturally
+- Include a clear call-to-action
+- Optimize for YouTube search
+- No markdown
+- No explanations
+- Output only the final description
 `,
     });
 

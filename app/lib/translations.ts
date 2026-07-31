@@ -259,6 +259,121 @@ previous: "Previous",
 next: "Next",
 
 bestVideo: "Best Performing Video",
+
+aiScriptGenerator: "AI Script Generator",
+
+aiScriptDescription:
+  "Generate a complete YouTube script in one click.",
+
+generateScript: "Generate Script",
+
+generating: "Generating...",
+
+aiDescriptionGenerator: "AI Description Generator",
+
+aiDescriptionDescription:
+  "Generate an SEO-optimized YouTube description.",
+
+generateDescription: "Generate Description",
+
+aiHashtagGenerator: "AI Hashtag Generator",
+
+aiHashtagDescription:
+  "Generate optimized hashtags for YouTube.",
+
+generateHashtags: "Generate Hashtags",
+
+aiThumbnailGenerator: "AI Thumbnail Prompt",
+
+aiThumbnailDescription:
+  "Generate an AI image prompt for your thumbnail.",
+
+generateThumbnail: "Generate Thumbnail",
+
+aiCreatorKit: "AI Creator Kit",
+
+aiCreatorKitDescription:
+  "Generate everything you need with one click.",
+
+generateEverything: "Generate Everything",
+
+viralTitles: "🚀 Viral Titles",
+
+hook: "🎣 Hook",
+
+script: "📝 Script",
+
+description: "📄 Description",
+
+hashtags: "🏷 Hashtags",
+
+thumbnailPrompt: "🖼 Thumbnail Prompt",
+
+downloadCreatorKit:
+  "📥 Download Creator Kit (.json)",
+
+  makeThisVideo: "🚀 MAKE THIS VIDEO",
+
+decisionDescription:
+  "Benchmark AI analyzes YouTube data and tells you whether a keyword is worth creating before you spend hours making a video.",
+
+stopGuessing: "Stop Guessing. Start Growing.",
+
+research: "Research",
+
+generateEverythingCard: "Generate Everything",
+
+growFaster: "Grow Faster",
+
+researchDescriptionCard:
+  "Analyze YouTube competitors and trends automatically.",
+
+generateDescriptionCard:
+  "Titles, scripts, SEO, thumbnails and strategy in one click.",
+
+growDescriptionCard:
+  "Spend less time researching and more time creating.",
+
+videosAnalyzed: "Videos Analyzed",
+
+aiAccuracy: "AI Accuracy",
+
+aiDecision: "AI Decision",
+
+copyDescription: "📋 Copy Description",
+
+copyPrompt: "📋 Copy Prompt",
+
+creatorKitCopied: "Creator Kit copied!",
+
+descriptionCopied: "Description copied!",
+
+promptCopied: "Prompt copied!",
+
+loginRequired: "Please sign in.",
+
+projectSaved: "Project saved.",
+
+saveFailed: "Failed to save project.",
+
+analyzingKeywordError:
+  "Something went wrong while analyzing this keyword. Please try again.",
+
+preparingAI: "Preparing AI...",
+
+researchingYoutube: "🔍 Researching YouTube...",
+
+writingScript: "✍️ Writing your script...",
+
+creatingThumbnail: "🎨 Creating thumbnail...",
+
+finalizingCreatorKit:
+  "🚀 Finalizing Creator Kit...",
+
+buildingVideo:
+  "AI is building your video...",
+
+  findingViralTrends: "📈 Finding viral trends...",
   },
 
   ko: {
@@ -521,5 +636,120 @@ previous: "이전",
 next: "다음",
 
 bestVideo: "최고 성과 영상",
+
+aiScriptGenerator: "AI 스크립트 생성",
+
+aiScriptDescription:
+  "클릭 한 번으로 유튜브 스크립트를 생성합니다.",
+
+generateScript: "스크립트 생성",
+
+generating: "생성 중...",
+
+aiDescriptionGenerator: "AI 설명 생성",
+
+aiDescriptionDescription:
+  "SEO 최적화된 유튜브 설명을 생성합니다.",
+
+generateDescription: "설명 생성",
+
+aiHashtagGenerator: "AI 해시태그 생성",
+
+aiHashtagDescription:
+  "유튜브 최적화 해시태그를 생성합니다.",
+
+generateHashtags: "해시태그 생성",
+
+aiThumbnailGenerator: "AI 썸네일 프롬프트",
+
+aiThumbnailDescription:
+  "썸네일 제작용 AI 프롬프트를 생성합니다.",
+
+generateThumbnail: "썸네일 생성",
+
+aiCreatorKit: "AI 크리에이터 키트",
+
+aiCreatorKitDescription:
+  "클릭 한 번으로 모든 콘텐츠를 생성합니다.",
+
+generateEverything: "전체 생성",
+
+viralTitles: "🚀 바이럴 제목",
+
+hook: "🎣 훅",
+
+script: "📝 스크립트",
+
+description: "📄 설명",
+
+hashtags: "🏷 해시태그",
+
+thumbnailPrompt: "🖼 썸네일 프롬프트",
+
+downloadCreatorKit:
+  "📥 Creator Kit 다운로드 (.json)",
+
+  makeThisVideo: "🚀 이 영상을 만드세요",
+
+decisionDescription:
+  "Benchmark AI는 YouTube 데이터를 분석하여 시간을 쓰기 전에 이 키워드가 만들 가치가 있는지 알려줍니다.",
+
+stopGuessing: "감이 아닌 데이터로 성장하세요",
+
+research: "리서치",
+
+generateEverythingCard: "전체 생성",
+
+growFaster: "더 빠른 성장",
+
+researchDescriptionCard:
+  "경쟁 채널과 트렌드를 자동 분석합니다.",
+
+generateDescriptionCard:
+  "제목, 스크립트, SEO, 썸네일 전략까지 한 번에 생성합니다.",
+
+growDescriptionCard:
+  "조사 시간을 줄이고 콘텐츠 제작에 집중하세요.",
+
+videosAnalyzed: "분석한 영상",
+
+aiAccuracy: "AI 정확도",
+
+aiDecision: "AI 판단",
+
+copyDescription: "📋 설명 복사",
+
+copyPrompt: "📋 프롬프트 복사",
+
+creatorKitCopied: "Creator Kit가 복사되었습니다.",
+
+descriptionCopied: "설명이 복사되었습니다.",
+
+promptCopied: "프롬프트가 복사되었습니다.",
+
+loginRequired: "로그인이 필요합니다.",
+
+projectSaved: "프로젝트가 저장되었습니다.",
+
+saveFailed: "저장 실패",
+
+analyzingKeywordError:
+  "키워드 분석 중 오류가 발생했습니다. 다시 시도해주세요.",
+
+preparingAI: "AI 준비 중...",
+
+researchingYoutube: "🔍 유튜브 분석 중...",
+
+writingScript: "✍️ 스크립트 생성 중...",
+
+creatingThumbnail: "🎨 썸네일 생성 중...",
+
+finalizingCreatorKit:
+  "🚀 Creator Kit 생성 중...",
+
+buildingVideo:
+  "AI가 영상을 생성하고 있습니다...",
+
+  findingViralTrends: "📈 바이럴 트렌드 분석 중...",
   },
 };

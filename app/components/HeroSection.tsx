@@ -32,29 +32,29 @@ export default function HeroSection({
   <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
     <p className="text-3xl font-bold text-cyan-400">1M+</p>
     <p className="mt-1 text-sm text-zinc-400">
-      Videos Analyzed
+      {t.videosAnalyzed}
     </p>
   </div>
 
   <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
     <p className="text-3xl font-bold text-green-400">95%</p>
     <p className="mt-1 text-sm text-zinc-400">
-      AI Accuracy
+      {t.aiAccuracy}
     </p>
   </div>
 </div>
 <div className="mt-12 rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 p-8">
 
   <p className="text-sm uppercase tracking-[0.3em] text-emerald-400">
-    AI DECISION
-  </p>
+  {t.aiDecision}
+</p>
 
   <h2 className="mt-3 text-4xl font-extrabold text-white">
-    🚀 MAKE THIS VIDEO
+    {t.makeThisVideo}
   </h2>
 
   <p className="mt-4 text-zinc-300">
-    Benchmark AI analyzes YouTube data and tells you whether a keyword is worth creating before you spend hours making a video.
+    {t.decisionDescription}
   </p>
 
 </div>
@@ -74,7 +74,7 @@ export default function HeroSection({
 <div className="mx-auto mt-12 max-w-5xl rounded-3xl border border-zinc-800 bg-zinc-900/60 p-8">
 
   <h3 className="text-2xl font-bold">
-    Stop Guessing. Start Growing.
+    {t.stopGuessing}
   </h3>
 
   <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -82,30 +82,30 @@ export default function HeroSection({
     <div>
       <p className="text-4xl">🔍</p>
       <h4 className="mt-3 font-bold">
-        Research
+        {t.research}
       </h4>
       <p className="mt-2 text-sm text-zinc-400">
-        Analyze YouTube competitors and trends automatically.
+        {t.researchDescriptionCard}
       </p>
     </div>
 
     <div>
       <p className="text-4xl">🤖</p>
       <h4 className="mt-3 font-bold">
-        Generate Everything
+        {t.generateEverything}
       </h4>
       <p className="mt-2 text-sm text-zinc-400">
-        Titles, scripts, SEO, thumbnails and strategy in one click.
+        {t.generateDescriptionCard}
       </p>
     </div>
 
     <div>
       <p className="text-4xl">📈</p>
       <h4 className="mt-3 font-bold">
-        Grow Faster
+        {t.growFaster}
       </h4>
       <p className="mt-2 text-sm text-zinc-400">
-        Spend less time researching and more time creating.
+        {t.growDescriptionCard}
       </p>
     </div>
 
