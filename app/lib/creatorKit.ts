@@ -5,4 +5,12 @@ export type CreatorKit = {
   description: string;
   hashtags: string[];
   thumbnailPrompt: string;
+
+  uploadStrategy: string;
+  uploadTime: string;
+  targetAudience: string;
+  seoKeywords: string[];
+  pinnedComment: string;
+  communityPost: string;
+  viralScore: number;
 };

@@ -29,6 +29,17 @@ export default function ProjectList({
           >
             <div>
               <p className="font-bold">{project.keyword}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+
+  <span className="rounded-full bg-cyan-500/20 px-2 py-1 text-xs text-cyan-300">
+    Saved Project
+  </span>
+
+  <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-300">
+    AI Ready
+  </span>
+
+</div>
 
              <p className="text-sm text-gray-400">
   {project.createdAt

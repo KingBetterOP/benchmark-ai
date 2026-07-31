@@ -7,6 +7,8 @@ import { downloadPDF } from "./lib/downloadPDF";
 import { useUser } from "@clerk/nextjs";
 import { validateSearch } from "./hooks/searchValidation";
 import { useBenchmarkState } from "./hooks/useBenchmarkState";
+import { calculateOpportunityScore } from "./lib/opportunityScore";
+import { calculateTrendingScore } from "./lib/trendingScore";
 import {
   saveProject,
   getProjects,
@@ -519,17 +521,20 @@ language={language}
 
 <section id="ai">
   <AIResultsSection
-    report={report}
-    idea={idea}
-    strategy={strategy}
-    competition={competition}
-    titles={titles}
-    thumbnailPrompt={thumbnailPrompt}
-    aiContext={aiContext}
-    messages={messages}
-    setMessages={setMessages}
-    language={language}
-  />
+  report={report}
+  idea={idea}
+  strategy={strategy}
+  competition={competition}
+  titles={titles}
+  thumbnailPrompt={thumbnailPrompt}
+  language={language}
+  aiContext={aiContext}
+  messages={messages}
+  setMessages={setMessages}
+  benchmarkScore={report?.score ?? 0}
+  opportunityScore={calculateOpportunityScore(results).score}
+  trendingScore={calculateTrendingScore(results)}
+/>
   <div className="mt-10">
   <CreatorKitCard
     keyword={keyword}

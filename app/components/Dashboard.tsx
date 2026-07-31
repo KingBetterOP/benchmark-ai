@@ -1,6 +1,7 @@
 import { Video } from "@/app/lib/types";
 import { calculateOpportunityScore } from "@/app/lib/opportunityScore";
 import PredictionCard from "./PredictionCard";
+import AICopilot from "./AICopilot";
 import { calculateTrendingScore } from "@/app/lib/trendingScore";
 import { calculateRevenue } from "@/app/lib/revenueEstimator";
 import { translations } from "../lib/translations";
@@ -26,6 +27,24 @@ export default function Dashboard({
 const opportunity = calculateOpportunityScore(videos);
 const trendingScore = calculateTrendingScore(videos);
 const revenue = calculateRevenue(videos);
+const keywordDifficulty = Math.min(
+  100,
+  Math.round(
+    (videoCount * 0.6) +
+    (averageViews / 100000)
+  )
+);
+
+const growthPotential =
+  100 - keywordDifficulty;
+
+const recommendedDuration =
+  averageViews > 500000
+    ? "12–18 min"
+    : "8–12 min";
+
+const bestUploadTime =
+  "Fri • 7PM";
   const stats = [
     {
       icon: "🔍",
@@ -33,6 +52,30 @@ const revenue = calculateRevenue(videos);
       value: keyword,
       color: "from-cyan-500/20 to-blue-500/5",
     },
+    {
+  icon: "🎯",
+  title: t.keywordDifficulty,
+  value: `${keywordDifficulty}/100`,
+  color: "from-red-500/20 to-orange-500/5",
+},
+{
+  icon: "🚀",
+  title: t.growthPotential,
+  value: `${growthPotential}/100`,
+  color: "from-green-500/20 to-emerald-500/5",
+},
+{
+  icon: "⏰",
+  title: t.bestUpload,
+  value: bestUploadTime,
+  color: "from-blue-500/20 to-cyan-500/5",
+},
+{
+  icon: "🎬",
+  title: t.bestLength,
+  value: recommendedDuration,
+  color: "from-pink-500/20 to-fuchsia-500/5",
+},
     {
       icon: "👀",
       title: t.averageViewsCard,
@@ -116,6 +159,11 @@ const revenue = calculateRevenue(videos);
   </div>
 </div>
 <PredictionCard videos={videos} />
+<AICopilot
+  opportunity={opportunity.score}
+  trending={trendingScore}
+  revenue={revenue.average}
+/>
 <div className="mx-8 mt-6 rounded-2xl border border-orange-500/30 bg-gradient-to-r from-orange-500/10 to-red-500/5 p-5">
   <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
     <div>

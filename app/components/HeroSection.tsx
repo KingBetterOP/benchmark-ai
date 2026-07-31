@@ -27,7 +27,37 @@ export default function HeroSection({
       <p className="mx-auto mt-8 max-w-3xl text-xl leading-8 text-zinc-400">
   {t.heroDescription}
 </p>
+<div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
 
+  <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+    <p className="text-3xl font-bold text-cyan-400">1M+</p>
+    <p className="mt-1 text-sm text-zinc-400">
+      Videos Analyzed
+    </p>
+  </div>
+
+  <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+    <p className="text-3xl font-bold text-green-400">95%</p>
+    <p className="mt-1 text-sm text-zinc-400">
+      AI Accuracy
+    </p>
+  </div>
+</div>
+<div className="mt-12 rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 p-8">
+
+  <p className="text-sm uppercase tracking-[0.3em] text-emerald-400">
+    AI DECISION
+  </p>
+
+  <h2 className="mt-3 text-4xl font-extrabold text-white">
+    🚀 MAKE THIS VIDEO
+  </h2>
+
+  <p className="mt-4 text-zinc-300">
+    Benchmark AI analyzes YouTube data and tells you whether a keyword is worth creating before you spend hours making a video.
+  </p>
+
+</div>
       <div className="mt-12 flex flex-wrap justify-center gap-4">
         <button
           onClick={onStart}
@@ -41,6 +71,47 @@ export default function HeroSection({
         </button>
       </div>
 
+<div className="mx-auto mt-12 max-w-5xl rounded-3xl border border-zinc-800 bg-zinc-900/60 p-8">
+
+  <h3 className="text-2xl font-bold">
+    Stop Guessing. Start Growing.
+  </h3>
+
+  <div className="mt-8 grid gap-6 md:grid-cols-3">
+
+    <div>
+      <p className="text-4xl">🔍</p>
+      <h4 className="mt-3 font-bold">
+        Research
+      </h4>
+      <p className="mt-2 text-sm text-zinc-400">
+        Analyze YouTube competitors and trends automatically.
+      </p>
+    </div>
+
+    <div>
+      <p className="text-4xl">🤖</p>
+      <h4 className="mt-3 font-bold">
+        Generate Everything
+      </h4>
+      <p className="mt-2 text-sm text-zinc-400">
+        Titles, scripts, SEO, thumbnails and strategy in one click.
+      </p>
+    </div>
+
+    <div>
+      <p className="text-4xl">📈</p>
+      <h4 className="mt-3 font-bold">
+        Grow Faster
+      </h4>
+      <p className="mt-2 text-sm text-zinc-400">
+        Spend less time researching and more time creating.
+      </p>
+    </div>
+
+  </div>
+
+</div>
       <div className="mt-14 flex flex-wrap justify-center gap-8 text-zinc-400">
         <div>{t.featureAI}</div>
 <div>{t.featureCompetitor}</div>

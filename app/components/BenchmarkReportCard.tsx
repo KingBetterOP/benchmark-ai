@@ -16,13 +16,19 @@ export default function BenchmarkReportCard({
       </h2>
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-xl bg-zinc-800 p-4">
+        <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-blue-500/5 p-5">
           <p className="text-sm text-gray-400">
             Benchmark Score
           </p>
 
-          <p className="mt-2 text-3xl font-bold text-cyan-400">
-            {report.score}
+          <p className="mt-3 text-5xl font-extrabold text-cyan-300">
+            <>
+  {report.score}
+  <span className="text-2xl text-zinc-500">
+    {" "}
+    /100
+  </span>
+</>
           </p>
         </div>
 
@@ -70,9 +76,14 @@ export default function BenchmarkReportCard({
           💡 Insights
         </h3>
 
-        <ul className="space-y-2">
+        <ul className="grid gap-3">
           {report.insights.map((item, index) => (
-            <li key={index}>• {item}</li>
+            <li
+  key={index}
+  className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4"
+>
+  💡 {item}
+</li>
           ))}
         </ul>
       </div>
@@ -82,9 +93,14 @@ export default function BenchmarkReportCard({
           🚀 Action Plan
         </h3>
 
-        <ul className="space-y-2">
+        <ul className="grid gap-3">
           {report.actionPlan.map((item, index) => (
-            <li key={index}>✅ {item}</li>
+            <li
+  key={index}
+  className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4"
+>
+  ✅ {item}
+</li>
           ))}
         </ul>
       </div>

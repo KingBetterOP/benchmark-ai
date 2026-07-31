@@ -52,12 +52,28 @@ Return ONLY valid JSON.
     "...",
     "..."
   ],
-  "thumbnailPrompt":""
+  "thumbnailPrompt":"",
+"uploadStrategy":""
+"uploadTime":"",
+"targetAudience":"",
+"seoKeywords":[
+  "...",
+  "...",
+  "..."
+],
+"pinnedComment":"",
+"communityPost":"",
+"viralScore":90
 }
 
 Topic:
 ${keyword}
+Also generate:
 
+- The best upload strategy
+- The best upload time
+- The ideal audience
+- The expected performance
 English only.
 `,
     });
@@ -79,6 +95,7 @@ English only.
         description: "",
         hashtags: [],
         thumbnailPrompt: "",
+        uploadStrategy: "",
       },
       {
         status: 500,

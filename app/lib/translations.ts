@@ -229,6 +229,13 @@ competitionLabel: "🟢 Competition",
 viralChanceLabel: "🔥 Viral Chance",
 
 growthLabel: "📈 Growth",
+keywordDifficulty: "Keyword Difficulty",
+
+growthPotential: "Growth Potential",
+
+bestUpload: "Best Upload",
+
+bestLength: "Best Length",
 bestVideos: "🏆 AI Benchmark Top 5",
 
 aiScore: "AI Score",
@@ -484,6 +491,13 @@ competitionLabel: "🟢 경쟁도",
 viralChanceLabel: "🔥 바이럴 가능성",
 
 growthLabel: "📈 성장성",
+keywordDifficulty: "키워드 난이도",
+
+growthPotential: "성장 가능성",
+
+bestUpload: "최적 업로드",
+
+bestLength: "추천 길이",
 bestVideos: "🏆 AI 추천 벤치마킹 TOP 5",
 
 aiScore: "AI 점수",

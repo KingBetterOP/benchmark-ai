@@ -11,6 +11,15 @@ export default function CreatorKitCard({
   keyword,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] =
+  useState("Preparing AI...");
+  const loadingSteps = [
+  "🔍 Researching YouTube...",
+  "📈 Finding viral trends...",
+  "📝 Writing your script...",
+  "🎨 Creating thumbnail strategy...",
+  "🚀 Finalizing Creator Kit...",
+];
   const [result, setResult] =
   useState<CreatorKit | null>(null);
 
@@ -19,6 +28,7 @@ export default function CreatorKitCard({
 
     try {
       setLoading(true);
+      setLoadingStep("🔍 Researching YouTube...");
 
       const res = await fetch("/api/ai/creator-kit", {
         method: "POST",
@@ -32,15 +42,44 @@ export default function CreatorKitCard({
 
       const data = await res.json();
 
-      setResult(data);
+setLoadingStep("✍️ Writing your script...");
+await new Promise((r) => setTimeout(r, 500));
+
+setLoadingStep("🎨 Creating thumbnail...");
+await new Promise((r) => setTimeout(r, 500));
+
+setLoadingStep("🚀 Finalizing Creator Kit...");
+await new Promise((r) => setTimeout(r, 500));
+
+setResult(data);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+const downloadResult = () => {
+  if (!result) return;
 
+  const text = JSON.stringify(result, null, 2);
+
+  const blob = new Blob([text], {
+    type: "application/json",
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = `${keyword}-creator-kit.json`;
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+};
   const copyResult = async () => {
+    
   if (!result) return;
 
   await navigator.clipboard.writeText(
@@ -60,6 +99,11 @@ export default function CreatorKitCard({
       <p className="mt-2 text-zinc-400">
         Generate everything you need with one click.
       </p>
+      {loading && (
+  <p className="mt-4 text-sm text-emerald-300 animate-pulse">
+    {loadingStep}
+  </p>
+)}
 
       <button
         onClick={generateCreatorKit}
@@ -67,11 +111,20 @@ export default function CreatorKitCard({
         className="mt-6 w-full rounded-xl bg-emerald-600 py-4 text-lg font-bold transition hover:bg-emerald-700 disabled:opacity-50"
       >
         {loading
-          ? "Generating..."
-          : "Generate Complete Creator Kit"}
+          ? "AI is building your video..."
+          : "Generate Everything"}
       </button>
+{result && (
+  <button
+    onClick={downloadResult}
+    className="mt-6 w-full rounded-xl bg-blue-600 py-4 text-lg font-bold transition hover:bg-blue-700"
+  >
+    📥 Download Creator Kit (.json)
+  </button>
+)}
 
-      {result && (
+{result && (
+      
   <div className="mt-8 space-y-6">
 
     <div className="rounded-xl bg-zinc-900 p-5">
