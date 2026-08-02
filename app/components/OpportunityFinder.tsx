@@ -32,7 +32,7 @@ export default function OpportunityFinder({
           onClick={onRefresh}
           className="rounded-xl border border-cyan-500 px-4 py-2 transition hover:bg-cyan-500/10"
         >
-          🔄 Refresh
+          t.refresh
         </button>
       </div>
 
@@ -80,7 +80,7 @@ export default function OpportunityFinder({
                 }}
                 className="mt-6 w-full rounded-xl bg-cyan-500 py-3 font-bold text-black transition hover:bg-cyan-400"
               >
-                🚀 Analyze Now
+                t.analyzeNow
               </button>
             </div>
           </div>

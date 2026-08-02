@@ -11,6 +11,7 @@ import {
   TitleSuggestion,
   ThumbnailPlan,
   Opportunity,
+  CreatorKit,
 } from "../lib/types";
 
 export function useBenchmarkState() {
@@ -24,6 +25,9 @@ export function useBenchmarkState() {
 
   const [idea, setIdea] =
     useState<ContentIdea[]>([]);
+
+    const [creatorKit, setCreatorKit] =
+  useState<CreatorKit | null>(null);
 
   return {
     keyword,
@@ -40,5 +44,8 @@ export function useBenchmarkState() {
 
     idea,
     setIdea,
+
+    creatorKit,
+setCreatorKit,
   };
 }

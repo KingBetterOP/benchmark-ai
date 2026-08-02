@@ -312,7 +312,7 @@ thumbnailPrompt: "🖼 Thumbnail Prompt",
 downloadCreatorKit:
   "📥 Download Creator Kit (.json)",
 
-  makeThisVideo: "🚀 MAKE THIS VIDEO",
+  makeThisVideo: "MAKE THIS VIDEO",
 
 decisionDescription:
   "Benchmark AI analyzes YouTube data and tells you whether a keyword is worth creating before you spend hours making a video.",
@@ -374,6 +374,62 @@ buildingVideo:
   "AI is building your video...",
 
   findingViralTrends: "📈 Finding viral trends...",
+
+  success: "Success",
+
+expectedViews: "Expected Views",
+
+upload: "Upload",
+
+today: "Today",
+
+executiveSummary: "Executive Summary",
+
+aiOverview: "AI Overview",
+
+executiveSummaryDescription:
+  "Analyze strengths, weaknesses and the highest-priority actions before creating your next video.",
+
+overallScore: "Overall Score",
+
+strength: "Strength",
+
+weakness: "Weakness",
+
+priority: "Priority",
+
+viralPotential: "Viral Potential",
+
+highCompetition: "High Competition",
+
+noRecommendation: "No recommendation",
+
+aiConclusion: "AI Conclusion",
+
+keyStrengths: "Key Strengths",
+
+topPriorities: "Top Priorities",
+
+confidence: "Confidence",
+
+benchmark: "Benchmark",
+
+opportunity: "Opportunity",
+
+trending: "Trending",
+
+wait: "WAIT",
+
+avoid: "AVOID",
+
+makeVideoDescription:
+  "This keyword has excellent potential based on AI benchmark analysis.",
+
+waitDescription:
+  "The keyword has potential, but improvements are recommended before creating a video.",
+
+avoidDescription:
+  "The current benchmark suggests focusing on a different keyword or strategy."
   },
 
   ko: {
@@ -689,7 +745,7 @@ thumbnailPrompt: "🖼 썸네일 프롬프트",
 downloadCreatorKit:
   "📥 Creator Kit 다운로드 (.json)",
 
-  makeThisVideo: "🚀 이 영상을 만드세요",
+  makeThisVideo: "이 영상을 만드세요",
 
 decisionDescription:
   "Benchmark AI는 YouTube 데이터를 분석하여 시간을 쓰기 전에 이 키워드가 만들 가치가 있는지 알려줍니다.",
@@ -751,5 +807,61 @@ buildingVideo:
   "AI가 영상을 생성하고 있습니다...",
 
   findingViralTrends: "📈 바이럴 트렌드 분석 중...",
+
+  success: "성공 가능성",
+
+expectedViews: "예상 조회수",
+
+upload: "업로드",
+
+today: "오늘",
+
+executiveSummary: "핵심 요약",
+
+aiOverview: "AI 종합 분석",
+
+executiveSummaryDescription:
+  "다음 영상을 제작하기 전에 장점, 단점, 그리고 가장 중요한 실행 항목을 확인하세요.",
+
+overallScore: "종합 점수",
+
+strength: "강점",
+
+weakness: "약점",
+
+priority: "최우선",
+
+viralPotential: "바이럴 가능성",
+
+highCompetition: "높은 경쟁도",
+
+noRecommendation: "추천 항목 없음",
+
+aiConclusion: "AI 최종 결론",
+
+keyStrengths: "핵심 강점",
+
+topPriorities: "최우선 실행 항목",
+
+confidence: "신뢰도",
+
+benchmark: "벤치마크",
+
+opportunity: "기회",
+
+trending: "트렌드",
+
+wait: "조금 더 기다리기",
+
+avoid: "추천하지 않음",
+
+makeVideoDescription:
+  "AI 분석 결과 이 키워드는 지금 제작할 가치가 매우 높습니다.",
+
+waitDescription:
+  "잠재력은 있지만 조금 더 지켜보거나 개선 후 제작하는 것이 좋습니다.",
+
+avoidDescription:
+  "현재 데이터 기준으로는 다른 키워드를 선택하는 것이 더 유리합니다."
   },
 };

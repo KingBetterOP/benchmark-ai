@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const { keyword, language } = await req.json();
 
     const response = await openai.responses.create({
-      model: "gpt-5.1-mini",
+      model: "gpt-4.1-mini",
       input: `
 You are a professional YouTube SEO expert.
 

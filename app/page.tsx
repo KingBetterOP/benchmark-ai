@@ -9,6 +9,9 @@ import { validateSearch } from "./hooks/searchValidation";
 import { useBenchmarkState } from "./hooks/useBenchmarkState";
 import { calculateOpportunityScore } from "./lib/opportunityScore";
 import { calculateTrendingScore } from "./lib/trendingScore";
+import { useAIAnalysis } from "./hooks/useAIAnalysis";
+import { useBenchmarkSearch } from "./hooks/useBenchmarkSearch";
+import { calculateFinalDecision } from "./lib/finalDecision";
 import {
   saveProject,
   getProjects,
@@ -29,6 +32,13 @@ import {
   TitleSuggestion,
   ThumbnailPlan,
   Opportunity,
+  CreatorKit,
+  SEOAnalysis,
+  SEOOptimizer,
+  ContentGap,
+  ChannelAudit,
+  ContentPlanner,
+  AIThumbnail,
 } from "./lib/types";
 import SearchBar from "./components/SearchBar";
 import TopVideos from "./components/TopVideos";
@@ -65,6 +75,19 @@ import AIScriptGeneratorCard from "./components/AIScriptGeneratorCard";
 import AICreatorToolkit from "./components/AICreatorToolkit";
 import CreatorKitCard from "./components/CreatorKitCard";
 import ErrorCard from "./components/ErrorCard";
+import AIKeywordIntelligenceCard from "./components/AIKeywordIntelligenceCard";
+import MissedOpportunitiesCard from "./components/MissedOpportunitiesCard";
+import ThumbnailAnalyzerCard from "./components/ThumbnailAnalyzerCard";
+import TitleAnalyzerCard from "./components/TitleAnalyzerCard";
+import ViralPredictorCard from "./components/ViralPredictorCard";
+import FinalDecisionCard from "./components/FinalDecisionCard";
+import SEOAnalysisCard from "./components/SEOAnalysisCard";
+import SEOOptimizerCard from "./components/SEOOptimizerCard";
+import ContentGapCard from "./components/ContentGapCard";
+import ChannelAuditCard from "./components/ChannelAuditCard";
+import ContentPlannerCard from "./components/ContentPlannerCard";
+import AIThumbnailCard from "./components/AIThumbnailCard";
+
 
 
 import {
@@ -92,6 +115,9 @@ export default function Home() {
 
   idea,
   setIdea,
+
+  creatorKit,
+  setCreatorKit,
 } = useBenchmarkState();
 
 const [strategy, setStrategy] =
@@ -116,6 +142,52 @@ const [recommendedChannels, setRecommendedChannels] =
   useState("");
 
 const [loading, setLoading] = useState(false);
+const {
+  keywordIntelligence,
+  setKeywordIntelligence,
+
+  missedOpportunities,
+  setMissedOpportunities,
+
+  thumbnailAnalysis,
+  setThumbnailAnalysis,
+} = useAIAnalysis();
+
+const [titleAnalysis, setTitleAnalysis] =
+  useState({
+    ctrScore: 0,
+    seoScore: 0,
+    emotionScore: 0,
+    curiosityScore: 0,
+    lengthScore: 0,
+    overallScore: 0,
+    improvements: [] as string[],
+    betterTitles: [] as string[],
+  });
+  const [seoAnalysis, setSeoAnalysis] =
+  useState<SEOAnalysis | null>(null);
+  const [seoOptimizer, setSeoOptimizer] =
+  useState<SEOOptimizer | null>(null);
+  const [contentGap, setContentGap] =
+  useState<ContentGap[]>([]);
+  const [channelAudit, setChannelAudit] =
+  useState<ChannelAudit | null>(null);
+  const [contentPlanner, setContentPlanner] =
+  useState<ContentPlanner[]>([]);
+  const [aiThumbnail, setAIThumbnail] =
+  useState<AIThumbnail[]>([]);
+  const [viralPrediction, setViralPrediction] =
+  useState({
+    successProbability: 0,
+    expectedViews: "-",
+    expectedCTR: "-",
+    estimatedRPM: "-",
+    estimatedRevenue: "-",
+    competition: "-",
+    recommendation: "-",
+    confidence: 0,
+  });
+
 const [error, setError] = useState("");
   const [loadingStep, setLoadingStep] = useState("");
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -177,21 +249,7 @@ useEffect(() => {
 
   loadUser();
 }, [user]);
-const updateSearchHistory = (searchKeyword: string) => {
-  setSearchHistory((prev) => {
-    const history = [
-      searchKeyword,
-      ...prev.filter((item) => item !== searchKeyword),
-    ].slice(0, 10);
 
-    localStorage.setItem(
-      "searchHistory",
-      JSON.stringify(history)
-    );
-
-    return history;
-  });
-};
 
 const refreshUsage = async () => {
   await fetch("/api/usage", {
@@ -221,7 +279,14 @@ const applyAIResults = (ai: {
   strategy: Strategy[];
   competition: CompetitionAnalysis | null;
   titles: TitleSuggestion[];
+  seo: SEOAnalysis;
+  seoOptimizer: SEOOptimizer | null;
+  contentGap: ContentGap[];
+  channelAudit: ChannelAudit | null;
+  contentPlanner: ContentPlanner[];
+  aiThumbnail: AIThumbnail[];
   thumbnail: ThumbnailPlan[];
+  creatorKit: CreatorKit | null;
   recommendedChannels: string;
   opportunities: Opportunity[];
 }) => {
@@ -230,7 +295,14 @@ const applyAIResults = (ai: {
   setStrategy(ai.strategy);
   setCompetition(ai.competition);
   setTitles(ai.titles);
-  setThumbnailPrompt(ai.thumbnail);
+  setSeoAnalysis(ai.seo);
+setSeoOptimizer(ai.seoOptimizer);
+setContentGap(ai.contentGap);
+setChannelAudit(ai.channelAudit);
+setContentPlanner(ai.contentPlanner);
+setAIThumbnail(ai.aiThumbnail);
+setThumbnailPrompt(ai.thumbnail);
+  setCreatorKit(ai.creatorKit);
   setRecommendedChannels(ai.recommendedChannels);
   setOpportunities(ai.opportunities);
 };
@@ -247,9 +319,17 @@ const applySearchResults = async (
     strategy: Strategy[];
     competition: CompetitionAnalysis | null;
     titles: TitleSuggestion[];
-    thumbnail: ThumbnailPlan[];
+    seo: SEOAnalysis;
+    seoOptimizer: SEOOptimizer | null;
+contentGap: ContentGap[];
+channelAudit: ChannelAudit | null;
+contentPlanner: ContentPlanner[];
+aiThumbnail: AIThumbnail[];
+thumbnail: ThumbnailPlan[];
+    creatorKit: CreatorKit | null;
     recommendedChannels: string;
     opportunities: Opportunity[];
+
   }
 ) => {
   applyProcessedResults(processed);
@@ -279,7 +359,6 @@ const handleSearch = async (
 });
 
 setMessages([]);
-updateSearchHistory(searchKeyword);
 setLoadingStep("🔍 YouTube 데이터를 가져오는 중...");
 const { processed, ai } =
   await executeBenchmarkSearch({
@@ -292,6 +371,88 @@ const { processed, ai } =
     onStep: setLoadingStep,
     onProgress: setLoadingProgress,
   });
+
+setKeywordIntelligence(ai.keywordIntelligence);
+
+setViralPrediction({
+  successProbability: ai.keywordIntelligence.opportunity,
+
+  expectedViews: ai.keywordIntelligence.expectedViews,
+
+  expectedCTR: ai.keywordIntelligence.expectedCTR,
+
+  estimatedRPM: ai.keywordIntelligence.estimatedRPM,
+
+  estimatedRevenue: ai.keywordIntelligence.estimatedRevenue,
+
+  competition: ai.keywordIntelligence.trend,
+
+  recommendation: ai.keywordIntelligence.recommendation,
+
+  confidence: ai.keywordIntelligence.confidence,
+});
+const missedRes = await fetch(
+  "/api/ai/missed-opportunities",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      keyword: searchKeyword,
+      videos: processed.results,
+    }),
+  }
+);
+
+const missedData = await missedRes.json();
+
+setMissedOpportunities(
+  missedData.opportunities
+);
+const thumbnailRes = await fetch(
+  "/api/ai/thumbnail-analyzer",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title:
+        ai.titles?.[0]?.title ??
+        keyword,
+      thumbnailPrompt:
+        ai.thumbnail?.[0]?.prompt ??
+        "",
+    }),
+  }
+);
+
+const thumbnailData =
+  await thumbnailRes.json();
+
+setThumbnailAnalysis(
+  thumbnailData
+);
+const titleRes = await fetch(
+  "/api/ai/title-analyzer",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title:
+        ai.titles?.[0]?.title ??
+        keyword,
+    }),
+  }
+);
+
+const titleData = await titleRes.json();
+
+setTitleAnalysis(titleData);
+
 
 await applySearchResults(processed, ai);
 } catch (error) {
@@ -400,6 +561,12 @@ const aiContext = useMemo(
     recommendedChannels,
   ]
 );
+const finalDecision = calculateFinalDecision({
+  opportunity: keywordIntelligence.opportunity,
+  difficulty: keywordIntelligence.difficulty,
+  confidence: keywordIntelligence.confidence,
+  benchmarkScore: report?.score ?? 0,
+});
   return (
     <>
     <Navbar
@@ -520,13 +687,103 @@ language={language}
 </section>
 
 <section id="ai">
-  <AIResultsSection
+
+<FinalDecisionCard
+  score={finalDecision.score}
+  decision={finalDecision.decision}
+  reasons={finalDecision.reasons}
+  action={finalDecision.action}
+/>
+
+<AIKeywordIntelligenceCard
+  keyword={keyword}
+  difficulty={keywordIntelligence.difficulty}
+  opportunity={keywordIntelligence.opportunity}
+  trend={keywordIntelligence.trend}
+  demand={keywordIntelligence.demand}
+  uploadTime={keywordIntelligence.uploadTime}
+  audience={keywordIntelligence.audience}
+  expectedViews={keywordIntelligence.expectedViews}
+  expectedCTR={keywordIntelligence.expectedCTR}
+  estimatedRPM={keywordIntelligence.estimatedRPM}
+  estimatedRevenue={keywordIntelligence.estimatedRevenue}
+  recommendation={keywordIntelligence.recommendation}
+  confidence={keywordIntelligence.confidence}
+/>
+<ViralPredictorCard
+  successProbability={
+    viralPrediction.successProbability
+  }
+  expectedViews={
+    viralPrediction.expectedViews
+  }
+  expectedCTR={
+    viralPrediction.expectedCTR
+  }
+  estimatedRPM={
+    viralPrediction.estimatedRPM
+  }
+  estimatedRevenue={
+    viralPrediction.estimatedRevenue
+  }
+  competition={
+    viralPrediction.competition
+  }
+  recommendation={
+    viralPrediction.recommendation
+  }
+  confidence={
+    viralPrediction.confidence
+  }
+/>
+<MissedOpportunitiesCard
+  opportunities={missedOpportunities}
+/>
+<ThumbnailAnalyzerCard
+  ctrScore={thumbnailAnalysis.ctrScore}
+  emotionScore={thumbnailAnalysis.emotionScore}
+  colorScore={thumbnailAnalysis.colorScore}
+  textScore={thumbnailAnalysis.textScore}
+  overallScore={thumbnailAnalysis.overallScore}
+  strengths={thumbnailAnalysis.strengths}
+  improvements={thumbnailAnalysis.improvements}
+/>
+<TitleAnalyzerCard
+  ctrScore={titleAnalysis.ctrScore}
+  seoScore={titleAnalysis.seoScore}
+  emotionScore={titleAnalysis.emotionScore}
+  curiosityScore={titleAnalysis.curiosityScore}
+  lengthScore={titleAnalysis.lengthScore}
+  overallScore={titleAnalysis.overallScore}
+  improvements={titleAnalysis.improvements}
+  betterTitles={titleAnalysis.betterTitles}
+/>
+<SEOAnalysisCard
+  seo={seoAnalysis}
+/>
+<ContentGapCard
+  gaps={contentGap}
+/>
+<ChannelAuditCard
+  audit={channelAudit}
+/>
+<ContentPlannerCard
+  plans={contentPlanner}
+/>
+<AIThumbnailCard
+  thumbnails={aiThumbnail}
+/>
+<SEOOptimizerCard
+  optimizer={seoOptimizer}
+/>
+<AIResultsSection
   report={report}
   idea={idea}
   strategy={strategy}
   competition={competition}
   titles={titles}
   thumbnailPrompt={thumbnailPrompt}
+  creatorKit={creatorKit}
   language={language}
   aiContext={aiContext}
   messages={messages}

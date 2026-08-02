@@ -110,7 +110,7 @@ export default function VideoGrid({
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {currentVideos.map((video) => (
           <div
-            key={video.id}
+            key={`${video.id}-${startIndex}-${currentPage}`}
             className="rounded-2xl border border-zinc-800 bg-zinc-900 p-4 transition-all duration-300 hover:border-red-500"
           >
             <VideoCard

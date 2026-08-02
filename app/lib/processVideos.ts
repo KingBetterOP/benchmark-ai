@@ -38,17 +38,22 @@ export function processVideos(
 
     return true;
   });
-  results.sort(
+  const uniqueResults = Array.from(
+  new Map(
+    results.map((video) => [video.id, video])
+  ).values()
+);
+  uniqueResults.sort(
   (a, b) =>
     calculateBenchmarkScore(b) -
     calculateBenchmarkScore(a)
 );
 
-  const topVideos = results.slice(0, 5);
+  const topVideos = uniqueResults.slice(0, 5);
 
   const channelMap = new Map<string, Channel>();
 
-  results.forEach((video) => {
+  uniqueResults.forEach((video) => {
     if (video.channel) {
       channelMap.set(video.channel.name, video.channel);
     }
@@ -57,7 +62,7 @@ export function processVideos(
   const channels = [...channelMap.values()];
 
   return {
-    results,
+  results: uniqueResults,
     averageViews,
     topVideos,
     channels,

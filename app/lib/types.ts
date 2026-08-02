@@ -48,15 +48,51 @@ export interface Channel {
 }
 export interface BenchmarkReport {
   score: number;
+
   overview: {
     avgViews: string;
     avgDuration: string;
     uploadFrequency: string;
     bestVideo: string;
   };
+
   insights: string[];
+
   actionPlan: string[];
+
   analysis: string;
+
+  prediction: {
+  successProbability: number;
+  expectedViews: string;
+  expectedCTR: string;
+  expectedRPM: string;
+  estimatedRevenue: string;
+};
+
+  seo: {
+  score: number;
+  titleScore: number;
+  keywordScore: number;
+  descriptionScore: number;
+};
+
+  audience: {
+    retention: number;
+    engagement: number;
+    target: string;
+  };
+
+  uploadStrategy: {
+    bestDay: string;
+    bestTime: string;
+    recommendedLength: string;
+  };
+
+  risk: {
+    level: string;
+    reasons: string[];
+  };
 }
 
 export interface ContentIdea {
@@ -77,11 +113,32 @@ export interface Strategy {
 
 export interface CompetitionAnalysis {
   competitionScore: number;
+
   difficulty: string;
+
   successProbability: number;
+
   recommendation: string;
+
   strengths: string[];
+
   weaknesses: string[];
+
+  marketSaturation: string;
+
+  barrierToEntry: string;
+
+  contentQuality: number;
+
+  thumbnailQuality: number;
+
+  titleQuality: number;
+
+  uploadFrequency: string;
+
+  opportunityScore: number;
+
+  opportunities: string[];
 }
 
 export interface TitleSuggestion {
@@ -104,4 +161,133 @@ export interface Opportunity {
   growth: string;
   expectedViews: string;
   reason: string;
+}
+export interface CreatorKit {
+  hook: string;
+
+  script: string;
+
+  description: string;
+
+  hashtags: string[];
+
+  thumbnailPrompt: string;
+
+  callToAction: string;
+
+  communityPost: string;
+
+  shortsScript: string;
+
+  instagramCaption: string;
+
+  twitterPost: string;
+}
+export interface SEOOptimizer {
+  betterTitle: string;
+
+  betterDescription: string;
+
+  tags: string[];
+
+  keywordCluster: string[];
+
+  searchIntent: string;
+
+  rankingTips: string[];
+}
+export interface KeywordIntelligence {
+  difficulty: number;
+  opportunity: number;
+  trend: string;
+  demand: string;
+  uploadTime: string;
+  audience: string;
+  expectedViews: string;
+  expectedCTR: string;
+  estimatedRPM: string;
+  estimatedRevenue: string;
+  recommendation: string;
+  confidence: number;
+}
+export interface SEOAnalysis {
+  overallScore: number;
+
+  titleScore: number;
+
+  descriptionScore: number;
+
+  keywordDensity: number;
+
+  rankingProbability: number;
+
+  recommendedKeywords: string[];
+
+  missingKeywords: string[];
+
+  suggestions: string[];
+}
+export interface ChannelAudit {
+  overallScore: number;
+
+  niche: string;
+
+  uploadFrequency: string;
+
+  titleStyle: string;
+
+  thumbnailStyle: string;
+
+  strengths: string[];
+
+  weaknesses: string[];
+
+  opportunities: string[];
+
+  estimatedCTR: string;
+
+  estimatedRPM: string;
+
+  growthPotential: string;
+
+  recommendation: string;
+}
+export type ContentGap = {
+  keyword: string;
+
+  opportunityScore: number;
+
+  competition: string;
+
+  reason: string;
+
+  estimatedViews: string;
+
+  contentIdea: string;
+};
+export interface ContentPlanner {
+  day: number;
+
+  title: string;
+
+  goal: string;
+
+  targetViews: string;
+
+  difficulty: string;
+
+  reason: string;
+}
+export interface AIThumbnail {
+  prompt: string;
+
+  style: string;
+
+  text: string;
+
+  colors: string[];
+
+  composition: string;
+
+  emotion: string;
 }

@@ -8,9 +8,16 @@ import {
   createStrategyPrompt,
   createCompetitionPrompt,
   createTitlePrompt,
+  createSEOPrompt,
+  createSEOOptimizerPrompt,
+  createContentGapPrompt,
   createRecommendedChannelsPrompt,
   createOpportunityPrompt,
   createThumbnailPrompt,
+  createCreatorKitPrompt,
+  createChannelAuditPrompt,
+  createContentPlannerPrompt,
+  createAIThumbnailPrompt,
 } from "./prompts";
 
 type Params = {
@@ -78,6 +85,26 @@ onProgress?.(50);
   const titlePrompt =
     createTitlePrompt(keyword);
 
+    const seoPrompt =
+  createSEOPrompt(keyword);
+
+  const seoOptimizerPrompt =
+  createSEOOptimizerPrompt(keyword);
+
+  const contentGapPrompt =
+  createContentGapPrompt(keyword);
+
+  const channelAuditPrompt =
+  createChannelAuditPrompt(
+    processed.channels[0]?.name ?? ""
+  );
+
+  const contentPlannerPrompt =
+  createContentPlannerPrompt(keyword);
+
+  const aiThumbnailPrompt =
+  createAIThumbnailPrompt(keyword);
+
   const recommendedChannelsPrompt =
     createRecommendedChannelsPrompt(
       keyword,
@@ -89,9 +116,12 @@ onProgress?.(50);
 
     const thumbnailPrompt =
   createThumbnailPrompt(keyword);
+  const creatorKitPrompt =
+  createCreatorKitPrompt(keyword);
 
   onStep?.("🤖 AI 리포트를 생성하는 중...");
 onProgress?.(75);
+
 
   const ai =
     await generateAllAI({
@@ -105,23 +135,27 @@ language,
       competitionPrompt,
 
       titlePrompt,
-
+seoPrompt,
+seoOptimizerPrompt,
+contentGapPrompt,
+channelAuditPrompt,
       thumbnailPrompt,
-
+creatorKitPrompt,
       recommendedChannelsPrompt,
-
       opportunityPrompt,
-
+contentPlannerPrompt,
+aiThumbnailPrompt,
     });
 
   onStep?.("📄 Benchmark Dashboard를 생성하는 중...");
 onProgress?.(100);
 
-  return {
+ return {
+  processed,
 
-    processed,
+  ai,
 
-    ai,
-
-  };
+  keywordIntelligence:
+    ai.keywordIntelligence,
+};
 }

@@ -62,7 +62,82 @@ export default function BenchmarkReportCard({
           </p>
         </div>
       </div>
+<div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 
+  <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4">
+    <p className="text-sm text-zinc-400">
+      🎯 Success Probability
+    </p>
+
+    <p className="mt-2 text-2xl font-bold">
+      {report.prediction.successProbability}%
+    </p>
+  </div>
+
+  <div className="rounded-xl border border-green-500/20 bg-green-500/10 p-4">
+    <p className="text-sm text-zinc-400">
+      👀 Expected Views
+    </p>
+
+    <p className="mt-2 text-2xl font-bold">
+      {report.prediction.expectedViews}
+    </p>
+  </div>
+
+  <div className="rounded-xl border border-orange-500/20 bg-orange-500/10 p-4">
+    <p className="text-sm text-zinc-400">
+      📈 Expected CTR
+    </p>
+
+    <p className="mt-2 text-2xl font-bold">
+      {report.prediction.expectedCTR}
+    </p>
+  </div>
+
+  <div className="rounded-xl border border-purple-500/20 bg-purple-500/10 p-4">
+    <p className="text-sm text-zinc-400">
+      💰 Estimated Revenue
+    </p>
+
+    <p className="mt-2 text-2xl font-bold">
+      {report.prediction.estimatedRevenue}
+    </p>
+  </div>
+
+</div>
+<div className="mt-6 rounded-xl bg-zinc-800 p-5">
+
+  <h3 className="mb-4 text-xl font-bold">
+    🔍 SEO Analysis
+  </h3>
+
+  <div className="grid gap-4 md:grid-cols-4">
+
+    <div>
+      <p className="text-sm text-zinc-400">Overall</p>
+      <p className="text-2xl font-bold">{report.seo.score}</p>
+    </div>
+
+    <div>
+      <p className="text-sm text-zinc-400">Title</p>
+      <p className="text-2xl font-bold">{report.seo.titleScore}</p>
+    </div>
+
+    <div>
+      <p className="text-sm text-zinc-400">Keyword</p>
+      <p className="text-2xl font-bold">{report.seo.keywordScore}</p>
+    </div>
+
+    <div>
+      <p className="text-sm text-zinc-400">Description</p>
+      <p className="text-2xl font-bold">
+        {report.seo.descriptionScore}
+      </p>
+    </div>
+
+  </div>
+
+</div>
       <div className="rounded-xl bg-zinc-800 p-5">
         <h3 className="mb-3 text-xl font-bold">
           🏆 Best Video

@@ -6,6 +6,7 @@ import GrowthStrategyCard from "./GrowthStrategyCard";
 import CompetitionCard from "./CompetitionCard";
 import TitleGeneratorCard from "./TitleGeneratorCard";
 import ThumbnailPlanCard from "./ThumbnailPlanCard";
+import CreatorStudioCard from "./CreatorStudioCard";
 import AIChat from "./AIChat";
 import Accordion from "./Accordion";
 
@@ -16,6 +17,7 @@ import {
   CompetitionAnalysis,
   TitleSuggestion,
   ThumbnailPlan,
+  CreatorKit,
 } from "../lib/types";
 import { translations } from "../lib/translations";
 
@@ -26,6 +28,7 @@ type Props = {
   competition: CompetitionAnalysis | null;
   titles: TitleSuggestion[];
   thumbnailPrompt: ThumbnailPlan[];
+  creatorKit: CreatorKit | null;
     benchmarkScore: number;
   opportunityScore: number;
   trendingScore: number;
@@ -52,6 +55,7 @@ export default function AIResultsSection({
   competition,
   titles,
   thumbnailPrompt,
+  creatorKit,
   benchmarkScore,
 opportunityScore,
 trendingScore,
@@ -79,22 +83,22 @@ const confidence = Math.min(
 );
 const competitionLevel =
   finalScore >= 85
-    ? "LOW"
+    ? t.low
     : finalScore >= 70
-    ? "MEDIUM"
-    : "HIGH";
+    ? t.average
+    : t.high;
   const decision =
   finalScore >= 85
-    ? "🚀 MAKE THIS VIDEO"
+    ? `🚀 ${t.makeThisVideo}`
     : finalScore >= 70
-    ? "⏳ WAIT"
-    : "🛑 AVOID";
+    ? `⏳ ${t.wait}`
+    : `🛑 ${t.avoid}`;
     const decisionDescription =
   finalScore >= 85
-    ? "This keyword has excellent potential based on AI benchmark analysis."
+    ? t.makeVideoDescription
     : finalScore >= 70
-    ? "The keyword has potential, but improvements are recommended before creating a video."
-    : "The current benchmark suggests focusing on a different keyword or strategy.";
+    ? t.waitDescription
+    : t.avoidDescription;
 
   return (
     <>
@@ -102,18 +106,18 @@ const competitionLevel =
         <div className="rounded-3xl border border-green-500/30 bg-gradient-to-r from-green-500/10 to-emerald-500/5 p-6">
 
   <p className="text-sm uppercase tracking-[0.3em] text-green-400">
-    AI Decision
+    {t.aiDecision}
   </p>
 
   <h2 className="mt-3 text-4xl font-extrabold text-green-300">
-    🚀 MAKE THIS VIDEO
+    {decision}
   </h2>
 
   <div className="mt-6 grid gap-4 md:grid-cols-4">
 
     <div>
       <p className="text-xs text-zinc-400">
-        Success
+        {t.success}
       </p>
 
       <p className="text-2xl font-bold">
@@ -123,7 +127,7 @@ const competitionLevel =
 
     <div>
       <p className="text-xs text-zinc-400">
-        Competition
+        {t.competition}
       </p>
 
       <p className="text-xl font-bold">
@@ -132,7 +136,7 @@ const competitionLevel =
     </div>
         <div>
       <p className="text-xs text-zinc-400">
-        Expected Views
+        {t.expectedViews}
       </p>
 
       <p className="text-xl font-bold">
@@ -142,11 +146,11 @@ const competitionLevel =
 
     <div>
       <p className="text-xs text-zinc-400">
-        Upload
+        {t.upload}
       </p>
 
       <p className="text-xl font-bold">
-        Today
+        {t.today}
       </p>
     </div>
 
@@ -155,15 +159,15 @@ const competitionLevel =
        <div className="rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-blue-500/5 p-6">
 
   <p className="text-sm uppercase tracking-[0.3em] text-cyan-400">
-    Executive Summary
+    {t.executiveSummary}
   </p>
 
   <h2 className="mt-2 text-3xl font-bold">
-    🧠 AI Overview
-  </h2>
+🧠 {t.aiOverview}
+</h2>
 
   <p className="mt-4 text-zinc-300">
-    Analyze strengths, weaknesses and the highest-priority actions before creating your next video.
+    {t.executiveSummaryDescription}
   </p>
 
   <div className="mt-6 grid gap-4 md:grid-cols-4">
@@ -171,7 +175,7 @@ const competitionLevel =
     <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-center">
 
       <p className="text-xs uppercase tracking-widest text-emerald-300">
-        Overall Score
+        {t.overallScore}
       </p>
 
       <h3 className="mt-2 text-4xl font-extrabold">
@@ -186,11 +190,11 @@ const competitionLevel =
             <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-4 text-center">
 
       <p className="text-xs uppercase tracking-widest text-cyan-300">
-        Strength
+        {t.strength}
       </p>
 
       <h3 className="mt-2 text-lg font-bold">
-        Viral Potential
+        {t.viralPotential}
       </h3>
 
     </div>
@@ -198,11 +202,11 @@ const competitionLevel =
     <div className="rounded-2xl border border-orange-500/30 bg-orange-500/10 p-4 text-center">
 
       <p className="text-xs uppercase tracking-widest text-orange-300">
-        Weakness
+        {t.weakness}
       </p>
 
       <h3 className="mt-2 text-lg font-bold">
-        High Competition
+        {t.highCompetition}
       </h3>
 
     </div>
@@ -210,11 +214,11 @@ const competitionLevel =
     <div className="rounded-2xl border border-purple-500/30 bg-purple-500/10 p-4 text-center">
 
       <p className="text-xs uppercase tracking-widest text-purple-300">
-        Priority
+        {t.priority}
       </p>
 
       <h3 className="mt-2 text-lg font-bold">
-  {report?.actionPlan?.[0] ?? "No recommendation"}
+  {report?.actionPlan?.[0] ?? t.noRecommendation}
 </h3>
 
     </div>
@@ -223,7 +227,7 @@ const competitionLevel =
 
   <div className="mt-6 rounded-2xl border border-zinc-700 bg-zinc-900/60 p-5">
       <h3 className="text-lg font-bold text-white">
-      📌 AI Conclusion
+      📌 {t.aiConclusion}
     </h3>
 
     <p className="mt-3 text-zinc-300">
@@ -237,7 +241,7 @@ const competitionLevel =
     <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5">
 
       <h3 className="mb-3 text-lg font-bold text-emerald-300">
-        ✅ Key Strengths
+        ✅ {t.keyStrengths}
       </h3>
 
       <ul className="space-y-2">
@@ -251,7 +255,7 @@ const competitionLevel =
     <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 p-5">
 
       <h3 className="mb-3 text-lg font-bold text-orange-300">
-        🎯 Top Priorities
+        🎯 {t.topPriorities}
       </h3>
 
       <ul className="space-y-2">
@@ -266,27 +270,27 @@ const competitionLevel =
     <div className="mt-6 rounded-3xl border border-green-500/30 bg-gradient-to-r from-green-500/10 to-emerald-500/5 p-6">
 
     <p className="text-sm uppercase tracking-[0.3em] text-green-400">
-      AI Decision
+      {t.aiDecision}
     </p>
 
     <h2 className="mt-3 text-4xl font-extrabold text-green-300">
   {decision}
 </h2>
 <p className="mt-2 text-lg font-semibold text-cyan-300">
-  Confidence: {confidence}%
+  {t.confidence}: {confidence}%
 </p>
 
     <p className="mt-4 text-zinc-300">
   {decisionDescription}
 </p>
 <p className="mt-3 text-sm text-zinc-500">
-  Benchmark: {benchmarkScore} · Opportunity: {opportunityScore} · Trending: {trendingScore}
+  {t.benchmark}: {benchmarkScore} · {t.opportunity}: {opportunityScore} · {t.trending}: {trendingScore}
 </p>
 <div className="mt-6 grid gap-3 md:grid-cols-3">
 
   <div className="rounded-xl bg-zinc-900/60 p-4 border border-zinc-700">
     <p className="text-xs uppercase text-zinc-400">
-      Benchmark
+      {t.benchmark}
     </p>
 
     <p className="mt-2 text-2xl font-bold text-cyan-300">
@@ -296,7 +300,7 @@ const competitionLevel =
 
   <div className="rounded-xl bg-zinc-900/60 p-4 border border-zinc-700">
     <p className="text-xs uppercase text-zinc-400">
-      Opportunity
+      {t.opportunity}
     </p>
 
     <p className="mt-2 text-2xl font-bold text-green-300">
@@ -333,6 +337,14 @@ const competitionLevel =
         <Accordion title={t.thumbnailStrategyTitle}>
           <ThumbnailPlanCard thumbnail={thumbnailPrompt} />
         </Accordion>
+        <Accordion
+  title="🎬 AI Creator Studio"
+  defaultOpen={false}
+>
+  <CreatorStudioCard
+    creatorKit={creatorKit}
+  />
+</Accordion>
 
       </div>
 
