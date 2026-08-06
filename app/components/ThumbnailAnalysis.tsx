@@ -66,7 +66,7 @@ setScore(data.score);
   }, [thumbnail]);
 
   return (
-    <div className="mt-4 rounded-xl border border-purple-500 bg-zinc-900 p-4">
+    <div className="mt-4 rounded-xl border border-purple-500 bg-white/5 backdrop-blur-xl p-4">
       <h3 className="text-lg font-bold">
         🎨 AI 썸네일 분석
       </h3>

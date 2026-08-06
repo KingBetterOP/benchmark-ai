@@ -42,7 +42,7 @@ export default function SearchFilters({
             : "rounded-lg border border-gray-700 px-4 py-2 hover:bg-zinc-800"
         }
       >
-        ⏱️ {t.moreThan10Minutes} {min10Minutes ? "ON" : "OFF"}
+        ⏱️ {t.moreThan10Minutes} {min10Minutes ? t.on : t.off}
       </button>
 
       <button
@@ -57,7 +57,7 @@ export default function SearchFilters({
             : "rounded-lg border border-gray-700 px-4 py-2 hover:bg-zinc-800"
         }
       >
-        📅 {t.last30Days} {last30Days ? "ON" : "OFF"}
+        📅 {t.last30Days} {last30Days ? t.on : t.off}
       </button>
 
       <button
@@ -76,7 +76,7 @@ export default function SearchFilters({
             : "rounded-lg border border-gray-700 px-4 py-2 hover:bg-zinc-800"
         }
       >
-        🔥 {t.viewCountOrder} {order === "viewCount" ? "ON" : "OFF"}
+        🔥 {t.viewCountOrder} {order === "viewCount" ? t.on : t.off}
       </button>
 
       <button

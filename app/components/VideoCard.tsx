@@ -12,23 +12,35 @@ type VideoCardProps = {
   score: number;
   language: string;
 };
-function getRecommendation(score: number) {
+function getRecommendation(
+  score: number,
+  language: string
+) {
   if (score >= 80) {
     return {
-      text: "🟢 AI 벤치마킹 추천",
+      text:
+        language === "ko"
+          ? "🟢 AI 벤치마킹 추천"
+          : "🟢 AI Recommended",
       color: "bg-green-600",
     };
   }
 
   if (score >= 60) {
     return {
-      text: "🟡 AI 참고 추천",
+      text:
+        language === "ko"
+          ? "🟡 AI 참고 추천"
+          : "🟡 Worth Considering",
       color: "bg-yellow-600",
     };
   }
 
   return {
-    text: "🔴 AI 비추천",
+    text:
+      language === "ko"
+        ? "🔴 AI 비추천"
+        : "🔴 Not Recommended",
     color: "bg-red-600",
   };
 }
@@ -63,18 +75,30 @@ export default function VideoCard({
     : "★☆☆☆☆";
 const ctr = predictCTR(video);
 const successScore = getSuccessScore(video, score);
-const insights = getAIInsight(video);
+
 const successLevel =
   successScore >= 90
-    ? "🚀 Excellent"
+    ? language === "ko"
+      ? "🚀 매우 높음"
+      : "🚀 Excellent"
     : successScore >= 75
-    ? "🔥 High Potential"
+    ? language === "ko"
+      ? "🔥 높음"
+      : "🔥 High Potential"
     : successScore >= 60
-    ? "👍 Good"
+    ? language === "ko"
+      ? "👍 보통"
+      : "👍 Good"
+    : language === "ko"
+    ? "⚠️ 낮음"
     : "⚠️ Low";
+const insights = getAIInsight(video);
 const competition = getCompetition(video);
 
-const recommendation = getRecommendation(score);
+const recommendation = getRecommendation(
+  score,
+  language
+);
     const scoreColor =
   score >= 80
     ? "bg-green-600"
@@ -108,7 +132,9 @@ const recommendation = getRecommendation(score);
 </div>
         
 <div className={`mb-3 rounded-lg p-2 text-center font-bold ${scoreColor}`}>
-  🤖 AI Benchmark Score : {score}/100
+  🤖 {language === "ko"
+  ? "AI 벤치마크 점수"
+  : "AI Benchmark Score"} : {score}/100
 </div>
 
 <div

@@ -1,18 +1,22 @@
 type Props = {
   history: string[];
   onSelect: (keyword: string) => void;
+  language: string;
 };
 
 export default function RecentSearches({
   history,
   onSelect,
+  language,
 }: Props) {
   if (history.length === 0) return null;
 
   return (
     <div className="mt-6">
       <h2 className="mb-3 text-xl font-bold">
-        🕒 최근 검색
+        {language === "ko"
+  ? "🕒 최근 검색"
+  : "🕒 Recent Searches"}
       </h2>
 
       <div className="flex flex-wrap gap-2">

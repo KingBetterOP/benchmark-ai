@@ -65,7 +65,7 @@ export default function AIScriptGeneratorCard({
       </button>
 
       {script && (
-        <div className="mt-6 rounded-xl bg-zinc-900 p-4 whitespace-pre-wrap">
+        <div className="mt-6 rounded-xl bg-white/5 backdrop-blur-xl p-4 whitespace-pre-wrap">
           {script}
         </div>
       )}

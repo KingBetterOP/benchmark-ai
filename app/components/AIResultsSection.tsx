@@ -103,70 +103,18 @@ const competitionLevel =
   return (
     <>
       <div className="mt-10 grid gap-6">
-        <div className="rounded-3xl border border-green-500/30 bg-gradient-to-r from-green-500/10 to-emerald-500/5 p-6">
-
-  <p className="text-sm uppercase tracking-[0.3em] text-green-400">
-    {t.aiDecision}
-  </p>
-
-  <h2 className="mt-3 text-4xl font-extrabold text-green-300">
-    {decision}
-  </h2>
-
-  <div className="mt-6 grid gap-4 md:grid-cols-4">
-
-    <div>
-      <p className="text-xs text-zinc-400">
-        {t.success}
-      </p>
-
-      <p className="text-2xl font-bold">
-        {report?.score ?? 0}%
-      </p>
-    </div>
-
-    <div>
-      <p className="text-xs text-zinc-400">
-        {t.competition}
-      </p>
-
-      <p className="text-xl font-bold">
-        {competitionLevel}
-      </p>
-    </div>
-        <div>
-      <p className="text-xs text-zinc-400">
-        {t.expectedViews}
-      </p>
-
-      <p className="text-xl font-bold">
-        --
-      </p>
-    </div>
-
-    <div>
-      <p className="text-xs text-zinc-400">
-        {t.upload}
-      </p>
-
-      <p className="text-xl font-bold">
-        {t.today}
-      </p>
-    </div>
-
-  </div>
-  </div>
-       <div className="rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-blue-500/5 p-6">
+        
+       <div className="overflow-hidden rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-cyan-500/10 via-slate-900 to-blue-500/5 p-8 shadow-2xl shadow-cyan-500/10 transition-all duration-300 hover:-translate-y-1">
 
   <p className="text-sm uppercase tracking-[0.3em] text-cyan-400">
     {t.executiveSummary}
   </p>
 
-  <h2 className="mt-2 text-3xl font-bold">
+  <h2 className="mt-3 bg-gradient-to-r from-cyan-300 to-white bg-clip-text text-4xl font-extrabold text-transparent">
 🧠 {t.aiOverview}
 </h2>
 
-  <p className="mt-4 text-zinc-300">
+  <p className="mt-5 max-w-3xl text-base leading-7 text-zinc-300">
     {t.executiveSummaryDescription}
   </p>
 
@@ -187,7 +135,7 @@ const competitionLevel =
 </h3>
 
     </div>
-            <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-4 text-center">
+            <div className="rounded-3xl border border-emerald-400/20 bg-gradient-to-br from-emerald-500/10 to-green-500/5 p-5 text-center shadow-lg transition-all duration-300 hover:-translate-y-1">
 
       <p className="text-xs uppercase tracking-widest text-cyan-300">
         {t.strength}
@@ -225,7 +173,7 @@ const competitionLevel =
 
   </div>
 
-  <div className="mt-6 rounded-2xl border border-zinc-700 bg-zinc-900/60 p-5">
+  <div className="mt-6 rounded-2xl border border-zinc-700 bg-white/5 backdrop-blur-xl p-5">
       <h3 className="text-lg font-bold text-white">
       📌 {t.aiConclusion}
     </h3>
@@ -288,7 +236,7 @@ const competitionLevel =
 </p>
 <div className="mt-6 grid gap-3 md:grid-cols-3">
 
-  <div className="rounded-xl bg-zinc-900/60 p-4 border border-zinc-700">
+  <div className="rounded-xl bg-white/5 backdrop-blur-xl p-4 border border-zinc-700">
     <p className="text-xs uppercase text-zinc-400">
       {t.benchmark}
     </p>
@@ -298,7 +246,7 @@ const competitionLevel =
     </p>
   </div>
 
-  <div className="rounded-xl bg-zinc-900/60 p-4 border border-zinc-700">
+  <div className="rounded-xl bg-white/5 backdrop-blur-xl p-4 border border-zinc-700">
     <p className="text-xs uppercase text-zinc-400">
       {t.opportunity}
     </p>
@@ -353,10 +301,11 @@ const competitionLevel =
         defaultOpen={false}
       >
         <AIChat
-          context={aiContext}
-          messages={messages}
-          setMessages={setMessages}
-        />
+  context={aiContext}
+  language={language}
+  messages={messages}
+  setMessages={setMessages}
+/>
       </Accordion>
 
     </>

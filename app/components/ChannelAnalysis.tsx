@@ -34,7 +34,7 @@ export default function ChannelAnalysis({
   if (channels.length === 0) return null;
 
   return (
-    <div className="mt-8 rounded-xl border border-indigo-500 bg-zinc-900 p-6">
+    <div className="mt-8 rounded-xl border border-indigo-500 bg-white/5 backdrop-blur-xl p-6">
       <h2 className="mb-6 text-2xl font-bold">
         🏆 경쟁 채널 분석
       </h2>

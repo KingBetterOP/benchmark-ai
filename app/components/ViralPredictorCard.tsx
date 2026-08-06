@@ -60,7 +60,7 @@ function Card({
   value: string;
 }) {
   return (
-    <div className="rounded-2xl bg-zinc-900 p-5 text-center">
+    <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5 text-center">
 
       <p className="text-sm text-zinc-400">
         {title}

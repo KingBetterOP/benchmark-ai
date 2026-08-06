@@ -63,7 +63,7 @@ import LoadingProgress from "./components/LoadingProgress";
 import { executeBenchmarkSearch } from "./hooks/useSearch";
 import RecentSearches from "./components/RecentSearches";
 import VideoGrid from "./components/VideoGrid";
-import HeroSection from "./components/HeroSection";
+import HeroSectionV2 from "./components/HeroSectionV2";
 import PlanCard from "./components/PlanCard";
 import SearchSummary from "./components/SearchSummary";
 import AIResultsSection from "./components/AIResultsSection";
@@ -75,18 +75,14 @@ import AIScriptGeneratorCard from "./components/AIScriptGeneratorCard";
 import AICreatorToolkit from "./components/AICreatorToolkit";
 import CreatorKitCard from "./components/CreatorKitCard";
 import ErrorCard from "./components/ErrorCard";
-import AIKeywordIntelligenceCard from "./components/AIKeywordIntelligenceCard";
-import MissedOpportunitiesCard from "./components/MissedOpportunitiesCard";
-import ThumbnailAnalyzerCard from "./components/ThumbnailAnalyzerCard";
-import TitleAnalyzerCard from "./components/TitleAnalyzerCard";
-import ViralPredictorCard from "./components/ViralPredictorCard";
-import FinalDecisionCard from "./components/FinalDecisionCard";
-import SEOAnalysisCard from "./components/SEOAnalysisCard";
-import SEOOptimizerCard from "./components/SEOOptimizerCard";
-import ContentGapCard from "./components/ContentGapCard";
-import ChannelAuditCard from "./components/ChannelAuditCard";
-import ContentPlannerCard from "./components/ContentPlannerCard";
-import AIThumbnailCard from "./components/AIThumbnailCard";
+import TrustBar from "./components/TrustBar";
+import KeywordIntelligenceSection from "./components/keyword/KeywordIntelligenceSection";
+import CompetitorIntelligenceSection from "./components/competitor/CompetitorIntelligenceSection";
+import SEOIntelligenceSection from "./components/seo/SEOIntelligenceSection";
+import CTRIntelligenceSection from "./components/ctr/CTRIntelligenceSection";
+import RevenueIntelligenceSection from "./components/revenue/RevenueIntelligenceSection";
+import IntelligenceSection from "./components/sections/IntelligenceSection";
+import AIAnalysisSection from "./components/sections/AIAnalysisSection";
 
 
 
@@ -359,7 +355,11 @@ const handleSearch = async (
 });
 
 setMessages([]);
-setLoadingStep("🔍 YouTube 데이터를 가져오는 중...");
+setLoadingStep(
+  language === "ko"
+    ? "🔍 YouTube 데이터를 가져오는 중..."
+    : "🔍 Fetching YouTube data..."
+);
 const { processed, ai } =
   await executeBenchmarkSearch({
     keyword: searchKeyword,
@@ -467,7 +467,9 @@ await applySearchResults(processed, ai);
   }
 
   setError(
-  "Something went wrong while analyzing this keyword. Please try again."
+  language === "ko"
+    ? "키워드를 분석하는 중 오류가 발생했습니다. 다시 시도해주세요."
+    : "Something went wrong while analyzing this keyword. Please try again."
 );
 } finally {
   finishLoading({
@@ -494,7 +496,11 @@ const reloadProjects = async () => {
 };
 const handleSaveProject = async () => {
   if (!user) {
-    alert("로그인이 필요합니다.");
+    alert(
+  language === "ko"
+    ? "로그인이 필요합니다."
+    : "Please sign in."
+);
     return;
   }
 
@@ -515,10 +521,18 @@ await saveProject(projectData);
 
     await reloadProjects();
 
-    alert("프로젝트가 저장되었습니다.");
+    alert(
+  language === "ko"
+    ? "프로젝트가 저장되었습니다."
+    : "Project saved."
+);
   } catch (error) {
     console.error(error);
-    alert("저장 실패");
+    alert(
+  language === "ko"
+    ? "저장 실패"
+    : "Failed to save project."
+);
   }
 };
 const handleLoadProject = (project: SavedProject) => {
@@ -586,22 +600,27 @@ const finalDecision = calculateFinalDecision({
     onRetry={() => handleSearch()}
   />
 )}
-<HeroSection
-  onStart={() => handleSearch()}
+<HeroSectionV2
+  keyword={keyword}
+  setKeyword={setKeyword}
+  order={order}
+  setOrder={setOrder}
+  min10Minutes={min10Minutes}
+  setMin10Minutes={setMin10Minutes}
+  last30Days={last30Days}
+  setLast30Days={setLast30Days}
+  loading={loading}
+  onSearch={() => handleSearch()}
   language={language}
 />
-
+<TrustBar />
 <QuickNavigation />
 
 <OpportunityFinder
   opportunities={opportunities}
-  onSelect={(keyword) => {
-    setKeyword(keyword);
-    handleSearch(order, keyword);
-  }}
-  onRefresh={() => {
-    handleSearch(order, keyword);
-  }}
+  language={language}
+  onSelect={handleSearch}
+  onRefresh={() => handleSearch()}
 />
   
  <PlanCard
@@ -685,96 +704,34 @@ language={language}
     formatDuration={formatDuration}
   />
 </section>
-
+<IntelligenceSection
+  averageViews={averageViews}
+  keywordDifficulty={keywordIntelligence.difficulty}
+  keywordOpportunity={keywordIntelligence.opportunity}
+  estimatedRPM={keywordIntelligence.estimatedRPM}
+  benchmarkScore={report?.score ?? 0}
+  seoOptimizer={seoOptimizer}
+  thumbnailScore={thumbnailAnalysis.overallScore ?? 50}
+  titleScore={titleAnalysis.overallScore ?? 50}
+  language={language}
+/>
 <section id="ai">
 
-<FinalDecisionCard
-  score={finalDecision.score}
-  decision={finalDecision.decision}
-  reasons={finalDecision.reasons}
-  action={finalDecision.action}
-/>
-
-<AIKeywordIntelligenceCard
+<AIAnalysisSection
+  language={language}
   keyword={keyword}
-  difficulty={keywordIntelligence.difficulty}
-  opportunity={keywordIntelligence.opportunity}
-  trend={keywordIntelligence.trend}
-  demand={keywordIntelligence.demand}
-  uploadTime={keywordIntelligence.uploadTime}
-  audience={keywordIntelligence.audience}
-  expectedViews={keywordIntelligence.expectedViews}
-  expectedCTR={keywordIntelligence.expectedCTR}
-  estimatedRPM={keywordIntelligence.estimatedRPM}
-  estimatedRevenue={keywordIntelligence.estimatedRevenue}
-  recommendation={keywordIntelligence.recommendation}
-  confidence={keywordIntelligence.confidence}
-/>
-<ViralPredictorCard
-  successProbability={
-    viralPrediction.successProbability
-  }
-  expectedViews={
-    viralPrediction.expectedViews
-  }
-  expectedCTR={
-    viralPrediction.expectedCTR
-  }
-  estimatedRPM={
-    viralPrediction.estimatedRPM
-  }
-  estimatedRevenue={
-    viralPrediction.estimatedRevenue
-  }
-  competition={
-    viralPrediction.competition
-  }
-  recommendation={
-    viralPrediction.recommendation
-  }
-  confidence={
-    viralPrediction.confidence
-  }
-/>
-<MissedOpportunitiesCard
-  opportunities={missedOpportunities}
-/>
-<ThumbnailAnalyzerCard
-  ctrScore={thumbnailAnalysis.ctrScore}
-  emotionScore={thumbnailAnalysis.emotionScore}
-  colorScore={thumbnailAnalysis.colorScore}
-  textScore={thumbnailAnalysis.textScore}
-  overallScore={thumbnailAnalysis.overallScore}
-  strengths={thumbnailAnalysis.strengths}
-  improvements={thumbnailAnalysis.improvements}
-/>
-<TitleAnalyzerCard
-  ctrScore={titleAnalysis.ctrScore}
-  seoScore={titleAnalysis.seoScore}
-  emotionScore={titleAnalysis.emotionScore}
-  curiosityScore={titleAnalysis.curiosityScore}
-  lengthScore={titleAnalysis.lengthScore}
-  overallScore={titleAnalysis.overallScore}
-  improvements={titleAnalysis.improvements}
-  betterTitles={titleAnalysis.betterTitles}
-/>
-<SEOAnalysisCard
-  seo={seoAnalysis}
-/>
-<ContentGapCard
-  gaps={contentGap}
-/>
-<ChannelAuditCard
-  audit={channelAudit}
-/>
-<ContentPlannerCard
-  plans={contentPlanner}
-/>
-<AIThumbnailCard
-  thumbnails={aiThumbnail}
-/>
-<SEOOptimizerCard
-  optimizer={seoOptimizer}
+  finalDecision={finalDecision}
+  keywordIntelligence={keywordIntelligence}
+  viralPrediction={viralPrediction}
+  missedOpportunities={missedOpportunities}
+  thumbnailAnalysis={thumbnailAnalysis}
+  titleAnalysis={titleAnalysis}
+  seoAnalysis={seoAnalysis}
+  seoOptimizer={seoOptimizer}
+  contentGap={contentGap}
+  channelAudit={channelAudit}
+  contentPlanner={contentPlanner}
+  aiThumbnail={aiThumbnail}
 />
 <AIResultsSection
   report={report}
@@ -810,10 +767,11 @@ language={language}
 
 <section id="projects">
   <ProjectList
-    projects={projects}
-    onLoad={handleLoadProject}
-    onDelete={handleDeleteProject}
-  />
+  projects={projects}
+  onLoad={handleLoadProject}
+  onDelete={handleDeleteProject}
+  language={language}
+/>
 </section>
     </main>
     <Footer

@@ -64,7 +64,7 @@ export default function AIViralTitleCard({
 
       {titles && (
         <>
-          <div className="mt-6 whitespace-pre-wrap rounded-xl bg-zinc-900 p-4">
+          <div className="mt-6 whitespace-pre-wrap rounded-xl bg-white/5 backdrop-blur-xl p-4">
             {titles}
           </div>
 

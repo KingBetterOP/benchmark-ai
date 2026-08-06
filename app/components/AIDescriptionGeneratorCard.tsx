@@ -45,11 +45,11 @@ export default function AIDescriptionGeneratorCard({
 
   const copyDescription = async () => {
     await navigator.clipboard.writeText(description);
-    alert("Description copied!");
+    alert(t.descriptionCopied);
   };
 
   return (
-    <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-6">
+    <div className="rounded-3xl border border-blue-500/30 bg-blue-500/10 p-6">
 
       <h2 className="text-2xl font-bold">
         {t.aiDescriptionGenerator}
@@ -71,7 +71,7 @@ export default function AIDescriptionGeneratorCard({
 
       {description && (
         <>
-          <div className="mt-6 whitespace-pre-wrap rounded-xl bg-zinc-900 p-4">
+          <div className="mt-6 whitespace-pre-wrap rounded-xl bg-white/5 backdrop-blur-xl p-4">
             {description}
           </div>
 
@@ -79,7 +79,7 @@ export default function AIDescriptionGeneratorCard({
             onClick={copyDescription}
             className="mt-4 w-full rounded-xl bg-zinc-800 py-3 font-semibold transition hover:bg-zinc-700"
           >
-            📋 Copy Description
+            📋 {t.copyDescription}
           </button>
         </>
       )}

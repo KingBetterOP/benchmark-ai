@@ -21,7 +21,7 @@ export default function ThumbnailAnalyzerCard({
     <section className="mt-10 rounded-3xl border border-pink-500/30 bg-pink-500/10 p-8">
 
       <h2 className="text-3xl font-extrabold">
-        🖼 AI Thumbnail Analyzer
+        🖼 t.thumbnailAnalyzer
       </h2>
 
       <p className="mt-2 text-zinc-400">
@@ -44,7 +44,7 @@ export default function ThumbnailAnalyzerCard({
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
           <h3 className="text-xl font-bold text-green-400">
             ✅ Strengths
           </h3>
@@ -58,7 +58,7 @@ export default function ThumbnailAnalyzerCard({
           </ul>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
           <h3 className="text-xl font-bold text-orange-400">
             🚀 Improvements
           </h3>
@@ -86,7 +86,7 @@ function ScoreCard({
   score: number;
 }) {
   return (
-    <div className="rounded-2xl bg-zinc-900 p-5 text-center">
+    <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5 text-center">
 
       <p className="text-zinc-400">
         {title}

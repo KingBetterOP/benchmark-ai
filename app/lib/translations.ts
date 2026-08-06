@@ -429,7 +429,44 @@ waitDescription:
   "The keyword has potential, but improvements are recommended before creating a video.",
 
 avoidDescription:
-  "The current benchmark suggests focusing on a different keyword or strategy."
+  "The current benchmark suggests focusing on a different keyword or strategy.",
+  channelAudit: "AI Channel Audit",
+  contentPlan30Days: "30-Day Content Plan",
+  thumbnailConcepts: "Thumbnail Concepts",
+  seoOptimizer: "AI SEO Optimizer",
+  thumbnailAnalyzer: "AI Thumbnail Analyzer",
+  titleAnalyzer: "AI Title Analyzer",
+  analyticsDashboard: "Analytics Dashboard",
+  viewDistribution: "View Distribution",
+  refresh: "Refresh",
+  difficulty: "Difficulty",
+  trend: "Trend",
+  videoLength: "Video Length",
+aiOpportunityFinder: "AI Opportunity Finder",
+
+todayBestOpportunities:
+"Today's Best Opportunities",
+
+
+
+analyzeNow: "Analyze Now",
+askAI: "Ask AI",
+
+askAIDescription:
+  "Explore and understand your benchmark in more detail.",
+
+askAIPlaceholder:
+  "Example: Why did the top video perform so well?",
+
+thinking: "Thinking...",
+
+you: "You",
+
+ai: "AI",
+growth: "Growth",
+on: "ON",
+off: "OFF",
+
   },
 
   ko: {
@@ -553,7 +590,7 @@ contactEmail: "📧 이메일",
 
 contactGithub: "💻 깃허브",
 
-contactBenchmark: "🚀 Benchmark AI",
+contactBenchmark: "🚀 Benchmark AI 플랫폼",
 
 contactDescription:
   "크리에이터를 위한 AI 기반 유튜브 벤치마킹 플랫폼입니다. 경쟁 채널을 분석하고, 바이럴 아이디어를 찾고, 콘텐츠 전략을 빠르게 생성합니다.",
@@ -563,7 +600,7 @@ contactDescription:
 pricingSubtitle:
   "무료 플랜은 하루 3회까지 AI 분석이 가능합니다.",
 
-pricingPrice: "$19 / month",
+pricingPrice: "월 $19",
 
 pricingFeature1: "✅ 무제한 AI 분석",
 
@@ -862,6 +899,43 @@ waitDescription:
   "잠재력은 있지만 조금 더 지켜보거나 개선 후 제작하는 것이 좋습니다.",
 
 avoidDescription:
-  "현재 데이터 기준으로는 다른 키워드를 선택하는 것이 더 유리합니다."
+  "현재 데이터 기준으로는 다른 키워드를 선택하는 것이 더 유리합니다.",
+  channelAudit: "AI 채널 진단",
+  contentPlan30Days: "30일 콘텐츠 계획",
+  thumbnailConcepts: "썸네일 컨셉",
+  seoOptimizer: "AI SEO 최적화",
+  thumbnailAnalyzer: "AI 썸네일 분석",
+  titleAnalyzer: "AI 제목 분석",
+  analyticsDashboard: "분석 대시보드",
+  viewDistribution: "조회수 분포",
+  refresh: "새로고침",
+  difficulty: "난이도",
+  trend: "트렌드",
+  videoLength: "영상 길이",
+  aiOpportunityFinder: "AI 기회 탐색기",
+
+todayBestOpportunities:
+"오늘의 추천 키워드",
+
+
+
+analyzeNow: "지금 분석하기",
+askAI: "AI에게 질문",
+
+askAIDescription:
+  "벤치마크 결과에 대해 자유롭게 질문해보세요.",
+
+askAIPlaceholder:
+  "예: 왜 이 영상이 가장 높은 조회수를 기록했나요?",
+
+thinking: "생각 중...",
+
+you: "나",
+
+ai: "AI",
+growth: "성장성",
+on: "활성",
+off: "비활성",
   },
+  
 };

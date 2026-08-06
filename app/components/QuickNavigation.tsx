@@ -10,7 +10,7 @@ const items = [
 
 export default function QuickNavigation() {
   return (
-    <div className="sticky top-16 z-40 mb-6 overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/90 backdrop-blur">
+    <div className="sticky top-16 z-40 mb-6 overflow-x-auto rounded-xl border border-zinc-800 bg-white/5 backdrop-blur-xl backdrop-blur">
       <div className="flex min-w-max gap-2 p-2">
         {items.map((item) => (
           <a

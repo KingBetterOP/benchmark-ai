@@ -29,7 +29,7 @@ export default function BenchmarkSummaryCard({
 
       <div className="grid grid-cols-2 gap-4">
 
-        <div className="rounded-xl bg-zinc-900 p-4">
+        <div className="rounded-xl bg-white/5 backdrop-blur-xl p-4">
           <p className="text-sm text-zinc-400">
             {t.videos}
           </p>
@@ -39,7 +39,7 @@ export default function BenchmarkSummaryCard({
           </h3>
         </div>
 
-        <div className="rounded-xl bg-zinc-900 p-4">
+        <div className="rounded-xl bg-white/5 backdrop-blur-xl p-4">
           <p className="text-sm text-zinc-400">
             {t.averageViews}
           </p>
@@ -49,7 +49,7 @@ export default function BenchmarkSummaryCard({
           </h3>
         </div>
 
-        <div className="rounded-xl bg-zinc-900 p-4">
+        <div className="rounded-xl bg-white/5 backdrop-blur-xl p-4">
           <p className="text-sm text-zinc-400">
             {t.averageDuration}
           </p>
@@ -59,7 +59,7 @@ export default function BenchmarkSummaryCard({
           </h3>
         </div>
 
-        <div className="rounded-xl bg-zinc-900 p-4">
+        <div className="rounded-xl bg-white/5 backdrop-blur-xl p-4">
           <p className="text-sm text-zinc-400">
             {t.averageTitleLength}
           </p>
@@ -68,7 +68,7 @@ export default function BenchmarkSummaryCard({
             {averageTitleLength}
           </h3>
         </div>
-<div className="rounded-xl bg-zinc-900 p-4">
+<div className="rounded-xl bg-white/5 backdrop-blur-xl p-4">
   <p className="text-sm text-zinc-400">
     {t.highestViews}
   </p>
@@ -78,7 +78,7 @@ export default function BenchmarkSummaryCard({
   </h3>
 </div>
 
-<div className="rounded-xl bg-zinc-900 p-4">
+<div className="rounded-xl bg-white/5 backdrop-blur-xl p-4">
   <p className="text-sm text-zinc-400">
     {t.lowestViews}
   </p>

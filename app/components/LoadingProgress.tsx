@@ -20,7 +20,7 @@ const t =
   translations[language as keyof typeof translations];
 
 return (
-    <div className="mx-auto mt-8 max-w-3xl rounded-3xl border border-cyan-500/30 bg-zinc-900 p-8 shadow-2xl">
+    <div className="mx-auto mt-8 max-w-3xl rounded-3xl border border-cyan-500/30 bg-white/5 backdrop-blur-xl p-8 shadow-2xl">
 
       <div className="mb-6 text-center">
   <div className="mb-3 text-6xl animate-pulse">

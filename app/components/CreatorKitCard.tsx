@@ -132,7 +132,7 @@ const downloadResult = () => {
       
   <div className="mt-8 space-y-6">
 
-    <div className="rounded-xl bg-zinc-900 p-5">
+    <div className="rounded-xl bg-white/5 backdrop-blur-xl p-5">
       <h3 className="mb-3 text-xl font-bold">
         {t.viralTitles}
       </h3>
@@ -146,7 +146,7 @@ const downloadResult = () => {
       </ul>
     </div>
 
-    <div className="rounded-xl bg-zinc-900 p-5">
+    <div className="rounded-xl bg-white/5 backdrop-blur-xl p-5">
       <h3 className="mb-3 text-xl font-bold">
         {t.hook}
       </h3>
@@ -154,7 +154,7 @@ const downloadResult = () => {
       <p>{result.hook}</p>
     </div>
 
-    <div className="rounded-xl bg-zinc-900 p-5">
+    <div className="rounded-xl bg-white/5 backdrop-blur-xl p-5">
       <h3 className="mb-3 text-xl font-bold">
         {t.script}
       </h3>
@@ -164,7 +164,7 @@ const downloadResult = () => {
       </p>
     </div>
 
-    <div className="rounded-xl bg-zinc-900 p-5">
+    <div className="rounded-xl bg-white/5 backdrop-blur-xl p-5">
       <h3 className="mb-3 text-xl font-bold">
         {t.description}
       </h3>
@@ -174,7 +174,7 @@ const downloadResult = () => {
       </p>
     </div>
 
-    <div className="rounded-xl bg-zinc-900 p-5">
+    <div className="rounded-xl bg-white/5 backdrop-blur-xl p-5">
       <h3 className="mb-3 text-xl font-bold">
         {t.hashtags}
       </h3>
@@ -191,7 +191,7 @@ const downloadResult = () => {
       </div>
     </div>
 
-    <div className="rounded-xl bg-zinc-900 p-5">
+    <div className="rounded-xl bg-white/5 backdrop-blur-xl p-5">
       <h3 className="mb-3 text-xl font-bold">
         {t.thumbnailPrompt}
       </h3>

@@ -41,7 +41,7 @@ export default function ThumbnailGenerator({
   };
 
   return (
-    <div className="mt-8 rounded-xl border border-pink-500 bg-zinc-900 p-6">
+    <div className="mt-8 rounded-xl border border-pink-500 bg-white/5 backdrop-blur-xl p-6">
       <h2 className="text-2xl font-bold">
         🖼️ AI 썸네일 생성
       </h2>

@@ -58,7 +58,7 @@ return (
 />
 
       {!loading && keyword && results.length === 0 && (
-        <div className="mt-8 rounded-xl border border-yellow-500 bg-zinc-900 p-8 text-center">
+        <div className="mt-8 rounded-xl border border-yellow-500 bg-white/5 backdrop-blur-xl p-8 text-center">
           <h2 className="text-2xl font-bold">
             {t.noResultsTitle}
           </h2>

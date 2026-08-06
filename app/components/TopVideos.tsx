@@ -16,7 +16,7 @@ export default function TopVideos({
   const t =
   translations[language as keyof typeof translations];
   return (
-    <div className="mt-6 rounded-xl border border-yellow-500 bg-zinc-900 p-6">
+    <div className="mt-6 rounded-xl border border-yellow-500 bg-white/5 backdrop-blur-xl p-6">
       <h2 className="mb-4 text-2xl font-bold">
   {t.bestVideos}
 </h2>

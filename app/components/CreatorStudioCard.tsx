@@ -17,7 +17,7 @@ export default function CreatorStudioCard({
   };
 
   return (
-    <div className="rounded-3xl border border-cyan-500 bg-zinc-900 p-6">
+    <div className="rounded-3xl border border-cyan-500 bg-white/5 backdrop-blur-xl p-6">
 
       <h2 className="text-3xl font-bold">
         🎬 AI Creator Studio

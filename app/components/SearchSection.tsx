@@ -1,5 +1,5 @@
 import SearchSummary from "./SearchSummary";
-import SearchBar from "./SearchBar";
+import SearchBarV2 from "./SearchBarV2";
 import Dashboard from "./Dashboard";
 import QuickStats from "./QuickStats";
 import RecentSearches from "./RecentSearches";
@@ -84,21 +84,12 @@ averageViews,
 }: Props) {
   return (
     <>
-      <SearchSummary keyword={keyword} />
-
-<SearchBar
+      <SearchSummary
   keyword={keyword}
-  setKeyword={setKeyword}
-  order={order}
-  setOrder={setOrder}
-  onSearch={onSearch}
-  loading={loading}
-  min10Minutes={min10Minutes}
-  setMin10Minutes={setMin10Minutes}
-  last30Days={last30Days}
-  setLast30Days={setLast30Days}
   language={language}
 />
+
+
 
 <section id="dashboard">
 <Dashboard
@@ -111,7 +102,7 @@ averageViews,
 </section>
 
 {results.length > 0 && !loading && (
-  <div className="mt-6 rounded-xl border border-zinc-700 bg-zinc-900 p-4">
+  <div className="mt-6 rounded-xl border border-zinc-700 bg-white/5 backdrop-blur-xl p-4">
     <div className="flex flex-wrap gap-6 text-sm">
       <span>🔎 <strong>{keyword}</strong></span>
       <span>
@@ -149,10 +140,12 @@ averageViews,
 <RecentSearches
   history={history}
   onSelect={onHistorySelect}
+  language={language}
 />
 <KeywordSuggestionsCard
   keyword={keyword}
   onSelect={onHistorySelect}
+  language={language}
 />
     </>
   );

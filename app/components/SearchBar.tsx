@@ -39,8 +39,14 @@ export default function SearchBar({
   translations[language as keyof typeof translations];
   return (
     <section className="mx-auto mt-12 max-w-6xl">
-      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-6 shadow-2xl backdrop-blur-xl">
-
+      <div className="rounded-[32px]
+border border-white/10
+bg-white/5
+p-10
+shadow-[0_20px_80px_rgba(0,0,0,0.45)]
+backdrop-blur-2xl
+transition-all
+duration-500">
         <div className="mb-6 text-center">
           <p className="text-sm uppercase tracking-[0.3em] text-red-400">
   {language === "ko"

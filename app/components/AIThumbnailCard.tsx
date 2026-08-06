@@ -52,14 +52,14 @@ const [loading, setLoading] =
       </p>
 
       <h2 className="mt-2 text-4xl font-extrabold">
-        🎨 Thumbnail Concepts
+        🎨 t.thumbnailConcepts
       </h2>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         {thumbnails.map((item, index) => (
           <div
             key={index}
-            className="rounded-2xl bg-zinc-900 p-6"
+            className="rounded-2xl bg-white/5 backdrop-blur-xl p-6"
           >
             <h3 className="text-xl font-bold">
               {item.text}

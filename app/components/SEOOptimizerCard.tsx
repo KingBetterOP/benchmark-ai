@@ -10,10 +10,10 @@ export default function SEOOptimizerCard({
   if (!optimizer) return null;
 
   return (
-    <div className="rounded-2xl border border-green-500 bg-zinc-900 p-6">
+    <div className="rounded-2xl border border-green-500 bg-white/5 backdrop-blur-xl p-6">
 
       <h2 className="mb-6 text-3xl font-bold">
-        🚀 AI SEO Optimizer
+        🚀 t.seoOptimizer
       </h2>
 
       <div className="space-y-6">

@@ -12,14 +12,14 @@ export default function ChannelAuditCard({
     <div className="mt-10 rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-8">
 
       <p className="text-sm uppercase tracking-[0.3em] text-cyan-400">
-        AI Channel Audit
+        t.channelAudit
       </p>
 
       <h2 className="mt-2 text-4xl font-extrabold">
         📺 {audit.niche}
       </h2>
 
-      <div className="mt-6 rounded-2xl bg-zinc-900 p-5">
+      <div className="mt-6 rounded-2xl bg-white/5 backdrop-blur-xl p-5">
         <p className="text-zinc-400">
           Channel Score
         </p>

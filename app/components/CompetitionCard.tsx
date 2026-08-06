@@ -10,7 +10,7 @@ export default function CompetitionCard({
   if (!competition) return null;
 
   return (
-    <div className="rounded-2xl border border-red-500 bg-zinc-900 p-6">
+    <div className="rounded-2xl border border-red-500 bg-white/5 backdrop-blur-xl p-6">
 
       <h2 className="mb-6 text-3xl font-bold">
         ⚔️ Competition Analysis

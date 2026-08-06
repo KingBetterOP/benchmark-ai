@@ -10,7 +10,7 @@ export default function TitleGeneratorCard({
   if (titles.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-yellow-500 bg-zinc-900 p-6">
+    <div className="rounded-2xl border border-yellow-500 bg-white/5 backdrop-blur-xl p-6">
       <h2 className="mb-6 text-3xl font-bold">
         📝 AI Title Generator
       </h2>

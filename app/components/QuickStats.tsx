@@ -29,7 +29,7 @@ export default function QuickStats({
 }: Props) {
     
   return (
-    <div className="mt-8 rounded-xl border border-gray-700 bg-zinc-900 p-6">
+    <div className="mt-8 rounded-xl border border-gray-700 bg-white/5 backdrop-blur-xl p-6">
       <h2 className="text-2xl font-bold">🧠 AI Quick Stats</h2>
 
       <p className="mt-3">
@@ -41,7 +41,7 @@ export default function QuickStats({
       </p>
 
       {loading && (
-        <div className="mt-6 rounded-xl border border-yellow-500 bg-zinc-900 p-6">
+        <div className="mt-6 rounded-xl border border-yellow-500 bg-white/5 backdrop-blur-xl p-6">
           <h2 className="text-xl font-bold">
             🤖 AI가 영상을 분석 중입니다...
           </h2>

@@ -17,14 +17,14 @@ export default function ContentPlannerCard({
       </p>
 
       <h2 className="mt-2 text-4xl font-extrabold">
-        📅 30-Day Content Plan
+        t.contentPlan30Days
       </h2>
 
       <div className="mt-8 space-y-5">
         {plans.map((plan, index) => (
           <div
             key={index}
-            className="rounded-2xl bg-zinc-900 p-6"
+            className="rounded-2xl bg-white/5 backdrop-blur-xl p-6"
           >
             <h3 className="text-2xl font-bold">
               Day {plan.day}

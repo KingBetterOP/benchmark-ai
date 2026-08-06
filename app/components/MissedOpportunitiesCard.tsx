@@ -28,7 +28,7 @@ export default function MissedOpportunitiesCard({
         {opportunities.map((item, index) => (
           <div
             key={index}
-            className="rounded-2xl bg-zinc-900 p-5"
+            className="rounded-2xl bg-white/5 backdrop-blur-xl p-5"
           >
             <h3 className="text-xl font-bold text-orange-400">
               {index + 1}. {item.title}

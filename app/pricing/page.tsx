@@ -30,7 +30,7 @@ const t =
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-black text-white">
-      <div className="max-w-xl rounded-xl border border-zinc-700 bg-zinc-900 p-8 text-center">
+      <div className="max-w-xl rounded-xl border border-zinc-700 bg-white/5 backdrop-blur-xl p-8 text-center">
         <h1 className="text-4xl font-bold">
   {t.pricingTitle}
 </h1>

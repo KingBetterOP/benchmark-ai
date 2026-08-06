@@ -4,12 +4,14 @@ type Props = {
   projects: SavedProject[];
   onLoad: (project: SavedProject) => void;
   onDelete: (id: string) => void;
+  language: string;
 };
 
 export default function ProjectList({
   projects,
   onLoad,
   onDelete,
+  language,
 }: Props) {
   if (projects.length === 0) {
     return null;
@@ -18,7 +20,9 @@ export default function ProjectList({
   return (
     <div className="mt-8 rounded-xl border border-gray-700 p-6">
       <h2 className="mb-4 text-2xl font-bold">
-        📂 저장된 프로젝트
+        {language === "ko"
+  ? "📂 저장된 프로젝트"
+  : "📂 Saved Projects"}
       </h2>
 
       <div className="space-y-3">
@@ -32,11 +36,15 @@ export default function ProjectList({
               <div className="mt-2 flex flex-wrap gap-2">
 
   <span className="rounded-full bg-cyan-500/20 px-2 py-1 text-xs text-cyan-300">
-    Saved Project
+    {language === "ko"
+  ? "저장된 프로젝트"
+  : "Saved Project"}
   </span>
 
   <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-300">
-    AI Ready
+    {language === "ko"
+  ? "AI 준비 완료"
+  : "AI Ready"}
   </span>
 
 </div>
@@ -44,7 +52,9 @@ export default function ProjectList({
              <p className="text-sm text-gray-400">
   {project.createdAt
     ? new Date(project.createdAt).toLocaleString()
-    : "날짜 없음"}
+    : language === "ko"
+  ? "날짜 없음"
+  : "No Date"}
 </p>
             </div>
 
@@ -53,14 +63,18 @@ export default function ProjectList({
                 onClick={() => onLoad(project)}
                 className="rounded bg-green-600 px-3 py-2"
               >
-                불러오기
+                {language === "ko"
+  ? "불러오기"
+  : "Load"}
               </button>
 
               <button
                 onClick={() => onDelete(project.id)}
                 className="rounded bg-red-600 px-3 py-2"
               >
-                삭제
+                {language === "ko"
+  ? "삭제"
+  : "Delete"}
               </button>
             </div>
           </div>

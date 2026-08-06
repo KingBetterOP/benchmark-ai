@@ -16,7 +16,7 @@ export default function Accordion({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
+    <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-white/5 backdrop-blur-xl">
       <button
         onClick={() => setOpen(!open)}
         className="flex w-full items-center justify-between px-6 py-4 text-left transition hover:bg-zinc-800"

@@ -23,7 +23,7 @@ export default function TitleAnalyzerCard({
     <section className="mt-10 rounded-3xl border border-yellow-500/30 bg-yellow-500/10 p-8">
 
       <h2 className="text-3xl font-extrabold">
-        📝 AI Title Analyzer
+        📝 t.titleAnalyzer
       </h2>
 
       <p className="mt-2 text-zinc-400">
@@ -43,7 +43,7 @@ export default function TitleAnalyzerCard({
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
           <h3 className="text-xl font-bold text-green-400">
             ✅ Improvements
           </h3>
@@ -55,7 +55,7 @@ export default function TitleAnalyzerCard({
           </ul>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
           <h3 className="text-xl font-bold text-cyan-400">
             🚀 Better Titles
           </h3>
@@ -83,7 +83,7 @@ function ScoreCard({
   score: number;
 }) {
   return (
-    <div className="rounded-2xl bg-zinc-900 p-5 text-center">
+    <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5 text-center">
 
       <p className="text-zinc-400">
         {title}

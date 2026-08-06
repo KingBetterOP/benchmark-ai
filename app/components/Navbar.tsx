@@ -23,7 +23,7 @@ export default function Navbar({
     translations[language as keyof typeof translations];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-2xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
 
         {/* Logo */}
@@ -31,12 +31,12 @@ export default function Navbar({
           href="/"
           className="group flex items-center gap-3"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500 text-xl font-bold text-black transition-all duration-300 group-hover:scale-110">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/30 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
             🚀
           </div>
 
           <div>
-            <div className="text-xl font-extrabold tracking-tight text-white">
+            <div className="bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-2xl font-extrabold text-transparent">
               Benchmark AI
             </div>
 
@@ -47,32 +47,32 @@ export default function Navbar({
         </Link>
 
         {/* Menu */}
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-10 md:flex">
 
           <Link
             href="/"
-            className="text-zinc-300 transition hover:text-cyan-400"
+            className="rounded-xl px-4 py-2 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white"
           >
             {t.home}
           </Link>
 
           <Link
             href="/pricing"
-            className="text-zinc-300 transition hover:text-cyan-400"
+            className="rounded-xl px-4 py-2 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white"
           >
             {t.pricing}
           </Link>
 
           <Link
             href="/about"
-            className="text-zinc-300 transition hover:text-cyan-400"
+            className="rounded-xl px-4 py-2 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white"
           >
             {t.about}
           </Link>
 
           <Link
             href="/contact"
-            className="text-zinc-300 transition hover:text-cyan-400"
+            className="rounded-xl px-4 py-2 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white"
           >
             {t.contact}
           </Link>
@@ -81,7 +81,7 @@ export default function Navbar({
         {/* Right */}
         <div className="flex items-center gap-4">
 
-          <div className="hidden rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-300 lg:flex">
+          <div className="hidden items-center rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 backdrop-blur-xl lg:flex">
             {t.trusted}
           </div>
           <LanguageSelector
@@ -92,7 +92,7 @@ export default function Navbar({
           <Show when="signed-out">
             <SignInButton mode="modal">
 
-              <button className="rounded-full border border-zinc-700 px-5 py-2 font-medium text-white transition hover:border-cyan-500 hover:bg-zinc-800">
+              <button className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-2.5 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-cyan-500/30">
                 {t.signIn}
               </button>
 

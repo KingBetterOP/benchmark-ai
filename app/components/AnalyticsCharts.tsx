@@ -66,10 +66,10 @@ export default function AnalyticsCharts({
   ];
 
   return (
-    <section className="mt-10 rounded-3xl border border-zinc-800 bg-zinc-900 p-8">
+    <section className="mt-10 rounded-3xl border border-zinc-800 bg-white/5 backdrop-blur-xl p-8">
 
       <h2 className="mb-8 text-3xl font-bold">
-        📊 Analytics Dashboard
+        📊 t.analyticsDashboard
       </h2>
 
       <div className="grid gap-8 lg:grid-cols-2">

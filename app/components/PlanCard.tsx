@@ -8,7 +8,7 @@ export default function PlanCard({
   dailyUsage,
 }: Props) {
   return (
-    <div className="mx-auto mt-6 max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-5 text-center">
+    <div className="mx-auto mt-6 max-w-md rounded-xl border border-zinc-700 bg-white/5 backdrop-blur-xl p-5 text-center">
       {plan === "pro" ? (
         <>
           <div className="text-2xl font-bold text-yellow-400">

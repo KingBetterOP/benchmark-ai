@@ -45,7 +45,7 @@ export default function ScriptAnalyzerCard({
 
       </div>
 
-      <div className="mt-8 rounded-2xl bg-zinc-900 p-5">
+      <div className="mt-8 rounded-2xl bg-white/5 backdrop-blur-xl p-5">
         <h3 className="text-xl font-bold text-cyan-400">
           🎣 Improved Hook
         </h3>
@@ -55,7 +55,7 @@ export default function ScriptAnalyzerCard({
         </p>
       </div>
 
-      <div className="mt-6 rounded-2xl bg-zinc-900 p-5">
+      <div className="mt-6 rounded-2xl bg-white/5 backdrop-blur-xl p-5">
         <h3 className="text-xl font-bold text-purple-400">
           ⏱ Estimated Watch Time
         </h3>
@@ -67,7 +67,7 @@ export default function ScriptAnalyzerCard({
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
 
           <h3 className="text-xl font-bold text-green-400">
             ✅ Strengths
@@ -83,7 +83,7 @@ export default function ScriptAnalyzerCard({
 
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
 
           <h3 className="text-xl font-bold text-red-400">
             ⚠ Weaknesses
@@ -113,7 +113,7 @@ function ScoreCard({
   score: number;
 }) {
   return (
-    <div className="rounded-2xl bg-zinc-900 p-5 text-center">
+    <div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5 text-center">
 
       <p className="text-zinc-400">
         {title}

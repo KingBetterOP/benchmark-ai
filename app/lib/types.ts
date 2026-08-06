@@ -291,3 +291,73 @@ export interface AIThumbnail {
 
   emotion: string;
 }
+export interface FinalDecision {
+  score: number;
+  decision: string;
+  reasons: string[];
+  action: string;
+}
+
+export interface ViralPrediction {
+  successProbability: number;
+  expectedViews: string;
+  expectedCTR: string;
+  estimatedRPM: string;
+  estimatedRevenue: string;
+  competition: string;
+  recommendation: string;
+  confidence: number;
+}
+
+export interface ThumbnailAnalysis {
+  ctrScore: number;
+  emotionScore: number;
+  colorScore: number;
+  textScore: number;
+  overallScore: number;
+  strengths: string[];
+  improvements: string[];
+}
+
+export interface TitleAnalysis {
+  ctrScore: number;
+  seoScore: number;
+  emotionScore: number;
+  curiosityScore: number;
+  lengthScore: number;
+  overallScore: number;
+  improvements: string[];
+  betterTitles: string[];
+}
+export interface MissedOpportunity {
+  title: string;
+  reason: string;
+}
+export interface DecisionEngine {
+  overallScore: number;
+
+  confidence: number;
+
+  decision: "make" | "wait" | "skip";
+
+  market: {
+    demand: number;
+    competition: number;
+    trend: number;
+  };
+
+  performance: {
+    ctr: number;
+    rpm: number;
+    retention: number;
+  };
+
+  risk: {
+    level: "Low" | "Medium" | "High";
+    reasons: string[];
+  };
+
+  reasons: string[];
+
+  actions: string[];
+}

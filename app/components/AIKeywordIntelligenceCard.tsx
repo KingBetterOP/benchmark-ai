@@ -44,7 +44,7 @@ export default function AIKeywordIntelligenceCard({
 
       <div className="mt-8 grid gap-5 md:grid-cols-3">
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl p-5">
           <p className="text-zinc-400">
             Difficulty
           </p>
@@ -54,7 +54,7 @@ export default function AIKeywordIntelligenceCard({
           </p>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl p-5">
           <p className="text-zinc-400">
             Opportunity
           </p>
@@ -64,7 +64,7 @@ export default function AIKeywordIntelligenceCard({
           </p>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl p-5">
           <p className="text-zinc-400">
             Trend
           </p>
@@ -74,7 +74,7 @@ export default function AIKeywordIntelligenceCard({
           </p>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl p-5">
           <p className="text-zinc-400">
             Search Demand
           </p>
@@ -84,7 +84,7 @@ export default function AIKeywordIntelligenceCard({
           </p>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl p-5">
           <p className="text-zinc-400">
             Best Upload Time
           </p>
@@ -94,7 +94,7 @@ export default function AIKeywordIntelligenceCard({
           </p>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl p-5">
           <p className="text-zinc-400">
             Target Audience
           </p>
@@ -105,7 +105,7 @@ export default function AIKeywordIntelligenceCard({
             {audience}
           </p>
         </div>
-        <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl p-5">
   <p className="text-zinc-400">
     Expected Views
   </p>
@@ -115,7 +115,7 @@ export default function AIKeywordIntelligenceCard({
   </p>
 </div>
 
-<div className="rounded-2xl bg-zinc-900 p-5">
+<div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
   <p className="text-zinc-400">
     Expected CTR
   </p>
@@ -125,7 +125,7 @@ export default function AIKeywordIntelligenceCard({
   </p>
 </div>
 
-<div className="rounded-2xl bg-zinc-900 p-5">
+<div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
   <p className="text-zinc-400">
     Estimated RPM
   </p>
@@ -135,7 +135,7 @@ export default function AIKeywordIntelligenceCard({
   </p>
 </div>
 
-<div className="rounded-2xl bg-zinc-900 p-5">
+<div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
   <p className="text-zinc-400">
     Estimated Revenue
   </p>
@@ -145,7 +145,7 @@ export default function AIKeywordIntelligenceCard({
   </p>
 </div>
 
-<div className="rounded-2xl bg-zinc-900 p-5">
+<div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
   <p className="text-zinc-400">
     Recommendation
   </p>
@@ -155,7 +155,7 @@ export default function AIKeywordIntelligenceCard({
   </p>
 </div>
 
-<div className="rounded-2xl bg-zinc-900 p-5">
+<div className="rounded-2xl bg-white/5 backdrop-blur-xl p-5">
   <p className="text-zinc-400">
     Confidence
   </p>

@@ -35,7 +35,7 @@ export default function VideoGrid({
 
   if (videos.length === 0) {
     return (
-      <div className="mt-12 rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 p-10 text-center">
+      <div className="mt-12 rounded-2xl border border-dashed border-zinc-700 bg-white/5 backdrop-blur-xl p-10 text-center">
 
         <div className="mb-4 text-5xl">
           🔍
@@ -111,7 +111,7 @@ export default function VideoGrid({
                 {currentVideos.map((video) => (
           <div
             key={`${video.id}-${startIndex}-${currentPage}`}
-            className="rounded-2xl border border-zinc-800 bg-zinc-900 p-4 transition-all duration-300 hover:border-red-500"
+            className="rounded-2xl border border-zinc-800 bg-white/5 backdrop-blur-xl p-4 transition-all duration-300 hover:border-red-500"
           >
             <VideoCard
               video={video}

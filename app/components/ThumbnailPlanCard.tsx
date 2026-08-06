@@ -10,7 +10,7 @@ export default function ThumbnailPlanCard({
   if (thumbnail.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-blue-500 bg-zinc-900 p-6">
+    <div className="rounded-2xl border border-blue-500 bg-white/5 backdrop-blur-xl p-6">
       <h2 className="mb-6 text-3xl font-bold">
         🎨 Thumbnail Blueprint
       </h2>
@@ -55,7 +55,7 @@ export default function ThumbnailPlanCard({
               </div>
             </div>
 
-            <div className="mt-5 rounded-lg bg-zinc-900 p-4">
+            <div className="mt-5 rounded-lg bg-white/5 backdrop-blur-xl p-4">
               <p className="text-sm text-gray-400">
                 AI Reason
               </p>

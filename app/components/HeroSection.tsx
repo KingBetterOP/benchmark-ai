@@ -29,14 +29,14 @@ export default function HeroSection({
 </p>
 <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
 
-  <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+  <div className="rounded-2xl border border-zinc-800 bg-white/5 backdrop-blur-xl p-4">
     <p className="text-3xl font-bold text-cyan-400">1M+</p>
     <p className="mt-1 text-sm text-zinc-400">
       {t.videosAnalyzed}
     </p>
   </div>
 
-  <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+  <div className="rounded-2xl border border-zinc-800 bg-white/5 backdrop-blur-xl p-4">
     <p className="text-3xl font-bold text-green-400">95%</p>
     <p className="mt-1 text-sm text-zinc-400">
       {t.aiAccuracy}
@@ -66,12 +66,12 @@ export default function HeroSection({
           {t.startBenchmark}
         </button>
 
-        <button className="rounded-2xl border border-zinc-700 bg-zinc-900 px-8 py-4 text-lg transition-all duration-300 hover:border-cyan-500 hover:bg-zinc-800">
+        <button className="rounded-2xl border border-zinc-700 bg-white/5 backdrop-blur-xl px-8 py-4 text-lg transition-all duration-300 hover:border-cyan-500 hover:bg-zinc-800">
           {t.watchDemo}
         </button>
       </div>
 
-<div className="mx-auto mt-12 max-w-5xl rounded-3xl border border-zinc-800 bg-zinc-900/60 p-8">
+<div className="mx-auto mt-12 max-w-5xl rounded-3xl border border-zinc-800 bg-white/5 backdrop-blur-xl p-8">
 
   <h3 className="text-2xl font-bold">
     {t.stopGuessing}

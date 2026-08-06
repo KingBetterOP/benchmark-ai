@@ -44,7 +44,7 @@ export default function AIHashtagGeneratorCard({
   };
 
   return (
-    <div className="rounded-2xl border border-purple-500/30 bg-purple-500/10 p-6">
+    <div className="rounded-3xl border border-purple-500/30 bg-purple-500/10 p-6">
 
       <h2 className="text-2xl font-bold">
         {t.aiHashtagGenerator}
@@ -61,7 +61,7 @@ export default function AIHashtagGeneratorCard({
       </button>
 
       {hashtags && (
-        <div className="mt-6 whitespace-pre-wrap rounded-xl bg-zinc-900 p-4">
+        <div className="mt-6 whitespace-pre-wrap rounded-xl bg-white/5 backdrop-blur-xl p-4">
           {hashtags}
         </div>
       )}
