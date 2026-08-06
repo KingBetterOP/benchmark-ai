@@ -2,25 +2,47 @@ import { SEOOptimizer } from "../lib/types";
 
 type Props = {
   optimizer: SEOOptimizer | null;
+  language: string;
 };
 
 export default function SEOOptimizerCard({
   optimizer,
+  language,
 }: Props) {
   if (!optimizer) return null;
+  const text =
+  language === "ko"
+    ? {
+        title: "🚀 SEO 최적화",
+        betterTitle: "더 나은 제목",
+        betterDescription: "더 나은 설명",
+        searchIntent: "검색 의도",
+        tags: "태그",
+        keywordCluster: "키워드 클러스터",
+        rankingTips: "랭킹 팁",
+      }
+    : {
+        title: "🚀 SEO Optimizer",
+        betterTitle: "Better Title",
+        betterDescription: "Better Description",
+        searchIntent: "Search Intent",
+        tags: "Tags",
+        keywordCluster: "Keyword Cluster",
+        rankingTips: "Ranking Tips",
+      };
 
   return (
     <div className="rounded-2xl border border-green-500 bg-white/5 backdrop-blur-xl p-6">
 
       <h2 className="mb-6 text-3xl font-bold">
-        🚀 t.seoOptimizer
+        {text.title}
       </h2>
 
       <div className="space-y-6">
 
         <div>
           <h3 className="mb-2 font-bold">
-            Better Title
+            {text.betterTitle}
           </h3>
 
           <p>{optimizer.betterTitle}</p>
@@ -28,7 +50,7 @@ export default function SEOOptimizerCard({
 
         <div>
           <h3 className="mb-2 font-bold">
-            Better Description
+            {text.betterDescription}
           </h3>
 
           <p>{optimizer.betterDescription}</p>
@@ -36,7 +58,7 @@ export default function SEOOptimizerCard({
 
         <div>
           <h3 className="mb-2 font-bold">
-            Search Intent
+            {text.searchIntent}
           </h3>
 
           <p>{optimizer.searchIntent}</p>
@@ -44,7 +66,7 @@ export default function SEOOptimizerCard({
 
         <div>
           <h3 className="mb-2 font-bold">
-            Tags
+            {text.tags}
           </h3>
 
           <div className="flex flex-wrap gap-2">
@@ -61,7 +83,7 @@ export default function SEOOptimizerCard({
 
         <div>
           <h3 className="mb-2 font-bold">
-            Keyword Cluster
+            {text.keywordCluster}
           </h3>
 
           <ul className="space-y-1">
@@ -73,7 +95,7 @@ export default function SEOOptimizerCard({
 
         <div>
           <h3 className="mb-2 font-bold">
-            Ranking Tips
+            {text.rankingTips}
           </h3>
 
           <ul className="space-y-1">

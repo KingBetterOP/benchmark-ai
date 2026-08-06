@@ -11,6 +11,7 @@ import ChannelAuditCard from "../ChannelAuditCard";
 import SEOOptimizerCard from "../SEOOptimizerCard";
 
 type Props = {
+  language: string;
   seoAnalysis: SEOAnalysis | null;
   seoOptimizer: SEOOptimizer | null;
   contentGap: ContentGap[];
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export default function SEOCards({
+    language,
   seoAnalysis,
   seoOptimizer,
   contentGap,
@@ -39,6 +41,7 @@ export default function SEOCards({
 
       <SEOOptimizerCard
         optimizer={seoOptimizer}
+        language={language}
       />
     </>
   );

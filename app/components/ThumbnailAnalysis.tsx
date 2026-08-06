@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useEffect, useState } from "react";
 type Analysis = {
@@ -91,9 +92,11 @@ setScore(data.score);
   </div>
 )}
 
-      <img
+      <Image
         src={thumbnail}
         alt="thumbnail"
+        width={1280}
+        height={720}
         className="mt-3 rounded-lg"
       />
 

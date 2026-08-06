@@ -73,6 +73,7 @@ export default function AIAnalysisSection({
       />
 
       <SEOCards
+      language={language}
         seoAnalysis={seoAnalysis}
         seoOptimizer={seoOptimizer}
         contentGap={contentGap}
@@ -80,6 +81,7 @@ export default function AIAnalysisSection({
       />
 
       <PlanningCards
+      language={language}
         contentPlanner={contentPlanner}
         aiThumbnail={aiThumbnail}
       />

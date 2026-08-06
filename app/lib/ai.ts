@@ -24,7 +24,7 @@ function parseAIJson(text: string) {
 
   try {
     return JSON.parse(cleaned);
-  } catch (error) {
+  } catch {
     console.error("❌ JSON PARSE FAILED");
     console.error(cleaned);
 
@@ -58,12 +58,13 @@ function safeObject<T>(
 }
 function safeBenchmark(data: unknown) {
   const benchmark = safeObject(data, {});
+  const benchmarkObj = benchmark as Record<string, unknown>;
 
   return {
-    score: safeNumber((benchmark as any).score),
+    score: safeNumber(benchmarkObj.score),
 
     overview: safeObject(
-      (benchmark as any).overview,
+  benchmarkObj.overview,
       {
         avgViews: "",
         avgDuration: "",
@@ -73,19 +74,19 @@ function safeBenchmark(data: unknown) {
     ),
 
     insights: safeArray(
-      (benchmark as any).insights
-    ),
+  benchmarkObj.insights
+),
 
     actionPlan: safeArray(
-      (benchmark as any).actionPlan
-    ),
+  benchmarkObj.actionPlan
+),
 
     analysis: safeString(
-      (benchmark as any).analysis
-    ),
+  benchmarkObj.analysis
+),
 
     prediction: safeObject(
-  (benchmark as any).prediction,
+  benchmarkObj.prediction,
   {
     successProbability: 0,
     expectedViews: "",
@@ -96,7 +97,7 @@ function safeBenchmark(data: unknown) {
 ),
 
     seo: safeObject(
-  (benchmark as any).seo,
+  benchmarkObj.seo,
   {
     score: 0,
     titleScore: 0,
@@ -106,7 +107,7 @@ function safeBenchmark(data: unknown) {
 ),
 
     audience: safeObject(
-  (benchmark as any).audience,
+  benchmarkObj.audience,
   {
     retention: 0,
     engagement: 0,
@@ -115,7 +116,7 @@ function safeBenchmark(data: unknown) {
 ),
 
     uploadStrategy: safeObject(
-  (benchmark as any).uploadStrategy,
+  benchmarkObj.uploadStrategy,
   {
     bestDay: "",
     bestTime: "",
@@ -124,7 +125,7 @@ function safeBenchmark(data: unknown) {
 ),
 
     risk: safeObject(
-  (benchmark as any).risk,
+  benchmarkObj.risk,
   {
     level: "",
     reasons: [],
@@ -265,11 +266,11 @@ console.log(
 
 return {
   report: safeBenchmark(
-    (benchmarkData as any).benchmark
+    (benchmarkData as Record<string, unknown>).benchmark
   ),
 
   keywordIntelligence: safeObject<KeywordIntelligence>(
-  (benchmarkData as any).keywordIntelligence,
+  (benchmarkData as Record<string, unknown>).keywordIntelligence,
   {
     difficulty: 0,
     opportunity: 0,

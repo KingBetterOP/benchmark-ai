@@ -1,12 +1,16 @@
+import Image from "next/image";
+
 import { useState } from "react";
 import { AIThumbnail } from "../lib/types";
 
 type Props = {
   thumbnails: AIThumbnail[];
+  language: string;
 };
 
 export default function AIThumbnailCard({
   thumbnails,
+  language,
 }: Props) {
     const [generatedImage, setGeneratedImage] =
   useState<string | null>(null);
@@ -43,16 +47,38 @@ const [loading, setLoading] =
     setLoading(false);
   }
 };
+const text =
+  language === "ko"
+    ? {
+        title: "AI 썸네일 생성기",
+        subtitle: "🎨 AI 썸네일 컨셉",
+        style: "스타일",
+        composition: "구도",
+        emotion: "감정",
+        generating: "생성 중...",
+        generate: "🎨 썸네일 생성",
+        download: "⬇️ 썸네일 다운로드",
+      }
+    : {
+        title: "AI Thumbnail Generator",
+        subtitle: "🎨 AI Thumbnail Concepts",
+        style: "Style",
+        composition: "Composition",
+        emotion: "Emotion",
+        generating: "Generating...",
+        generate: "🎨 Generate Thumbnail",
+        download: "⬇️ Download Thumbnail",
+      };
   if (!thumbnails.length) return null;
 
   return (
     <div className="mt-10 rounded-3xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-500/10 to-pink-500/10 p-8">
       <p className="text-sm uppercase tracking-[0.3em] text-fuchsia-400">
-        AI Thumbnail Generator
+        {text.title}
       </p>
 
       <h2 className="mt-2 text-4xl font-extrabold">
-        🎨 t.thumbnailConcepts
+        {text.subtitle}
       </h2>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -70,10 +96,18 @@ const [loading, setLoading] =
             </p>
 
             <div className="mt-4 space-y-2 text-sm">
-              <p><strong>Style:</strong> {item.style}</p>
-              <p><strong>Composition:</strong> {item.composition}</p>
-              <p><strong>Emotion:</strong> {item.emotion}</p>
-            </div>
+  <p>
+    <strong>{text.style}:</strong> {item.style}
+  </p>
+
+  <p>
+    <strong>{text.composition}:</strong> {item.composition}
+  </p>
+
+  <p>
+    <strong>{text.emotion}:</strong> {item.emotion}
+  </p>
+</div>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {item.colors.map((color, i) => (
@@ -90,22 +124,24 @@ const [loading, setLoading] =
   disabled={loading}
   className="mt-6 w-full rounded-xl bg-fuchsia-600 px-4 py-3 font-bold transition hover:bg-fuchsia-500 disabled:opacity-50"
 >
-  {loading ? "Generating..." : "🎨 Generate Thumbnail"}
+  {loading ? text.generating : text.generate}
 </button>
 {generatedImage && (
   <div className="mt-6">
-    <img
-      src={generatedImage}
-      alt="Generated Thumbnail"
-      className="w-full rounded-2xl border border-zinc-700"
-    />
+    <Image
+  src={generatedImage}
+  alt="Generated Thumbnail"
+  width={1024}
+  height={576}
+  className="w-full rounded-2xl border border-zinc-700"
+/>
 
     <a
       href={generatedImage}
       download="thumbnail.png"
       className="mt-4 block rounded-xl bg-emerald-600 px-4 py-3 text-center font-bold transition hover:bg-emerald-500"
     >
-      ⬇️ Download Thumbnail
+      {text.download}
     </a>
   </div>
 )}

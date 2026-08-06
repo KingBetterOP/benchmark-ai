@@ -7,23 +7,27 @@ import ContentPlannerCard from "../ContentPlannerCard";
 import AIThumbnailCard from "../AIThumbnailCard";
 
 type Props = {
+    language: string;
   contentPlanner: ContentPlanner[];
   aiThumbnail: AIThumbnail[];
 };
 
 export default function PlanningCards({
+    language,
   contentPlanner,
   aiThumbnail,
 }: Props) {
   return (
     <>
       <ContentPlannerCard
-        plans={contentPlanner}
-      />
+  plans={contentPlanner}
+  language={language}
+/>
 
       <AIThumbnailCard
-        thumbnails={aiThumbnail}
-      />
+  thumbnails={aiThumbnail}
+  language={language}
+/>
     </>
   );
 }

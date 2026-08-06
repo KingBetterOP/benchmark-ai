@@ -1,5 +1,8 @@
+import Image from "next/image";
+
 import { Video } from "../lib/types";
 import { formatDuration } from "../lib/videoUtils";
+
 
 type Props = {
   video: Video;
@@ -18,9 +21,11 @@ export default function VideoHeader({
     >
       <div className="relative">
 
-        <img
+        <Image
           src={video.snippet.thumbnails.high.url}
           alt={video.snippet.title}
+          width={1280}
+          height={720}
           className="aspect-video w-full object-cover"
         />
 

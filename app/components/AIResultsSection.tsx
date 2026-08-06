@@ -81,12 +81,7 @@ const confidence = Math.min(
   99,
   Math.max(50, finalScore + 5)
 );
-const competitionLevel =
-  finalScore >= 85
-    ? t.low
-    : finalScore >= 70
-    ? t.average
-    : t.high;
+
   const decision =
   finalScore >= 85
     ? `🚀 ${t.makeThisVideo}`

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState } from "react";
 
@@ -72,9 +73,11 @@ export default function ThumbnailGenerator({
 
       {imageUrl && (
   <div className="mt-6">
-    <img
+    <Image
       src={`data:image/png;base64,${imageUrl}`}
       alt="AI Thumbnail"
+      width={1280}
+      height={720}
       className="rounded-xl"
     />
 

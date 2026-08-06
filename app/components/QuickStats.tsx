@@ -1,6 +1,6 @@
 import TopVideos from "./TopVideos";
 import { Video, ThumbnailPlan } from "../lib/types";
-import ThumbnailGenerator from "./ThumbnailGenerator";
+
 type Props = {
   results: Video[];
   averageViews: number;
@@ -22,7 +22,6 @@ export default function QuickStats({
   averageViews,
   loading,
   topVideos,
-  thumbnailPrompt,
   calculateBenchmarkScore,
   formatDuration,
   language,

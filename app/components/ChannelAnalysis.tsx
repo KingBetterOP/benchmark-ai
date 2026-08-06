@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type Channel = {
   name: string;
   subscribers: number;
@@ -52,9 +54,11 @@ export default function ChannelAnalysis({
             key={channel.name}
             className="flex items-center gap-4 rounded-lg border border-zinc-700 p-4"
           >
-            <img
+            <Image
               src={channel.thumbnail}
               alt={channel.name}
+              width={1280}
+              height={720}
               className="h-16 w-16 rounded-full"
             />
 

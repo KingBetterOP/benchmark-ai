@@ -1,5 +1,6 @@
 import { Video } from "../lib/types";
 import { translations } from "../lib/translations";
+import Image from "next/image";
 
 type BestVideoCardProps = {
   video?: Video;
@@ -38,18 +39,20 @@ shadow-yellow-500/10
       </div>
 
       <div className="mb-5 overflow-hidden rounded-2xl">
-  <img
-    src={video.snippet.thumbnails.high.url}
-    alt={video.snippet.title}
-    className="
-      h-[220px]
-      w-full
-      object-cover
-      transition
-      duration-500
-      hover:scale-105
-    "
-  />
+  <Image
+  src={video.snippet.thumbnails.high.url}
+  alt={video.snippet.title}
+  width={1280}
+  height={720}
+  className="
+    h-[220px]
+    w-full
+    object-cover
+    transition
+    duration-500
+    hover:scale-105
+  "
+/>
 </div>
 
       <h3 className="line-clamp-2 text-2xl font-bold leading-tight">

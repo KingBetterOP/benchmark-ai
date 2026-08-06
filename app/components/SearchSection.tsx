@@ -1,14 +1,12 @@
 import SearchSummary from "./SearchSummary";
-import SearchBarV2 from "./SearchBarV2";
 import Dashboard from "./Dashboard";
 import QuickStats from "./QuickStats";
 import RecentSearches from "./RecentSearches";
 import KeywordSuggestionsCard from "./KeywordSuggestionsCard";
-import BenchmarkSummaryCard from "./BenchmarkSummaryCard";
+
 
 import {
   Video,
-  Channel,
   BenchmarkReport,
   ContentIdea,
   Strategy,
@@ -20,6 +18,7 @@ import {
 type Props = {
   keyword: string;
   setKeyword: React.Dispatch<React.SetStateAction<string>>;
+
 
   order: string;
   setOrder: React.Dispatch<React.SetStateAction<string>>;
@@ -58,15 +57,7 @@ setLast30Days: React.Dispatch<React.SetStateAction<boolean>>;
 
 export default function SearchSection({
   keyword,
-  setKeyword,
-  order,
-  setOrder,
-  onSearch,
   loading,
-min10Minutes,
-setMin10Minutes,
-last30Days,
-setLast30Days,
 averageViews,
   results,
   report,

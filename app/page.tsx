@@ -10,7 +10,6 @@ import { useBenchmarkState } from "./hooks/useBenchmarkState";
 import { calculateOpportunityScore } from "./lib/opportunityScore";
 import { calculateTrendingScore } from "./lib/trendingScore";
 import { useAIAnalysis } from "./hooks/useAIAnalysis";
-import { useBenchmarkSearch } from "./hooks/useBenchmarkSearch";
 import { calculateFinalDecision } from "./lib/finalDecision";
 import {
   saveProject,
@@ -40,47 +39,25 @@ import {
   ContentPlanner,
   AIThumbnail,
 } from "./lib/types";
-import SearchBar from "./components/SearchBar";
-import TopVideos from "./components/TopVideos";
-import ChannelAnalysis from "./components/ChannelAnalysis";
-import QuickStats from "./components/QuickStats";
+
 import SearchFilters from "./components/SearchFilters";
 import ProjectList from "./components/ProjectList";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Dashboard from "./components/Dashboard";
-import BestVideoCard from "./components/BestVideoCard";
-import AIChat from "./components/AIChat";
-import BenchmarkReportCard from "./components/BenchmarkReportCard";
-import ContentIdeasCard from "./components/ContentIdeasCard";
-import GrowthStrategyCard from "./components/GrowthStrategyCard";
-import CompetitionCard from "./components/CompetitionCard";
-import TitleGeneratorCard from "./components/TitleGeneratorCard";
-import ThumbnailPlanCard from "./components/ThumbnailPlanCard";
-import AnalyticsCharts from "./components/AnalyticsCharts";
 import OpportunityFinder from "./components/OpportunityFinder";
 import LoadingProgress from "./components/LoadingProgress";
 import { executeBenchmarkSearch } from "./hooks/useSearch";
-import RecentSearches from "./components/RecentSearches";
-import VideoGrid from "./components/VideoGrid";
 import HeroSectionV2 from "./components/HeroSectionV2";
 import PlanCard from "./components/PlanCard";
-import SearchSummary from "./components/SearchSummary";
 import AIResultsSection from "./components/AIResultsSection";
 import SearchSection from "./components/SearchSection";
 import AnalysisSection from "./components/AnalysisSection";
 import QuickNavigation from "./components/QuickNavigation";
-import KeywordSuggestionsCard from "./components/KeywordSuggestionsCard";
 import AIScriptGeneratorCard from "./components/AIScriptGeneratorCard";
 import AICreatorToolkit from "./components/AICreatorToolkit";
 import CreatorKitCard from "./components/CreatorKitCard";
 import ErrorCard from "./components/ErrorCard";
 import TrustBar from "./components/TrustBar";
-import KeywordIntelligenceSection from "./components/keyword/KeywordIntelligenceSection";
-import CompetitorIntelligenceSection from "./components/competitor/CompetitorIntelligenceSection";
-import SEOIntelligenceSection from "./components/seo/SEOIntelligenceSection";
-import CTRIntelligenceSection from "./components/ctr/CTRIntelligenceSection";
-import RevenueIntelligenceSection from "./components/revenue/RevenueIntelligenceSection";
 import IntelligenceSection from "./components/sections/IntelligenceSection";
 import AIAnalysisSection from "./components/sections/AIAnalysisSection";
 
@@ -93,7 +70,7 @@ import {
 
 export default function Home() {
   const router = useRouter();
- const { user, isLoaded, isSignedIn } = useUser();
+ const { user } = useUser();
 
 
   const {
@@ -188,26 +165,23 @@ const [error, setError] = useState("");
   const [loadingStep, setLoadingStep] = useState("");
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [order, setOrder] = useState("relevance");
-  const [excludeShorts, setExcludeShorts] = useState(false);
+  const [excludeShorts] = useState(false);
   const [min10Minutes, setMin10Minutes] = useState(false);
   const [last30Days, setLast30Days] = useState(false);
-  const [language, setLanguage] = useState("en");
-const [searchHistory, setSearchHistory] =
-  useState<string[]>([]);
-  useEffect(() => {
-  const saved = localStorage.getItem("searchHistory");
+  const [language, setLanguage] = useState(() => {
+  if (typeof window === "undefined") return "en";
 
-  if (saved) {
-    setSearchHistory(JSON.parse(saved));
-  }
-}, []);
-useEffect(() => {
-  const saved = localStorage.getItem("language");
+  return localStorage.getItem("language") ?? "en";
+});
+const [searchHistory] =
+  useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
 
-  if (saved) {
-    setLanguage(saved);
-  }
-}, []);
+    const saved = localStorage.getItem("searchHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+  
+
 useEffect(() => {
   localStorage.setItem("language", language);
 }, [language]);

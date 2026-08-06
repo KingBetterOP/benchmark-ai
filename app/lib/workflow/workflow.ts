@@ -10,37 +10,40 @@ export class WorkflowEngine {
       progress: WorkflowProgress
     ) => void
   ): Promise<WorkflowResult> {
-   return {
-  report: null,
+    // 현재는 아직 사용하지 않지만
+    // 추후 실제 워크플로우 구현 시 사용할 예정
+    console.debug(keyword, onProgress);
 
-  competition: null,
+    return {
+      report: null,
 
-  ideas: [],
+      competition: null,
 
-  strategy: [],
+      ideas: [],
 
-  titles: [],
+      strategy: [],
 
-  thumbnails: [],
+      titles: [],
 
-  script: "",
+      thumbnails: [],
 
-  description: "",
+      script: "",
 
-  tags: [],
+      description: "",
 
-  uploadTime: "Today 7:00 PM",
+      tags: [],
 
-  checklist: [
-    "Research competitors",
-    "Generate titles",
-    "Create thumbnail",
-    "Write script",
-    "Optimize SEO",
-  ],
-};
+      uploadTime: "Today 7:00 PM",
+
+      checklist: [
+        "Research competitors",
+        "Generate titles",
+        "Create thumbnail",
+        "Write script",
+        "Optimize SEO",
+      ],
+    };
   }
 }
 
-export const workflow =
-  new WorkflowEngine();
+export const workflow = new WorkflowEngine();

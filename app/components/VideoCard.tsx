@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Video } from "../lib/types";
 import { getNativeBadge } from "../lib/badge";
 import { formatDuration } from "../lib/videoUtils";
@@ -7,6 +9,7 @@ import { getCompetition } from "../lib/competition";
 import { getSuccessScore } from "../lib/successScore";
 import { getAIInsight } from "../lib/insight";
 import { translations } from "../lib/translations";
+
 type VideoCardProps = {
   video: Video;
   score: number;
@@ -114,9 +117,11 @@ const recommendation = getRecommendation(
       className="rounded-xl border border-gray-700 p-4 hover:border-red-500 transition block"
     >
       <div className="relative overflow-hidden rounded-xl">
-  <img
+  <Image
     src={video.snippet.thumbnails.high.url}
     alt={video.snippet.title}
+    width={1280}
+    height={720}
     className="aspect-video w-full object-cover transition duration-300 hover:scale-105"
   />
 

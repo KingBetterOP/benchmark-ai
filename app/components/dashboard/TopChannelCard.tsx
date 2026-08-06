@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { motion } from "framer-motion";
 import { DashboardStats } from "../../lib/dashboardAnalytics";
@@ -40,9 +41,11 @@ export default function TopChannelCard({
             className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-5"
           >
             <div className="flex items-center gap-4">
-              <img
+              <Image
                 src={topChannel.channel.thumbnail}
                 alt={topChannel.channel.name}
+                width={100}
+                height={100}
                 className="h-16 w-16 rounded-full border border-cyan-500/30 object-cover"
               />
 

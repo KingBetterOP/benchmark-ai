@@ -3,14 +3,8 @@
 import { useState } from "react";
 import {
   Video,
-  Channel,
   BenchmarkReport,
   ContentIdea,
-  Strategy,
-  CompetitionAnalysis,
-  TitleSuggestion,
-  ThumbnailPlan,
-  Opportunity,
   CreatorKit,
 } from "../lib/types";
 

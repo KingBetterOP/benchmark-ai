@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function useLanguage() {
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState(() => {
+  if (typeof window === "undefined") return "en";
 
-  useEffect(() => {
-    const saved = localStorage.getItem("language");
+  return localStorage.getItem("language") ?? "en";
+});
 
-    if (saved) {
-      setLanguage(saved);
-    }
-  }, []);
+  
 
   const changeLanguage = (lang: string) => {
     setLanguage(lang);

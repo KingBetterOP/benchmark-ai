@@ -1,7 +1,7 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 type ValidateSearchParams = {
   keyword: string;
-  user: any;
+  user: { id: string } | null | undefined;
   router: AppRouterInstance;
 };
 

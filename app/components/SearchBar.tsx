@@ -29,10 +29,6 @@ export default function SearchBar({
   setOrder,
   onSearch,
   loading,
-  min10Minutes,
-  setMin10Minutes,
-  last30Days,
-  setLast30Days,
   language,
 }: SearchBarProps) {
   const t =

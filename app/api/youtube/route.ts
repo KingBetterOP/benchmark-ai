@@ -75,7 +75,7 @@ if (!searchData.items || searchData.items.length === 0) {
   });
 }
 
-let allItems = [...searchData.items];
+const allItems = [...searchData.items];
 
 if (searchData.nextPageToken) {
   const secondSearchUrl =
@@ -101,7 +101,7 @@ if (searchData.nextPageToken) {
   (item: SearchItem) => item.id.videoId
 );
 
-let videoItems: VideoApiItem[] = [];
+const videoItems: VideoApiItem[] = [];
 
 for (let i = 0; i < videoIds.length; i += 50) {
   const ids = videoIds.slice(i, i + 50).join(",");
