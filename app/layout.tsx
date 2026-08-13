@@ -62,6 +62,10 @@ icons: {
 verification: {
   google: "ZqUw3XijKLfCyff-rXTlLD9YDoKYfL0FO5aR20uJ7Ko",
 },
+other: {
+  "naver-site-verification":
+    "32f1bbc7a0230eee64e7169b192cca1bd438b468",
+},
 alternates: {
   canonical: "https://benchmark-ai-indol.vercel.app",
 },
