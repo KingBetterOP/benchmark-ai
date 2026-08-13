@@ -275,6 +275,26 @@ export default function Home() {
     }
   }, [language]);
 
+  useEffect(() => {
+  try {
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const initialKeyword =
+      params.get("keyword")?.trim();
+
+    if (initialKeyword) {
+      setKeyword(initialKeyword);
+    }
+  } catch (error) {
+    console.error(
+      "Failed to load keyword from URL:",
+      error
+    );
+  }
+}, [setKeyword]);
+
   /* ==========================================================
      SEARCH HISTORY
      ========================================================== */
