@@ -43,5 +43,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   changeFrequency: "weekly",
   priority: 0.9,
 },
+
+{
+  url: `${BASE_URL}/tools/youtube-competitor-analysis`,
+  lastModified: now,
+  changeFrequency: "weekly",
+  priority: 0.9,
+},
   ];
 }
