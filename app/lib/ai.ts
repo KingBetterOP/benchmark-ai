@@ -1,4 +1,5 @@
 import { askAI } from "./openai";
+
 import type {
   KeywordIntelligence,
   SEOAnalysis,
@@ -8,168 +9,676 @@ import type {
   ChannelAudit,
   ContentPlanner,
   AIThumbnail,
+  ContentIdea,
+  Strategy,
+  TitleSuggestion,
+  ContentGap,
+  ThumbnailPlan,
+  Opportunity,
 } from "./types";
 
-function parseAIJson(text: string) {
-  console.log("===== RAW AI RESPONSE =====");
-  console.log(text);
+/* =========================================================
+   TYPES
+========================================================= */
 
-  const cleaned = text
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
+type AIRequest = {
+  language: string;
 
-  console.log("===== CLEANED =====");
-  console.log(cleaned);
+  reportPrompt: string;
+  ideaPrompt: string;
+  strategyPrompt: string;
+  competitionPrompt: string;
+  titlePrompt: string;
+  seoPrompt: string;
+  seoOptimizerPrompt: string;
+  contentGapPrompt: string;
+  channelAuditPrompt: string;
+  thumbnailPrompt: string;
+  creatorKitPrompt: string;
+  recommendedChannelsPrompt: string;
+  opportunityPrompt: string;
+  contentPlannerPrompt: string;
+  aiThumbnailPrompt: string;
+};
 
-  try {
-    return JSON.parse(cleaned);
-  } catch {
-    console.error("❌ JSON PARSE FAILED");
-    console.error(cleaned);
+type AIParseResult<T = unknown> = {
+  success: boolean;
+  data: T | null;
+  error?: string;
+};
 
-    return null;
+type AIExecutionResult = {
+  success: boolean;
+  value: string;
+  error?: string;
+};
+
+
+/* =========================================================
+   DEBUG
+========================================================= */
+
+const DEBUG_AI =
+  process.env.NODE_ENV !== "production";
+
+
+function debugLog(
+  ...args: unknown[]
+) {
+  if (DEBUG_AI) {
+    console.log(...args);
   }
 }
-function safeArray(value: unknown) {
-  return Array.isArray(value) ? value : [];
+
+
+/* =========================================================
+   JSON PARSER
+========================================================= */
+
+function parseAIJson<T = unknown>(
+  text: string,
+  label = "AI"
+): AIParseResult<T> {
+
+  if (
+    typeof text !== "string" ||
+    !text.trim()
+  ) {
+    console.error(
+      `❌ ${label}: EMPTY AI RESPONSE`
+    );
+
+    return {
+      success: false,
+      data: null,
+      error: "EMPTY_RESPONSE",
+    };
+  }
+
+  debugLog(
+    `===== ${label} RAW AI RESPONSE =====`
+  );
+
+  debugLog(text);
+
+  let cleaned = text.trim();
+
+
+  /*
+   * Remove markdown code fences
+   */
+
+  cleaned = cleaned
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+
+  /*
+   * Remove accidental leading/trailing text
+   * around JSON.
+   */
+
+  const firstObject =
+    cleaned.indexOf("{");
+
+  const lastObject =
+    cleaned.lastIndexOf("}");
+
+  const firstArray =
+    cleaned.indexOf("[");
+
+  const lastArray =
+    cleaned.lastIndexOf("]");
+
+
+  /*
+   * Object JSON
+   */
+
+  if (
+    firstObject !== -1 &&
+    lastObject !== -1 &&
+    (
+      firstArray === -1 ||
+      firstObject < firstArray
+    )
+  ) {
+    const possibleObject =
+      cleaned.slice(
+        firstObject,
+        lastObject + 1
+      );
+
+    try {
+      const parsed =
+        JSON.parse(possibleObject);
+
+      debugLog(
+        `===== ${label} JSON PARSE SUCCESS =====`
+      );
+
+      return {
+        success: true,
+        data: parsed as T,
+      };
+
+    } catch {
+      // Continue to array attempt.
+    }
+  }
+
+
+  /*
+   * Array JSON
+   */
+
+  if (
+    firstArray !== -1 &&
+    lastArray !== -1
+  ) {
+
+    const possibleArray =
+      cleaned.slice(
+        firstArray,
+        lastArray + 1
+      );
+
+    try {
+      const parsed =
+        JSON.parse(possibleArray);
+
+      debugLog(
+        `===== ${label} JSON PARSE SUCCESS =====`
+      );
+
+      return {
+        success: true,
+        data: parsed as T,
+      };
+
+    } catch {
+      // Continue to error.
+    }
+  }
+
+
+  console.error(
+    `❌ ${label}: JSON PARSE FAILED`
+  );
+
+  if (DEBUG_AI) {
+    console.error(cleaned);
+  }
+
+  return {
+    success: false,
+    data: null,
+    error: "INVALID_JSON",
+  };
 }
 
-function safeString(value: unknown) {
-  return typeof value === "string" ? value : "";
+
+/* =========================================================
+   SAFE HELPERS
+========================================================= */
+
+function safeArray<T = unknown>(
+  value: unknown
+): T[] {
+
+  return Array.isArray(value)
+    ? value as T[]
+    : [];
 }
 
-function safeNumber(value: unknown) {
-  return typeof value === "number" ? value : 0;
+
+function safeString(
+  value: unknown
+): string {
+
+  if (
+    typeof value === "string"
+  ) {
+    return value;
+  }
+
+  /*
+   * Prevent accidental undefined/null
+   */
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return "";
+  }
+
+  /*
+   * Useful when AI accidentally returns
+   * a primitive value.
+   */
+
+  return String(value);
 }
+
+
+function safeNumber(
+  value: unknown
+): number {
+
+  /*
+   * Normal number
+   */
+
+  if (
+    typeof value === "number" &&
+    Number.isFinite(value)
+  ) {
+    return value;
+  }
+
+
+  /*
+   * AI sometimes returns:
+   *
+   * "82"
+   * "82.5"
+   * "82%"
+   */
+
+  if (
+    typeof value === "string"
+  ) {
+
+    const cleaned =
+      value
+        .replace(/,/g, "")
+        .replace(/%/g, "")
+        .trim();
+
+    const parsed =
+      Number(cleaned);
+
+    if (
+      Number.isFinite(parsed)
+    ) {
+      return parsed;
+    }
+  }
+
+
+  return 0;
+}
+
 
 function safeObject<T>(
   value: unknown,
   fallback: T
 ): T {
+
   if (
     value &&
-    typeof value === "object"
+    typeof value === "object" &&
+    !Array.isArray(value)
   ) {
     return value as T;
   }
 
   return fallback;
 }
-function safeBenchmark(data: unknown) {
-  const benchmark = safeObject(data, {});
-  const benchmarkObj = benchmark as Record<string, unknown>;
+
+
+/* =========================================================
+   RECORD HELPER
+========================================================= */
+
+function asRecord(
+  value: unknown
+): Record<string, unknown> {
+
+  if (
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value)
+  ) {
+    return value as Record<
+      string,
+      unknown
+    >;
+  }
+
+  return {};
+}
+
+
+/* =========================================================
+   BENCHMARK NORMALIZER
+========================================================= */
+
+function safeBenchmark(
+  data: unknown
+) {
+
+  const benchmark =
+    asRecord(data);
+
+
+  const overview =
+    asRecord(
+      benchmark.overview
+    );
+
+
+  const prediction =
+    asRecord(
+      benchmark.prediction
+    );
+
+
+  const seo =
+    asRecord(
+      benchmark.seo
+    );
+
+
+  const audience =
+    asRecord(
+      benchmark.audience
+    );
+
+
+  const uploadStrategy =
+    asRecord(
+      benchmark.uploadStrategy
+    );
+
+
+  const risk =
+    asRecord(
+      benchmark.risk
+    );
+
 
   return {
-    score: safeNumber(benchmarkObj.score),
 
-    overview: safeObject(
-  benchmarkObj.overview,
-      {
-        avgViews: "",
-        avgDuration: "",
-        uploadFrequency: "",
-        bestVideo: "",
-      }
+    score:
+      safeNumber(
+        benchmark.score
+      ),
+
+
+    overview: {
+
+      avgViews:
+        safeString(
+          overview.avgViews
+        ),
+
+      avgDuration:
+        safeString(
+          overview.avgDuration
+        ),
+
+      uploadFrequency:
+        safeString(
+          overview.uploadFrequency
+        ),
+
+      bestVideo:
+        safeString(
+          overview.bestVideo
+        ),
+    },
+
+
+    insights:
+  safeArray<string>(
+    benchmark.insights
+  ),
+
+
+    actionPlan:
+  safeArray<string>(
+    benchmark.actionPlan
+  ),
+
+
+    analysis:
+      safeString(
+        benchmark.analysis
+      ),
+
+
+    prediction: {
+
+      successProbability:
+        safeNumber(
+          prediction.successProbability
+        ),
+
+      expectedViews:
+        safeString(
+          prediction.expectedViews
+        ),
+
+      expectedCTR:
+        safeString(
+          prediction.expectedCTR
+        ),
+
+      expectedRPM:
+        safeString(
+          prediction.expectedRPM
+        ),
+
+      estimatedRevenue:
+        safeString(
+          prediction.estimatedRevenue
+        ),
+    },
+
+
+    seo: {
+
+      score:
+        safeNumber(
+          seo.score
+        ),
+
+      titleScore:
+        safeNumber(
+          seo.titleScore
+        ),
+
+      keywordScore:
+        safeNumber(
+          seo.keywordScore
+        ),
+
+      descriptionScore:
+        safeNumber(
+          seo.descriptionScore
+        ),
+    },
+
+
+    audience: {
+
+      retention:
+        safeNumber(
+          audience.retention
+        ),
+
+      engagement:
+        safeNumber(
+          audience.engagement
+        ),
+
+      target:
+        safeString(
+          audience.target
+        ),
+    },
+
+
+    uploadStrategy: {
+
+      bestDay:
+        safeString(
+          uploadStrategy.bestDay
+        ),
+
+      bestTime:
+        safeString(
+          uploadStrategy.bestTime
+        ),
+
+      recommendedLength:
+        safeString(
+          uploadStrategy.recommendedLength
+        ),
+    },
+
+
+    risk: {
+
+  level:
+    safeString(
+      risk.level
     ),
 
-    insights: safeArray(
-  benchmarkObj.insights
-),
-
-    actionPlan: safeArray(
-  benchmarkObj.actionPlan
-),
-
-    analysis: safeString(
-  benchmarkObj.analysis
-),
-
-    prediction: safeObject(
-  benchmarkObj.prediction,
-  {
-    successProbability: 0,
-    expectedViews: "",
-    expectedCTR: "",
-    expectedRPM: "",
-    estimatedRevenue: "",
-  }
-),
-
-    seo: safeObject(
-  benchmarkObj.seo,
-  {
-    score: 0,
-    titleScore: 0,
-    keywordScore: 0,
-    descriptionScore: 0,
-  }
-),
-
-    audience: safeObject(
-  benchmarkObj.audience,
-  {
-    retention: 0,
-    engagement: 0,
-    target: "",
-  }
-),
-
-    uploadStrategy: safeObject(
-  benchmarkObj.uploadStrategy,
-  {
-    bestDay: "",
-    bestTime: "",
-    recommendedLength: "",
-  }
-),
-
-    risk: safeObject(
-  benchmarkObj.risk,
-  {
-    level: "",
-    reasons: [],
-  }
-),
+  reasons:
+    safeArray<string>(
+      risk.reasons
+    ),
+},
   };
 }
 
-type AIRequest = {
-  language: string;
 
-  reportPrompt: string;
+/* =========================================================
+   AI CALL WRAPPER
+========================================================= */
 
-  ideaPrompt: string;
+async function executeAI(
+  prompt: string,
+  language: string,
+  label: string
+): Promise<AIExecutionResult> {
 
-  strategyPrompt: string;
+  try {
 
-  competitionPrompt: string;
+    if (
+      !prompt ||
+      !prompt.trim()
+    ) {
 
-  titlePrompt: string;
+      console.error(
+        `❌ ${label}: EMPTY PROMPT`
+      );
 
-  seoPrompt: string;
+      return {
+        success: false,
+        value: "",
+        error: "EMPTY_PROMPT",
+      };
+    }
 
-  seoOptimizerPrompt: string;
 
-  contentGapPrompt: string;
+    debugLog(
+      `🤖 ${label}: START`
+    );
 
-channelAuditPrompt: string;
 
-thumbnailPrompt: string;
+    const start =
+      performance.now();
 
-  creatorKitPrompt: string;
 
-  recommendedChannelsPrompt: string;
+    const result =
+      await askAI(
+        prompt,
+        language
+      );
 
-  opportunityPrompt: string;
 
-  contentPlannerPrompt: string;
+    const elapsed =
+      Math.round(
+        performance.now() - start
+      );
 
-  aiThumbnailPrompt: string;
-};
+
+    debugLog(
+      `✅ ${label}: ${elapsed}ms`
+    );
+
+
+    if (
+      typeof result !== "string"
+    ) {
+
+      console.error(
+        `❌ ${label}: INVALID RESPONSE TYPE`
+      );
+
+      return {
+        success: false,
+        value: "",
+        error: "INVALID_RESPONSE_TYPE",
+      };
+    }
+
+
+    if (
+      !result.trim()
+    ) {
+
+      console.error(
+        `❌ ${label}: EMPTY RESPONSE`
+      );
+
+      return {
+        success: false,
+        value: "",
+        error: "EMPTY_RESPONSE",
+      };
+    }
+
+
+    return {
+      success: true,
+      value: result,
+    };
+
+  } catch (error) {
+
+    console.error(
+      `❌ ${label}: AI REQUEST FAILED`
+    );
+
+    console.error(error);
+
+    return {
+      success: false,
+      value: "",
+      error:
+        error instanceof Error
+          ? error.message
+          : "UNKNOWN_AI_ERROR",
+    };
+  }
+}
+
+
+/* =========================================================
+   MAIN AI ENGINE
+========================================================= */
 
 export async function generateAllAI({
+
   language,
+
   reportPrompt,
   ideaPrompt,
   strategyPrompt,
@@ -180,217 +689,654 @@ export async function generateAllAI({
   contentGapPrompt,
   channelAuditPrompt,
   thumbnailPrompt,
-creatorKitPrompt,
-recommendedChannelsPrompt,
+  creatorKitPrompt,
+  recommendedChannelsPrompt,
   opportunityPrompt,
   contentPlannerPrompt,
   aiThumbnailPrompt,
+
 }: AIRequest) {
-  console.log("🚨 generateAllAI START");
-  console.log("REPORT PROMPT");
-console.log(reportPrompt);
 
-console.log("IDEA PROMPT");
-console.log(ideaPrompt);
+  console.log(
+    "🚀 Benchmark AI Engine START"
+  );
 
-console.log("STRATEGY PROMPT");
-console.log(strategyPrompt);
 
-console.log("COMPETITION PROMPT");
-console.log(competitionPrompt);
+  const globalStart =
+    performance.now();
 
-console.log("TITLE PROMPT");
-console.log(titlePrompt);
 
-console.log("THUMBNAIL PROMPT");
-console.log(thumbnailPrompt);
+  /*
+   * IMPORTANT:
+   *
+   * We intentionally keep these calls
+   * parallel for now.
+   *
+   * The next engine upgrade will merge
+   * these into logical AI groups.
+   *
+   * But first we make the existing
+   * pipeline fault tolerant.
+   */
 
-console.log("RECOMMENDED CHANNELS PROMPT");
-console.log(recommendedChannelsPrompt);
+  const results =
+    await Promise.all([
 
-console.log("OPPORTUNITY PROMPT");
-console.log(opportunityPrompt);
-const start = performance.now();
+      executeAI(
+        reportPrompt,
+        language,
+        "REPORT"
+      ),
+
+      executeAI(
+        ideaPrompt,
+        language,
+        "IDEA"
+      ),
+
+      executeAI(
+        strategyPrompt,
+        language,
+        "STRATEGY"
+      ),
+
+      executeAI(
+        competitionPrompt,
+        language,
+        "COMPETITION"
+      ),
+
+      executeAI(
+        titlePrompt,
+        language,
+        "TITLES"
+      ),
+
+      executeAI(
+        seoPrompt,
+        language,
+        "SEO"
+      ),
+
+      executeAI(
+        seoOptimizerPrompt,
+        language,
+        "SEO OPTIMIZER"
+      ),
+
+      executeAI(
+        contentGapPrompt,
+        language,
+        "CONTENT GAP"
+      ),
+
+      executeAI(
+        channelAuditPrompt,
+        language,
+        "CHANNEL AUDIT"
+      ),
+
+      executeAI(
+        thumbnailPrompt,
+        language,
+        "THUMBNAIL"
+      ),
+
+      executeAI(
+        creatorKitPrompt,
+        language,
+        "CREATOR KIT"
+      ),
+
+      executeAI(
+        recommendedChannelsPrompt,
+        language,
+        "RECOMMENDED CHANNELS"
+      ),
+
+      executeAI(
+        opportunityPrompt,
+        language,
+        "OPPORTUNITIES"
+      ),
+
+      executeAI(
+        contentPlannerPrompt,
+        language,
+        "CONTENT PLANNER"
+      ),
+
+      executeAI(
+        aiThumbnailPrompt,
+        language,
+        "AI THUMBNAIL"
+      ),
+    ]);
+
+
   const [
-  report,
-  idea,
-  strategy,
-  competition,
-  titles,
-  seo,
-  seoOptimizer,
-  contentGap,
-  channelAudit,
-  thumbnail,
-  creatorKit,
-  recommendedChannels,
-  opportunities,
-  contentPlanner,
-  aiThumbnail,
-] = await Promise.all([
-  askAI(reportPrompt, language),
-  askAI(ideaPrompt, language),
-  askAI(strategyPrompt, language),
-  askAI(competitionPrompt, language),
-  askAI(titlePrompt, language),
-askAI(seoPrompt, language),
-askAI(seoOptimizerPrompt, language),
-askAI(contentGapPrompt, language),
-askAI(channelAuditPrompt, language),
-askAI(thumbnailPrompt, language),
-  askAI(creatorKitPrompt, language),
-  askAI(recommendedChannelsPrompt, language),
-  askAI(opportunityPrompt, language),
-  askAI(contentPlannerPrompt, language),
-  askAI(aiThumbnailPrompt, language),
-]);
-const end = performance.now();
-console.log(
-  `🚀 AI generation took ${Math.round(end - start)}ms`
-);
-  console.log("========== AI RESPONSES ==========");
-  console.log("REPORT:", report);
-  console.log("IDEA:", idea);
-  console.log("STRATEGY:", strategy);
-  console.log("COMPETITION:", competition);
-  console.log("TITLES:", titles);
-  console.log("SEO:", seo);
-  console.log("THUMBNAIL:", thumbnail);
-  console.log("CREATOR KIT:", creatorKit);
-  console.log("RECOMMENDED:", recommendedChannels);
-  console.log("OPPORTUNITIES:", opportunities);
-  console.log("==================================");
 
-  const benchmarkData =
-  safeObject(parseAIJson(report), {});
+    reportResult,
+    ideaResult,
+    strategyResult,
+    competitionResult,
+    titlesResult,
+    seoResult,
+    seoOptimizerResult,
+    contentGapResult,
+    channelAuditResult,
+    thumbnailResult,
+    creatorKitResult,
+    recommendedChannelsResult,
+    opportunitiesResult,
+    contentPlannerResult,
+    aiThumbnailResult,
 
-return {
-  report: safeBenchmark(
-    (benchmarkData as Record<string, unknown>).benchmark
+  ] = results;
+
+
+  /*
+   * =======================================================
+   * PARSE
+   * =======================================================
+   */
+
+  const reportParsed =
+    parseAIJson(
+      reportResult.value,
+      "REPORT"
+    );
+
+
+  const ideaParsed =
+    parseAIJson(
+      ideaResult.value,
+      "IDEA"
+    );
+
+
+  const strategyParsed =
+    parseAIJson(
+      strategyResult.value,
+      "STRATEGY"
+    );
+
+
+  const competitionParsed =
+    parseAIJson(
+      competitionResult.value,
+      "COMPETITION"
+    );
+
+
+  const titlesParsed =
+    parseAIJson(
+      titlesResult.value,
+      "TITLES"
+    );
+
+
+  const seoParsed =
+    parseAIJson(
+      seoResult.value,
+      "SEO"
+    );
+
+
+  const seoOptimizerParsed =
+    parseAIJson(
+      seoOptimizerResult.value,
+      "SEO OPTIMIZER"
+    );
+
+
+  const contentGapParsed =
+    parseAIJson(
+      contentGapResult.value,
+      "CONTENT GAP"
+    );
+
+
+  const channelAuditParsed =
+    parseAIJson(
+      channelAuditResult.value,
+      "CHANNEL AUDIT"
+    );
+
+
+  const thumbnailParsed =
+    parseAIJson(
+      thumbnailResult.value,
+      "THUMBNAIL"
+    );
+
+
+  const creatorKitParsed =
+    parseAIJson(
+      creatorKitResult.value,
+      "CREATOR KIT"
+    );
+
+
+  const opportunitiesParsed =
+    parseAIJson(
+      opportunitiesResult.value,
+      "OPPORTUNITIES"
+    );
+
+
+  const contentPlannerParsed =
+    parseAIJson(
+      contentPlannerResult.value,
+      "CONTENT PLANNER"
+    );
+
+
+  const aiThumbnailParsed =
+    parseAIJson(
+      aiThumbnailResult.value,
+      "AI THUMBNAIL"
+    );
+
+
+  /*
+   * =======================================================
+   * BENCHMARK ROOT
+   * =======================================================
+   */
+
+  const reportRoot =
+    asRecord(
+      reportParsed.data
+    );
+
+
+  /*
+   * =======================================================
+   * KEYWORD INTELLIGENCE
+   * =======================================================
+   */
+
+  const keywordIntelligence =
+    safeObject<KeywordIntelligence>(
+      reportRoot.keywordIntelligence,
+      {
+        difficulty: 0,
+        opportunity: 0,
+        trend: "",
+        demand: "",
+        uploadTime: "",
+        audience: "",
+        expectedViews: "",
+        expectedCTR: "",
+        estimatedRPM: "",
+        estimatedRevenue: "",
+        recommendation: "",
+        confidence: 0,
+      }
+    );
+
+
+  /*
+   * =======================================================
+   * COMPETITION
+   * =======================================================
+   */
+
+  const competition =
+    safeObject<CompetitionAnalysis>(
+      competitionParsed.data,
+      {
+        competitionScore: 0,
+        difficulty: "",
+        successProbability: 0,
+        recommendation: "",
+        strengths: [],
+        weaknesses: [],
+        marketSaturation: "",
+        barrierToEntry: "",
+        contentQuality: 0,
+        thumbnailQuality: 0,
+        titleQuality: 0,
+        uploadFrequency: "",
+        opportunityScore: 0,
+        opportunities: [],
+      }
+    );
+
+
+  /*
+   * =======================================================
+   * SEO
+   * =======================================================
+   */
+
+  const seo =
+    safeObject<SEOAnalysis>(
+      seoParsed.data,
+      {
+        overallScore: 0,
+        titleScore: 0,
+        descriptionScore: 0,
+        keywordDensity: 0,
+        rankingProbability: 0,
+        recommendedKeywords: [],
+        missingKeywords: [],
+        suggestions: [],
+      }
+    );
+
+
+  /*
+   * =======================================================
+   * SEO OPTIMIZER
+   * =======================================================
+   */
+
+  const seoOptimizer =
+    safeObject<SEOOptimizer>(
+      seoOptimizerParsed.data,
+      {
+        betterTitle: "",
+        betterDescription: "",
+        tags: [],
+        keywordCluster: [],
+        searchIntent: "",
+        rankingTips: [],
+      }
+    );
+
+
+  /*
+   * =======================================================
+   * CHANNEL AUDIT
+   * =======================================================
+   */
+
+  const channelAudit =
+    safeObject<ChannelAudit>(
+      channelAuditParsed.data,
+      {
+        overallScore: 0,
+        niche: "",
+        uploadFrequency: "",
+        titleStyle: "",
+        thumbnailStyle: "",
+        strengths: [],
+        weaknesses: [],
+        opportunities: [],
+        estimatedCTR: "",
+        estimatedRPM: "",
+        growthPotential: "",
+        recommendation: "",
+      }
+    );
+
+
+  /*
+   * =======================================================
+   * CREATOR KIT
+   * =======================================================
+   */
+
+  const creatorKit =
+    safeObject<CreatorKit>(
+      creatorKitParsed.data,
+      {
+        hook: "",
+        script: "",
+        description: "",
+        hashtags: [],
+        thumbnailPrompt: "",
+        callToAction: "",
+        communityPost: "",
+        shortsScript: "",
+        instagramCaption: "",
+        twitterPost: "",
+      }
+    );
+
+
+  /*
+   * =======================================================
+   * SUCCESS METRICS
+   * =======================================================
+   */
+
+  const moduleResults = [
+
+    reportResult,
+    ideaResult,
+    strategyResult,
+    competitionResult,
+    titlesResult,
+    seoResult,
+    seoOptimizerResult,
+    contentGapResult,
+    channelAuditResult,
+    thumbnailResult,
+    creatorKitResult,
+    recommendedChannelsResult,
+    opportunitiesResult,
+    contentPlannerResult,
+    aiThumbnailResult,
+
+  ];
+
+
+  const successfulModules =
+    moduleResults.filter(
+      result => result.success
+    ).length;
+
+
+  const failedModules =
+    moduleResults.filter(
+      result => !result.success
+    ).length;
+
+
+  const totalTime =
+    Math.round(
+      performance.now() - globalStart
+    );
+
+
+  console.log(
+    `🚀 Benchmark AI COMPLETE`
+  );
+
+
+  console.log(
+    `⏱️ Total: ${totalTime}ms`
+  );
+
+
+  console.log(
+    `✅ Modules: ${successfulModules}/15`
+  );
+
+
+  if (
+    failedModules > 0
+  ) {
+
+    console.warn(
+      `⚠️ Failed modules: ${failedModules}`
+    );
+  }
+
+
+  /*
+   * =======================================================
+   * FINAL RETURN
+   * =======================================================
+   */
+
+  return {
+
+    /*
+     * Meta
+     */
+
+    meta: {
+
+      success:
+        successfulModules > 0,
+
+      totalModules: 15,
+
+      successfulModules,
+
+      failedModules,
+
+      processingTimeMs:
+        totalTime,
+    },
+
+
+    /*
+     * Benchmark
+     */
+
+    report:
+      safeBenchmark(
+        reportRoot.benchmark
+      ),
+
+
+    /*
+     * Keyword Intelligence
+     */
+
+    keywordIntelligence,
+
+
+    /*
+     * Ideas
+     */
+
+    idea:
+  safeArray<ContentIdea>(
+    ideaParsed.data
   ),
 
-  keywordIntelligence: safeObject<KeywordIntelligence>(
-  (benchmarkData as Record<string, unknown>).keywordIntelligence,
-  {
-    difficulty: 0,
-    opportunity: 0,
-    trend: "",
-    demand: "",
-    uploadTime: "",
-    audience: "",
-    expectedViews: "",
-    expectedCTR: "",
-    estimatedRPM: "",
-    estimatedRevenue: "",
-    recommendation: "",
-    confidence: 0,
-  }
-),
 
-  idea: safeArray(parseAIJson(idea)),
+    /*
+     * Strategy
+     */
 
-  strategy: safeArray(parseAIJson(strategy)),
-
-  competition: safeObject<CompetitionAnalysis>(
-  parseAIJson(competition),
-  {
-    competitionScore: 0,
-    difficulty: "",
-    successProbability: 0,
-    recommendation: "",
-    strengths: [],
-    weaknesses: [],
-    marketSaturation: "",
-    barrierToEntry: "",
-    contentQuality: 0,
-    thumbnailQuality: 0,
-    titleQuality: 0,
-    uploadFrequency: "",
-    opportunityScore: 0,
-    opportunities: [],
-  }
-),
-
-  titles: safeArray(parseAIJson(titles)),
-
-  seo: safeObject<SEOAnalysis>(
-  parseAIJson(seo),
-  {
-    overallScore: 0,
-    titleScore: 0,
-    descriptionScore: 0,
-    keywordDensity: 0,
-    rankingProbability: 0,
-    recommendedKeywords: [],
-    missingKeywords: [],
-    suggestions: [],
-  }
-),
-
-seoOptimizer: safeObject<SEOOptimizer>(
-  parseAIJson(seoOptimizer),
-  {
-    betterTitle: "",
-    betterDescription: "",
-    tags: [],
-    keywordCluster: [],
-    searchIntent: "",
-    rankingTips: [],
-  }
-),
-contentGap: safeArray(
-  parseAIJson(contentGap)
-),
-channelAudit: safeObject<ChannelAudit>(
-  parseAIJson(channelAudit),
-  {
-    overallScore: 0,
-    niche: "",
-    uploadFrequency: "",
-    titleStyle: "",
-    thumbnailStyle: "",
-    strengths: [],
-    weaknesses: [],
-    opportunities: [],
-    estimatedCTR: "",
-    estimatedRPM: "",
-    growthPotential: "",
-    recommendation: "",
-  }
-),
-
-  thumbnail: safeArray(parseAIJson(thumbnail)),
-
-  creatorKit: safeObject<CreatorKit>(
-    parseAIJson(creatorKit),
-    {
-      hook: "",
-      script: "",
-      description: "",
-      hashtags: [],
-      thumbnailPrompt: "",
-      callToAction: "",
-      communityPost: "",
-      shortsScript: "",
-      instagramCaption: "",
-      twitterPost: "",
-    }
+    strategy:
+  safeArray<Strategy>(
+    strategyParsed.data
   ),
 
-  recommendedChannels: safeString(
-    recommendedChannels
+
+    /*
+     * Competition
+     */
+
+    competition,
+
+
+    /*
+     * Titles
+     */
+
+    titles:
+  safeArray<TitleSuggestion>(
+    titlesParsed.data
   ),
 
-  opportunities: safeArray(
-    parseAIJson(opportunities)
+
+    /*
+     * SEO
+     */
+
+    seo,
+
+
+    /*
+     * SEO Optimizer
+     */
+
+    seoOptimizer,
+
+
+    /*
+     * Content Gap
+     */
+
+    contentGap:
+  safeArray<ContentGap>(
+    contentGapParsed.data
   ),
 
-  contentPlanner: safeArray(
-  parseAIJson(contentPlanner)
-) as ContentPlanner[],
 
-aiThumbnail: safeArray(
-  parseAIJson(aiThumbnail)
-) as AIThumbnail[],
-};
+    /*
+     * Channel Audit
+     */
+
+    channelAudit,
+
+
+    /*
+     * Thumbnail
+     */
+
+    thumbnail:
+  safeArray<ThumbnailPlan>(
+    thumbnailParsed.data
+  ),
+
+    /*
+     * Creator Kit
+     */
+
+    creatorKit,
+
+
+    /*
+     * Recommended Channels
+     *
+     * This prompt currently returns
+     * plain text, so we intentionally
+     * don't JSON.parse it.
+     */
+
+    recommendedChannels:
+      safeString(
+        recommendedChannelsResult.value
+      ),
+
+
+    /*
+     * Opportunities
+     */
+
+    opportunities:
+  safeArray<Opportunity>(
+    opportunitiesParsed.data
+  ),
+
+
+    /*
+     * Content Planner
+     */
+
+    contentPlanner:
+      safeArray<ContentPlanner>(
+        contentPlannerParsed.data
+      ),
+
+
+    /*
+     * AI Thumbnail
+     */
+
+    aiThumbnail:
+      safeArray<AIThumbnail>(
+        aiThumbnailParsed.data
+      ),
+  };
 }

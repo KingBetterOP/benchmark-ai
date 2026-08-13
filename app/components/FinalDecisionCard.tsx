@@ -1,6 +1,6 @@
 type Props = {
   score: number;
-  decision: string;
+  decision: "MAKE" | "WAIT" | "SKIP";
   reasons: string[];
   action: string;
   language: string;
@@ -14,11 +14,24 @@ export default function FinalDecisionCard({
   language,
 }: Props) {
   const color =
-    decision === "MAKE THIS VIDEO"
+    decision === "MAKE"
       ? "text-green-400"
       : decision === "WAIT"
       ? "text-yellow-400"
       : "text-red-400";
+
+  const decisionLabel =
+    language === "ko"
+      ? decision === "MAKE"
+        ? "이 영상은 지금 만들어라"
+        : decision === "WAIT"
+        ? "조금 더 기다려라"
+        : "다른 키워드를 선택하라"
+      : decision === "MAKE"
+      ? "MAKE THIS VIDEO"
+      : decision === "WAIT"
+      ? "WAIT"
+      : "SKIP";
 
   const text =
     language === "ko"
@@ -41,8 +54,10 @@ export default function FinalDecisionCard({
         {text.title}
       </p>
 
-      <h2 className={`mt-3 text-5xl font-extrabold ${color}`}>
-        {decision}
+      <h2
+        className={`mt-3 text-5xl font-extrabold ${color}`}
+      >
+        {decisionLabel}
       </h2>
 
       <div className="mt-8 rounded-2xl bg-white/5 p-6 backdrop-blur-xl">
@@ -60,13 +75,21 @@ export default function FinalDecisionCard({
           {text.why}
         </h3>
 
-        <ul className="mt-4 space-y-2">
-          {reasons.map((reason, index) => (
-            <li key={index}>
-              ✅ {reason}
-            </li>
-          ))}
-        </ul>
+        {reasons.length > 0 ? (
+          <ul className="mt-4 space-y-2">
+            {reasons.map((reason, index) => (
+              <li key={`${reason}-${index}`}>
+                ✅ {reason}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4 text-zinc-400">
+            {language === "ko"
+              ? "현재 판단을 뒷받침하는 주요 신호가 없습니다."
+              : "There are no major signals supporting this decision yet."}
+          </p>
+        )}
       </div>
 
       <div className="mt-8 rounded-2xl bg-white/5 p-5 backdrop-blur-xl">

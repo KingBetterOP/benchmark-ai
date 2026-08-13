@@ -32,7 +32,15 @@ export default function DecisionCards({
     <>
       <FinalDecisionCard
   score={finalDecision.score}
-  decision={finalDecision.decision}
+  decision={
+  finalDecision.decision ===
+  "MAKE THIS VIDEO"
+    ? "MAKE"
+    : finalDecision.decision ===
+      "WAIT"
+      ? "WAIT"
+      : "SKIP"
+}
   reasons={finalDecision.reasons}
   action={finalDecision.action}
   language={language}

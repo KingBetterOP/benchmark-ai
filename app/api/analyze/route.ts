@@ -1,115 +1,130 @@
-import { adminDb } from "@/app/lib/firebase-admin";
-import { FieldValue } from "firebase-admin/firestore";
-import { auth } from "@clerk/nextjs/server";
 import OpenAI from "openai";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey:
+    process.env.OPENAI_API_KEY,
 });
 
-export async function POST(request: NextRequest) {
-  console.log("🔥 /api/analyze called");
+export async function POST(
+  request: NextRequest
+) {
+  console.log(
+    "🔥 /api/analyze called"
+  );
 
-  const { userId } = await auth();
-
-  if (!userId) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
-  }
-
-  const userRef = adminDb.collection("users").doc(userId);
-  const userSnap = await userRef.get();
-
-  if (!userSnap.exists) {
-    await userRef.set({
-      plan: "free",
-      dailyUsage: 0,
-      lastReset: new Date().toISOString().split("T")[0],
-      createdAt: FieldValue.serverTimestamp(),
-    });
-  }
-
-  const userData = (await userRef.get()).data()!;
-  const today = new Date().toISOString().split("T")[0];
-
-  if (userData.lastReset !== today) {
-    await userRef.update({
-      dailyUsage: 0,
-      lastReset: today,
-    });
-
-    userData.dailyUsage = 0;
-  }
-
-  if (userData.plan === "free" && userData.dailyUsage >= 3) {
-    return NextResponse.json(
-      {
-        error: "Daily limit reached",
-        upgrade: true,
-      },
-      { status: 403 }
-    );
-  }
-let language = "en";
   try {
-    const body = await request.json();
+    const { userId } =
+      await auth();
 
-const prompt = body.prompt;
-language = body.language ?? "en";
-    console.log("========== PROMPT ==========");
-console.log(prompt);
-console.log("============================");
+    if (!userId) {
+      return NextResponse.json(
+        {
+          error:
+            "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: [
-  {
-    role: "system",
-    content:
-      language === "ko"
-        ? `
-You must answer ONLY in Korean.
+    const body =
+      await request.json();
 
-Never answer in English.
+    const prompt =
+      typeof body.prompt ===
+      "string"
+        ? body.prompt.trim()
+        : "";
 
-Return valid JSON only.
+    const language =
+      body.language === "ko"
+        ? "ko"
+        : "en";
 
-Do not use markdown.
+    if (!prompt) {
+      return NextResponse.json(
+        {
+          error:
+            "AI prompt is required.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const response =
+      await openai.chat.completions.create(
+        {
+          model:
+            "gpt-4.1-mini",
+
+          temperature: 0.4,
+
+          messages: [
+            {
+              role: "system",
+              content:
+                language === "ko"
+                  ? `
+당신은 Benchmark AI의 YouTube 분석 AI입니다.
+
+반드시 한국어로 답변하세요.
+
+사용자의 요청에 정확하게 답변하세요.
+
+가능하면 구조화된 JSON을 반환하세요.
 `
-        : `
-You must answer ONLY in English.
+                  : `
+You are the YouTube analysis engine
+for Benchmark AI.
 
-Return valid JSON only.
+Answer accurately.
 
-Do not use markdown.
+Return structured JSON whenever
+the request requires structured data.
 `,
-  },
-  {
-    role: "user",
-    content: prompt,
-  },
-],
-    });
+            },
+
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+        }
+      );
+
+    const result =
+      response
+        .choices[0]
+        ?.message
+        ?.content;
+
+    if (!result) {
+      throw new Error(
+        "EMPTY_AI_RESULT"
+      );
+    }
 
     return NextResponse.json({
-      result: response.choices[0].message.content,
+      result,
     });
   } catch (error) {
-    console.error("OPENAI ERROR");
-    console.error(error);
+    console.error(
+      "❌ /api/analyze failed:",
+      error
+    );
 
     return NextResponse.json(
-      {
-        error:
-  language === "ko"
-    ? "AI 분석 실패"
-    : "AI Analysis Failed",
-        detail: String(error),
-      },
-      { status: 500 }
-    );
+  {
+    error: "AI analysis failed.",
+  },
+  {
+    status: 500,
+  }
+);
   }
 }

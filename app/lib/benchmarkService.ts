@@ -1,29 +1,10 @@
-import { searchYoutube } from "./search";
-import { processVideos } from "./processVideos";
-import { generateAllAI } from "./ai";
-
-import {
-  createBenchmarkPrompt,
-  createIdeaPrompt,
-  createStrategyPrompt,
-  createCompetitionPrompt,
-  createTitlePrompt,
-  createSEOPrompt,
-  createSEOOptimizerPrompt,
-  createContentGapPrompt,
-  createRecommendedChannelsPrompt,
-  createOpportunityPrompt,
-  createThumbnailPrompt,
-  createCreatorKitPrompt,
-  createChannelAuditPrompt,
-  createContentPlannerPrompt,
-  createAIThumbnailPrompt,
-} from "./prompts";
+"use client";
 
 type Params = {
   keyword: string;
   order: string;
-language: string;
+  language: string;
+
   excludeShorts: boolean;
   min10Minutes: boolean;
   last30Days: boolean;
@@ -35,127 +16,68 @@ language: string;
 export async function benchmarkService({
   keyword,
   order,
-language,
+  language,
   excludeShorts,
   min10Minutes,
   last30Days,
-
   onStep,
   onProgress,
 }: Params) {
-  onStep?.("🔍 YouTube 데이터를 가져오는 중...");
-  onProgress?.(10);
+  onStep?.(
+    language === "ko"
+      ? "🔍 Benchmark 분석을 시작하는 중..."
+      : "🔍 Starting Benchmark analysis..."
+  );
 
-  const data = await searchYoutube({
-    keyword,
-    order,
-    last30Days,
-  });
+  onProgress?.(5);
 
-  if (!data.items) {
-    throw new Error("YouTube API 응답 오류");
+  const response = await fetch(
+    "/api/benchmark",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        keyword,
+        order,
+        language,
+        excludeShorts,
+        min10Minutes,
+        last30Days,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const data =
+      await response.json().catch(() => null);
+
+    throw new Error(
+      data?.error ??
+        "Benchmark analysis failed."
+    );
   }
 
-  onStep?.("📊 영상 데이터를 분석하는 중...");
-onProgress?.(25);
-
-  const processed = processVideos(
-    data.items,
-    excludeShorts,
-    min10Minutes
-  );
-  onStep?.("🧠 AI 프롬프트 생성 중...");
-onProgress?.(50);
-
-  const prompt =
-    createBenchmarkPrompt(
-      keyword,
-      processed.topVideos
-    );
-
-  const ideaPrompt =
-    createIdeaPrompt(keyword);
-
-  const strategyPrompt =
-    createStrategyPrompt(keyword);
-
-  const competitionPrompt =
-    createCompetitionPrompt(keyword);
-
-  const titlePrompt =
-    createTitlePrompt(keyword);
-
-    const seoPrompt =
-  createSEOPrompt(keyword);
-
-  const seoOptimizerPrompt =
-  createSEOOptimizerPrompt(keyword);
-
-  const contentGapPrompt =
-  createContentGapPrompt(keyword);
-
-  const channelAuditPrompt =
-  createChannelAuditPrompt(
-    processed.channels[0]?.name ?? ""
+  onStep?.(
+    language === "ko"
+      ? "📊 Benchmark 결과를 불러오는 중..."
+      : "📊 Loading Benchmark results..."
   );
 
-  const contentPlannerPrompt =
-  createContentPlannerPrompt(keyword);
+  onProgress?.(90);
 
-  const aiThumbnailPrompt =
-  createAIThumbnailPrompt(keyword);
+  const data = await response.json();
 
-  const recommendedChannelsPrompt =
-    createRecommendedChannelsPrompt(
-      keyword,
-      processed.channels
-    );
+onStep?.(
+  language === "ko"
+    ? "✅ Benchmark 분석 완료!"
+    : "✅ Benchmark analysis complete!"
+);
 
-  const opportunityPrompt =
-    createOpportunityPrompt();
-
-    const thumbnailPrompt =
-  createThumbnailPrompt(keyword);
-  const creatorKitPrompt =
-  createCreatorKitPrompt(keyword);
-
-  onStep?.("🤖 AI 리포트를 생성하는 중...");
-onProgress?.(75);
-
-
-  const ai =
-    await generateAllAI({
-language,
-      reportPrompt: prompt,
-
-      ideaPrompt,
-
-      strategyPrompt,
-
-      competitionPrompt,
-
-      titlePrompt,
-seoPrompt,
-seoOptimizerPrompt,
-contentGapPrompt,
-channelAuditPrompt,
-      thumbnailPrompt,
-creatorKitPrompt,
-      recommendedChannelsPrompt,
-      opportunityPrompt,
-contentPlannerPrompt,
-aiThumbnailPrompt,
-    });
-
-  onStep?.("📄 Benchmark Dashboard를 생성하는 중...");
 onProgress?.(100);
 
- return {
-  processed,
-
-  ai,
-
-  keywordIntelligence:
-    ai.keywordIntelligence,
-};
+return data.result;
 }

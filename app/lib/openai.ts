@@ -7,30 +7,62 @@ export async function askAI(
 
   const response = await fetch("/api/analyze", {
     method: "POST",
+
     headers: {
       "Content-Type": "application/json",
     },
+
     body: JSON.stringify({
-  prompt,
-  language,
-}),
+      prompt,
+      language,
+    }),
   });
 
+  let data: any = null;
+
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error(
+      language === "ko"
+        ? "AI 서버 응답을 읽을 수 없습니다."
+        : "Unable to read AI server response."
+    );
+  }
+
   if (!response.ok) {
-    const error = await response.json();
+    console.error("API ERROR:", data);
 
-    console.log("API ERROR:", error);
-
-    if (response.status === 403 && error.upgrade) {
+    if (
+      response.status === 403 &&
+      data?.upgrade
+    ) {
       throw new Error("UPGRADE_REQUIRED");
     }
 
     throw new Error(
-      error.detail || error.error || "AI 요청 실패"
+      data?.detail ||
+        data?.error ||
+        (language === "ko"
+          ? "AI 요청 실패"
+          : "AI request failed")
     );
   }
 
-  const data = await response.json();
+  if (
+    typeof data?.result !== "string"
+  ) {
+    console.error(
+      "INVALID AI RESULT:",
+      data
+    );
+
+    throw new Error(
+      language === "ko"
+        ? "AI 결과 형식이 올바르지 않습니다."
+        : "Invalid AI result format."
+    );
+  }
 
   console.log("===== AI RESULT =====");
   console.log(data.result);

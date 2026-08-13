@@ -4,6 +4,7 @@ import type {
   TitleAnalysis,
 } from "@/app/lib/types";
 type Props = {
+  language: string;
   opportunities: MissedOpportunity[];
   thumbnailAnalysis: ThumbnailAnalysis;
   titleAnalysis: TitleAnalysis;
@@ -18,6 +19,7 @@ import TitleAnalyzerCard from "../TitleAnalyzerCard";
 
 
 export default function AnalysisCards({
+  language,
   opportunities,
   thumbnailAnalysis,
   titleAnalysis,
@@ -29,6 +31,7 @@ export default function AnalysisCards({
       />
 
       <ThumbnailAnalyzerCard
+      language={language}
         ctrScore={thumbnailAnalysis.ctrScore}
         emotionScore={thumbnailAnalysis.emotionScore}
         colorScore={thumbnailAnalysis.colorScore}
@@ -39,6 +42,7 @@ export default function AnalysisCards({
       />
 
       <TitleAnalyzerCard
+      language={language}
         ctrScore={titleAnalysis.ctrScore}
         seoScore={titleAnalysis.seoScore}
         emotionScore={titleAnalysis.emotionScore}

@@ -4,7 +4,6 @@ import QuickStats from "./QuickStats";
 import RecentSearches from "./RecentSearches";
 import KeywordSuggestionsCard from "./KeywordSuggestionsCard";
 
-
 import {
   Video,
   BenchmarkReport,
@@ -19,19 +18,20 @@ type Props = {
   keyword: string;
   setKeyword: React.Dispatch<React.SetStateAction<string>>;
 
-
   order: string;
   setOrder: React.Dispatch<React.SetStateAction<string>>;
 
   onSearch: () => void;
+  onSaveProject: () => void;
 
   loading: boolean;
   language: string;
-  min10Minutes: boolean;
-setMin10Minutes: React.Dispatch<React.SetStateAction<boolean>>;
 
-last30Days: boolean;
-setLast30Days: React.Dispatch<React.SetStateAction<boolean>>;
+  min10Minutes: boolean;
+  setMin10Minutes: React.Dispatch<React.SetStateAction<boolean>>;
+
+  last30Days: boolean;
+  setLast30Days: React.Dispatch<React.SetStateAction<boolean>>;
 
   averageViews: number;
 
@@ -58,7 +58,8 @@ setLast30Days: React.Dispatch<React.SetStateAction<boolean>>;
 export default function SearchSection({
   keyword,
   loading,
-averageViews,
+  averageViews,
+  onSaveProject,
   results,
   report,
   idea,
@@ -76,68 +77,85 @@ averageViews,
   return (
     <>
       <SearchSummary
-  keyword={keyword}
-  language={language}
-/>
+        keyword={keyword}
+        language={language}
+      />
 
+      <section id="dashboard">
+        <Dashboard
+          keyword={keyword}
+          averageViews={averageViews}
+          videoCount={results.length}
+          videos={results}
+          language={language}
+        />
+      </section>
 
+      {results.length > 0 && !loading && (
+        <div className="mt-6 rounded-xl border border-zinc-700 bg-white/5 p-4 backdrop-blur-xl">
+          <div className="flex flex-wrap items-center justify-between gap-4">
 
-<section id="dashboard">
-<Dashboard
-  keyword={keyword}
-  averageViews={averageViews}
-  videoCount={results.length}
-  videos={results}
-  language={language}
-/>
-</section>
+            <div className="flex flex-wrap gap-6 text-sm">
+              <span>
+                🔎 <strong>{keyword}</strong>
+              </span>
 
-{results.length > 0 && !loading && (
-  <div className="mt-6 rounded-xl border border-zinc-700 bg-white/5 backdrop-blur-xl p-4">
-    <div className="flex flex-wrap gap-6 text-sm">
-      <span>🔎 <strong>{keyword}</strong></span>
-      <span>
-  🎥{" "}
-  {language === "ko"
-    ? `${results.length}개 영상 분석`
-    : `${results.length} videos analyzed`}
-</span>
-      <span>
-  👀{" "}
-  {language === "ko"
-    ? `평균 조회수 ${averageViews.toLocaleString()}`
-    : `Average Views ${averageViews.toLocaleString()}`}
-</span>
-    </div>
-  </div>
-)}
+              <span>
+                🎥{" "}
+                {language === "ko"
+                  ? `${results.length}개 영상 분석`
+                  : `${results.length} videos analyzed`}
+              </span>
 
-<QuickStats
-  results={results}
-  averageViews={averageViews}
-  loading={loading}
-  report={report}
-  idea={idea}
-  strategy={strategy}
-  competition={competition}
-  titles={titles}
-  topVideos={topVideos}
-  thumbnailPrompt={thumbnailPrompt}
-  calculateBenchmarkScore={calculateBenchmarkScore}
-  formatDuration={formatDuration}
-  language={language}
-/>
+              <span>
+                👀{" "}
+                {language === "ko"
+                  ? `평균 조회수 ${averageViews.toLocaleString()}`
+                  : `Average Views ${averageViews.toLocaleString()}`}
+              </span>
+            </div>
 
-<RecentSearches
-  history={history}
-  onSelect={onHistorySelect}
-  language={language}
-/>
-<KeywordSuggestionsCard
-  keyword={keyword}
-  onSelect={onHistorySelect}
-  language={language}
-/>
+            <button
+              type="button"
+              onClick={onSaveProject}
+              className="rounded-lg bg-white px-4 py-2 font-semibold text-black transition hover:bg-zinc-200"
+            >
+              {language === "ko"
+                ? "프로젝트 저장"
+                : "Save Project"}
+            </button>
+
+          </div>
+        </div>
+      )}
+
+      <QuickStats
+        results={results}
+        averageViews={averageViews}
+        loading={loading}
+        report={report}
+        idea={idea}
+        strategy={strategy}
+        competition={competition}
+        titles={titles}
+        topVideos={topVideos}
+        thumbnailPrompt={thumbnailPrompt}
+        calculateBenchmarkScore={calculateBenchmarkScore}
+        formatDuration={formatDuration}
+        language={language}
+      />
+
+      <RecentSearches
+        history={history}
+        onSelect={onHistorySelect}
+        language={language}
+      />
+
+      <KeywordSuggestionsCard
+        keyword={keyword}
+        onSelect={onHistorySelect}
+        language={language}
+      />
     </>
   );
 }

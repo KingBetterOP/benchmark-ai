@@ -67,6 +67,7 @@ export default function AIAnalysisSection({
       />
 
       <AnalysisCards
+      language={language}
         opportunities={missedOpportunities}
         thumbnailAnalysis={thumbnailAnalysis}
         titleAnalysis={titleAnalysis}

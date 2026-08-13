@@ -5,12 +5,24 @@ type DecisionInput = {
   benchmarkScore: number;
 };
 
+export type FinalDecisionValue =
+  | "MAKE"
+  | "WAIT"
+  | "SKIP";
+
+export interface FinalDecision {
+  score: number;
+  decision: FinalDecisionValue;
+  reasons: string[];
+  action: string;
+}
+
 export function calculateFinalDecision({
   opportunity,
   difficulty,
   confidence,
   benchmarkScore,
-}: DecisionInput) {
+}: DecisionInput): FinalDecision {
   const score = Math.round(
     opportunity * 0.35 +
       (100 - difficulty) * 0.25 +
@@ -18,48 +30,45 @@ export function calculateFinalDecision({
       benchmarkScore * 0.2
   );
 
-  let decision:
-    | "MAKE THIS VIDEO"
-    | "WAIT"
-    | "AVOID";
+  let decision: FinalDecisionValue;
 
   if (score >= 80) {
-    decision = "MAKE THIS VIDEO";
+    decision = "MAKE";
   } else if (score >= 60) {
     decision = "WAIT";
   } else {
-    decision = "AVOID";
+    decision = "SKIP";
   }
 
   const reasons: string[] = [];
 
-if (opportunity >= 80) {
-  reasons.push("High opportunity");
-}
+  if (opportunity >= 80) {
+    reasons.push("High opportunity");
+  }
 
-if (difficulty <= 40) {
-  reasons.push("Low competition");
-}
+  if (difficulty <= 40) {
+    reasons.push("Low competition");
+  }
 
-if (confidence >= 85) {
-  reasons.push("High confidence");
-}
+  if (confidence >= 85) {
+    reasons.push("High confidence");
+  }
 
-if (benchmarkScore >= 80) {
-  reasons.push("Strong benchmark score");
-}
+  if (benchmarkScore >= 80) {
+    reasons.push("Strong benchmark score");
+  }
 
-const action =
-  decision === "MAKE THIS VIDEO"
-    ? "Upload within the next 48 hours."
-    : decision === "WAIT"
-    ? "Monitor this keyword for a few days."
-    : "Choose another keyword.";
+  const action =
+    decision === "MAKE"
+      ? "Upload within the next 48 hours."
+      : decision === "WAIT"
+      ? "Monitor this keyword for a few days."
+      : "Choose another keyword.";
 
-return {
-  score,
-  decision,
-  reasons,
-  action,
-};
+  return {
+    score,
+    decision,
+    reasons,
+    action,
+  };
 }

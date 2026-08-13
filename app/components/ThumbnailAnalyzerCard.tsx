@@ -1,4 +1,5 @@
 type Props = {
+  language: string;
   ctrScore: number;
   emotionScore: number;
   colorScore: number;
@@ -7,8 +8,10 @@ type Props = {
   strengths: string[];
   improvements: string[];
 };
+import { translations } from "@/app/lib/translations";
 
 export default function ThumbnailAnalyzerCard({
+  language,
   ctrScore,
   emotionScore,
   colorScore,
@@ -17,15 +20,19 @@ export default function ThumbnailAnalyzerCard({
   strengths,
   improvements,
 }: Props) {
+  const t =
+    translations[language as keyof typeof translations];
   return (
     <section className="mt-10 rounded-3xl border border-pink-500/30 bg-pink-500/10 p-8">
 
       <h2 className="text-3xl font-extrabold">
-        🖼 t.thumbnailAnalyzer
+        🖼 {t.thumbnailAnalyzer}
       </h2>
 
       <p className="mt-2 text-zinc-400">
-        Analyze your thumbnail before publishing.
+        {language === "ko"
+  ? "게시 전에 썸네일을 AI가 분석합니다."
+  : "Analyze your thumbnail before publishing."}
       </p>
 
       <div className="mt-8 grid gap-5 md:grid-cols-5">

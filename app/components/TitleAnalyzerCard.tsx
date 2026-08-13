@@ -1,4 +1,7 @@
+import { translations } from "@/app/lib/translations";
+
 type Props = {
+  language: string;
   ctrScore: number;
   seoScore: number;
   emotionScore: number;
@@ -10,6 +13,7 @@ type Props = {
 };
 
 export default function TitleAnalyzerCard({
+  language,
   ctrScore,
   seoScore,
   emotionScore,
@@ -19,17 +23,21 @@ export default function TitleAnalyzerCard({
   improvements,
   betterTitles,
 }: Props) {
+
+  const t =
+    translations[language as keyof typeof translations];
   return (
     <section className="mt-10 rounded-3xl border border-yellow-500/30 bg-yellow-500/10 p-8">
 
       <h2 className="text-3xl font-extrabold">
-        📝 t.titleAnalyzer
-      </h2>
+  📝 {t.titleAnalyzer}
+</h2>
 
       <p className="mt-2 text-zinc-400">
-        Analyze your YouTube title before publishing.
-      </p>
-
+  {language === "ko"
+    ? "게시 전에 유튜브 제목을 AI가 분석합니다."
+    : "Analyze your YouTube title before publishing."}
+</p>
       <div className="mt-8 grid gap-5 md:grid-cols-3">
 
         <ScoreCard title="CTR" score={ctrScore} />

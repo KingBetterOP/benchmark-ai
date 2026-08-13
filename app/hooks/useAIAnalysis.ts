@@ -1,9 +1,14 @@
 import { useState } from "react";
 
-export function useAIAnalysis() {
+import type {
+  KeywordIntelligence,
+  MissedOpportunity,
+  ThumbnailAnalysis,
+} from "../lib/types";
 
+export function useAIAnalysis() {
   const [keywordIntelligence, setKeywordIntelligence] =
-    useState({
+    useState<KeywordIntelligence>({
       difficulty: 0,
       opportunity: 0,
       trend: "",
@@ -19,22 +24,17 @@ export function useAIAnalysis() {
     });
 
   const [missedOpportunities, setMissedOpportunities] =
-    useState<
-      {
-        title: string;
-        reason: string;
-      }[]
-    >([]);
+    useState<MissedOpportunity[]>([]);
 
   const [thumbnailAnalysis, setThumbnailAnalysis] =
-    useState({
+    useState<ThumbnailAnalysis>({
       ctrScore: 0,
       emotionScore: 0,
       colorScore: 0,
       textScore: 0,
       overallScore: 0,
-      strengths: [] as string[],
-      improvements: [] as string[],
+      strengths: [],
+      improvements: [],
     });
 
   return {
