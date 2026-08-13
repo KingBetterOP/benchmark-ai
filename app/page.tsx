@@ -74,6 +74,7 @@ import ResearchSnapshot from "./components/ResearchSnapshot";
 import DecisionEngine from "./components/DecisionEngine";
 import FinalDecisionCard from "./components/FinalDecisionCard";
 import ContentStrategyCard from "./components/ContentStrategyCard";
+import Link from "next/link";
 
 /* ============================================================
    DEFAULT VALUES
@@ -856,6 +857,200 @@ const {
         ==================================================== */}
 
         <TrustBar />
+        {/* ====================================================
+    GLOBAL GROWTH HUB
+==================================================== */}
+
+<section
+  id="growth"
+  className="mx-auto mt-16 w-full max-w-7xl"
+>
+  <div className="rounded-3xl border border-cyan-400/10 bg-white/[0.03] p-6 shadow-2xl backdrop-blur-xl md:p-10">
+
+    {/* HEADER */}
+    <div className="mx-auto max-w-3xl text-center">
+      <div className="mb-4 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm font-medium text-cyan-300">
+        AI-POWERED YOUTUBE INTELLIGENCE
+      </div>
+
+      <h2 className="text-3xl font-black tracking-tight text-white md:text-5xl">
+        Turn YouTube Data Into Your Next Winning Video.
+      </h2>
+
+      <p className="mt-5 text-base leading-7 text-zinc-400 md:text-lg">
+        Research the market, discover content opportunities,
+        benchmark competitors, make better decisions,
+        and turn insights into content with AI.
+      </p>
+    </div>
+
+    {/* 3 STEP SYSTEM */}
+    <div className="mt-10 grid gap-4 md:grid-cols-3">
+
+      <div className="rounded-2xl border border-white/10 bg-black/20 p-6">
+        <div className="text-sm font-bold text-cyan-300">
+          01 · RESEARCH
+        </div>
+
+        <h3 className="mt-3 text-xl font-bold text-white">
+          Understand the Market
+        </h3>
+
+        <p className="mt-2 text-sm leading-6 text-zinc-400">
+          Analyze YouTube search data, videos, channels,
+          trends, competition, and audience opportunities.
+        </p>
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-black/20 p-6">
+        <div className="text-sm font-bold text-cyan-300">
+          02 · DECIDE
+        </div>
+
+        <h3 className="mt-3 text-xl font-bold text-white">
+          Find What to Make
+        </h3>
+
+        <p className="mt-2 text-sm leading-6 text-zinc-400">
+          Discover content gaps, opportunity scores,
+          competitive advantages, and the best next move.
+        </p>
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-black/20 p-6">
+        <div className="text-sm font-bold text-cyan-300">
+          03 · CREATE
+        </div>
+
+        <h3 className="mt-3 text-xl font-bold text-white">
+          Turn Insights Into Content
+        </h3>
+
+        <p className="mt-2 text-sm leading-6 text-zinc-400">
+          Generate titles, hooks, scripts, descriptions,
+          thumbnails, SEO assets, and a complete creator plan.
+        </p>
+      </div>
+
+    </div>
+
+    {/* FREE TOOLS */}
+    <div className="mt-14">
+
+      <div className="text-center">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
+          Free Intelligence
+        </p>
+
+        <h3 className="mt-3 text-2xl font-black text-white md:text-3xl">
+          Start With One Question.
+        </h3>
+
+        <p className="mt-3 text-sm text-zinc-400 md:text-base">
+          Enter a topic and discover what the market is telling you.
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+        {[
+          {
+            title: "YouTube Benchmark",
+            description:
+              "Compare content performance and discover what separates stronger videos.",
+          },
+          {
+            title: "Keyword Intelligence",
+            description:
+              "Understand demand, difficulty, trends, and opportunity before creating.",
+          },
+          {
+            title: "Content Opportunity",
+            description:
+              "Find topics and gaps where your next video can compete.",
+          },
+          {
+            title: "Competitor Intelligence",
+            description:
+              "See what competing channels are publishing and where they leave gaps.",
+          },
+          {
+            title: "Title Intelligence",
+            description:
+              "Improve your titles using CTR, curiosity, SEO, and audience signals.",
+          },
+          {
+            title: "Creator Workspace",
+            description:
+              "Turn research into titles, hooks, scripts, thumbnails, and publishing plans.",
+          },
+        ].map((tool) => (
+          <button
+            key={tool.title}
+            type="button"
+            onClick={() => {
+              document
+                .getElementById("search")
+                ?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+            }}
+            className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left transition hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-cyan-400/[0.04]"
+          >
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-white">
+                {tool.title}
+              </h4>
+
+              <span className="text-cyan-300 transition group-hover:translate-x-1">
+                →
+              </span>
+            </div>
+
+            <p className="mt-3 text-sm leading-6 text-zinc-400">
+              {tool.description}
+            </p>
+
+            <div className="mt-4 text-xs font-semibold text-cyan-300">
+              TRY IT FREE
+            </div>
+          </button>
+        ))}
+
+      </div>
+    </div>
+
+    {/* FINAL CTA */}
+    <div className="mt-12 rounded-2xl border border-cyan-400/10 bg-gradient-to-r from-cyan-400/10 via-blue-500/10 to-purple-500/10 p-6 text-center md:p-8">
+
+      <h3 className="text-2xl font-black text-white md:text-3xl">
+        Stop Guessing What to Create.
+      </h3>
+
+      <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
+        Let YouTube data show you where the opportunities are.
+      </p>
+
+      <button
+        type="button"
+        onClick={() => {
+          document
+            .getElementById("search")
+            ?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+        }}
+        className="mt-6 inline-flex items-center justify-center rounded-xl bg-cyan-400 px-7 py-3 font-bold text-black transition hover:scale-[1.02] hover:bg-cyan-300"
+      >
+        Analyze for Free →
+      </button>
+
+    </div>
+
+  </div>
+</section>
 
         {/* ====================================================
             QUICK NAVIGATION

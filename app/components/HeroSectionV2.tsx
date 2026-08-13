@@ -203,7 +203,7 @@ export default function HeroSectionV2({
             <>
               다음
               <br />
-              성공 영상을 찾아보세요.
+              성공 영상을 데이터로 찾아보세요.
             </>
           ) : (
             <>
@@ -231,8 +231,8 @@ export default function HeroSectionV2({
           className="mt-8 max-w-3xl text-lg leading-9 text-zinc-300 md:text-xl"
         >
           {isKo
-            ? "YouTube 검색 데이터와 경쟁 콘텐츠를 AI로 분석하고, 어떤 영상을 만들지 결정한 뒤 바로 콘텐츠 제작까지 연결하세요."
-            : "Analyze YouTube search data and competing content with AI, discover what is worth making, and turn the insight into your next video."}
+            ? "YouTube 데이터를 분석하고, 경쟁자를 비교하고, 콘텐츠 기회를 발견한 뒤 AI로 다음 영상을 제작하세요."
+            : "Analyze YouTube data, compare competitors, discover content opportunities, and turn your next idea into content with AI."}
         </motion.p>
 
         {/* ===================================================
@@ -317,8 +317,8 @@ export default function HeroSectionV2({
                 }}
                 placeholder={
                   isKo
-                    ? "예: AI tools, fitness, gaming..."
-                    : "Try a topic like AI tools, fitness, gaming..."
+                    ? "예: AI tools, fitness, gaming, finance..."
+                    : "Try a topic like AI tools, fitness, gaming, or finance..."
                 }
                 className="min-w-0 flex-1 rounded-2xl bg-transparent px-6 py-5 text-lg text-white outline-none placeholder:text-zinc-500"
               />
@@ -347,8 +347,8 @@ export default function HeroSectionV2({
 
           <p className="mt-4 text-sm text-zinc-500">
             {isKo
-              ? "키워드 하나로 수요, 경쟁, 기회와 콘텐츠 전략을 확인하세요."
-              : "Analyze demand, competition, opportunity, and content strategy from one keyword."}
+              ? "키워드 하나로 수요, 경쟁, 기회, 트렌드와 콘텐츠 전략을 확인하세요."
+              : "Discover demand, competition, trends, opportunities, and content strategy from one keyword."}
           </p>
         </motion.div>
 
