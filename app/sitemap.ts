@@ -50,5 +50,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
   changeFrequency: "weekly",
   priority: 0.9,
 },
+
+{
+  url: `${BASE_URL}/tools/youtube-title-analyzer`,
+  lastModified: now,
+  changeFrequency: "weekly",
+  priority: 0.9,
+},
+
+{
+  url: `${BASE_URL}/tools/youtube-thumbnail-analyzer`,
+  lastModified: now,
+  changeFrequency: "weekly",
+  priority: 0.9,
+},
+
+{
+  url: `${BASE_URL}/tools/youtube-seo-analyzer`,
+  lastModified: now,
+  changeFrequency: "weekly",
+  priority: 0.9,
+},
+
+{
+  url: `${BASE_URL}/tools/youtube-content-gap`,
+  lastModified: now,
+  changeFrequency: "weekly",
+  priority: 0.9,
+},
+
+{
+  url: `${BASE_URL}/tools/youtube-channel-benchmark`,
+  lastModified: now,
+  changeFrequency: "weekly",
+  priority: 0.9,
+},
   ];
 }

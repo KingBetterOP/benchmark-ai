@@ -259,47 +259,50 @@ export async function POST(req: Request) {
 
     if (!reportId) {
       const newReportRef =
-        await adminDb
-          .collection("reports")
-          .add({
-            ownerId: userId,
+  await adminDb
+    .collection("reports")
+    .add({
+      ownerId: userId,
 
-            projectId:
-              projectId ?? null,
+      projectId:
+        projectId ?? null,
 
-            keyword,
+      keyword,
 
-            benchmarkResult:
-              benchmarkResult ?? null,
+      benchmarkResult:
+        benchmarkResult ?? null,
 
-            report:
-              report ?? null,
+      report:
+        report ?? null,
 
-            benchmarkScore:
-              normalizedBenchmarkScore,
+      benchmarkScore:
+        normalizedBenchmarkScore,
 
-            opportunity:
-              opportunity ?? 0,
+      opportunity:
+        opportunity ?? 0,
 
-            opportunityScoreV2:
-              normalizedOpportunityScore,
+      opportunityScoreV2:
+        normalizedOpportunityScore,
 
-            competition:
-              competition ?? "Unknown",
+      competition:
+        competition ?? "Unknown",
 
-            expectedViews:
-              expectedViews ?? "Unknown",
+      expectedViews:
+        expectedViews ?? "Unknown",
 
-            uploadTime:
-              uploadTime ?? "Unknown",
+      uploadTime:
+        uploadTime ?? "Unknown",
 
-            titles:
-              titles ?? [],
+      titles:
+        titles ?? [],
 
-            createdAt: now,
+      // Report visibility
+      visibility: "private",
 
-            updatedAt: now,
-          });
+      createdAt: now,
+
+      updatedAt: now,
+    });
 
       reportId =
         newReportRef.id;

@@ -283,6 +283,18 @@ export default function ProjectsPage() {
     프로젝트 열기
   </button>
 
+  <button
+    type="button"
+    onClick={() =>
+      router.push(
+        `/intelligence/${project.id}`
+      )
+    }
+    className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/20"
+  >
+    Intelligence
+  </button>
+
   {project.latestReportId && (
     <button
       type="button"

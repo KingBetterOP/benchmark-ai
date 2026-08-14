@@ -30,9 +30,11 @@ export async function GET() {
         : undefined;
 
     const plan =
-      data?.plan === "pro"
-        ? "pro"
-        : "free";
+  data?.plan === "business"
+    ? "business"
+    : data?.plan === "pro"
+    ? "pro"
+    : "free";
 
     const dailyUsage =
       typeof data?.dailyUsage === "number"

@@ -2,26 +2,91 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { polar } from "@/app/lib/polar";
 
-export async function POST() {
+type Plan = "pro" | "business";
+
+export async function POST(req: Request) {
   try {
+    /*
+    ============================================================
+    1. AUTH
+    ============================================================
+    */
+
     const { userId } = await auth();
 
     if (!userId) {
       return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
       );
     }
 
-    const productId =
-      process.env.POLAR_PRODUCT_ID;
+    /*
+    ============================================================
+    2. REQUEST
+    ============================================================
+    */
 
-    const appUrl =
-      process.env.NEXT_PUBLIC_APP_URL;
+    let body: {
+      plan?: unknown;
+    };
+
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        {
+          error: "Invalid request body.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    /*
+    ============================================================
+    3. PLAN VALIDATION
+    ============================================================
+    */
+
+    const plan =
+      body.plan === "business"
+        ? "business"
+        : body.plan === "pro"
+        ? "pro"
+        : null;
+
+    if (!plan) {
+      return NextResponse.json(
+        {
+          error:
+            "A valid plan is required: pro or business.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    /*
+    ============================================================
+    4. PRODUCT ID
+    ============================================================
+    */
+
+    const productId =
+      plan === "business"
+        ? process.env.POLAR_BUSINESS_PRODUCT_ID
+        : process.env.POLAR_PRO_PRODUCT_ID;
 
     if (!productId) {
       console.error(
-        "POLAR_PRODUCT_ID is not configured"
+        `Polar product ID is not configured for plan: ${plan}`
       );
 
       return NextResponse.json(
@@ -29,9 +94,20 @@ export async function POST() {
           error:
             "Payment configuration is incomplete.",
         },
-        { status: 500 }
+        {
+          status: 500,
+        }
       );
     }
+
+    /*
+    ============================================================
+    5. APPLICATION URL
+    ============================================================
+    */
+
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL;
 
     if (!appUrl) {
       console.error(
@@ -43,9 +119,17 @@ export async function POST() {
           error:
             "Application URL is not configured.",
         },
-        { status: 500 }
+        {
+          status: 500,
+        }
       );
     }
+
+    /*
+    ============================================================
+    6. CREATE POLAR CHECKOUT
+    ============================================================
+    */
 
     const checkout =
       await polar.checkouts.create({
@@ -55,15 +139,25 @@ export async function POST() {
 
         metadata: {
           clerkUserId: userId,
-          source: "benchmark-ai-pricing",
+          plan,
+          source:
+            "benchmark-ai-pricing",
         },
 
         successUrl:
           `${appUrl}/success?checkout_id={CHECKOUT_ID}`,
       });
 
+    /*
+    ============================================================
+    7. RESPONSE
+    ============================================================
+    */
+
     return NextResponse.json({
       success: true,
+      plan,
+      productId,
       url: checkout.url,
     });
   } catch (error) {

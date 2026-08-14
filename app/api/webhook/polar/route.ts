@@ -2,8 +2,7 @@ import { Webhooks } from "@polar-sh/nextjs";
 import { adminDb } from "@/app/lib/firebase-admin";
 import { trackServerEventOnce } from "@/app/lib/analytics-server";
 
-
-type Plan = "free" | "pro";
+type Plan = "free" | "pro" | "business";
 
 type SubscriptionState = {
   plan: Plan;
@@ -11,6 +10,53 @@ type SubscriptionState = {
   currentPeriodEnd?: number | null;
   cancelAtPeriodEnd?: boolean;
 };
+
+function getPlanFromProductId(
+  productId: unknown
+): "pro" | "business" | null {
+  if (
+    productId ===
+    process.env.POLAR_BUSINESS_PRODUCT_ID
+  ) {
+    return "business";
+  }
+
+  if (
+    productId ===
+    process.env.POLAR_PRO_PRODUCT_ID
+  ) {
+    return "pro";
+  }
+
+  /*
+  Legacy compatibility:
+  */
+
+  if (
+    productId ===
+    process.env.POLAR_PRODUCT_ID
+  ) {
+    return "pro";
+  }
+
+  return null;
+}
+
+function getPeriodEnd(
+  value: unknown
+): number | null {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return new Date(
+      String(value)
+    ).getTime();
+  } catch {
+    return null;
+  }
+}
 
 async function setUserSubscription(
   externalId: string | null | undefined,
@@ -43,13 +89,19 @@ async function setUserSubscription(
   );
 }
 
+/*
+============================================================
+POLAR WEBHOOK
+============================================================
+*/
+
 export const POST = Webhooks({
   webhookSecret:
     process.env.POLAR_WEBHOOK_SECRET!,
 
   /*
   ============================================================
-  PAYLOAD LOG
+  PAYLOAD
   ============================================================
   */
 
@@ -72,25 +124,46 @@ export const POST = Webhooks({
     const externalId =
       payload.data.customer.externalId;
 
+    const productId =
+      payload.data.productId;
+
+    const plan =
+      getPlanFromProductId(
+        productId
+      );
+
+    if (!plan) {
+      console.error(
+        "Unknown Polar product:",
+        productId
+      );
+
+      return;
+    }
+
     await setUserSubscription(
       externalId,
       {
-        plan: "pro",
+        plan,
+
         subscriptionStatus:
+          payload.data.status ??
           "active",
 
         currentPeriodEnd:
-          payload.data.currentPeriodEnd
-            ? new Date(
-                payload.data.currentPeriodEnd
-              ).getTime()
-            : null,
+          getPeriodEnd(
+            payload.data.currentPeriodEnd
+          ),
 
         cancelAtPeriodEnd:
           payload.data
             .cancelAtPeriodEnd ??
           false,
       }
+    );
+
+    console.log(
+      `Subscription active: ${externalId} → ${plan}`
     );
   },
 
@@ -100,9 +173,8 @@ export const POST = Webhooks({
   ============================================================
   
   IMPORTANT:
-  Cancellation at the end of the
-  billing period does NOT immediately
-  remove Pro access.
+  Cancellation at period end keeps access.
+  ============================================================
   */
 
   onSubscriptionCanceled: async (
@@ -111,27 +183,43 @@ export const POST = Webhooks({
     const externalId =
       payload.data.customer.externalId;
 
+    const productId =
+      payload.data.productId;
+
+    const plan =
+      getPlanFromProductId(
+        productId
+      );
+
+    if (!plan) {
+      console.error(
+        "Unknown Polar product:",
+        productId
+      );
+
+      return;
+    }
+
     await setUserSubscription(
       externalId,
       {
-        plan: "pro",
+        plan,
 
         subscriptionStatus:
-  payload.data.status ?? "active",
+          payload.data.status ??
+          "canceled",
 
         currentPeriodEnd:
-          payload.data.currentPeriodEnd
-            ? new Date(
-                payload.data.currentPeriodEnd
-              ).getTime()
-            : null,
+          getPeriodEnd(
+            payload.data.currentPeriodEnd
+          ),
 
         cancelAtPeriodEnd: true,
       }
     );
 
     console.log(
-      `Subscription canceled for ${externalId}`
+      `Subscription canceled at period end: ${externalId} → ${plan}`
     );
   },
 
@@ -141,6 +229,7 @@ export const POST = Webhooks({
   ============================================================
   
   Immediate access removal.
+  ============================================================
   */
 
   onSubscriptionRevoked: async (
@@ -162,6 +251,10 @@ export const POST = Webhooks({
         cancelAtPeriodEnd: false,
       }
     );
+
+    console.log(
+      `Subscription revoked: ${externalId} → free`
+    );
   },
 
   /*
@@ -176,34 +269,50 @@ export const POST = Webhooks({
     const externalId =
       payload.data.customer.externalId;
 
+    const productId =
+      payload.data.productId;
+
+    const plan =
+      getPlanFromProductId(
+        productId
+      );
+
+    if (!plan) {
+      console.error(
+        "Unknown Polar product:",
+        productId
+      );
+
+      return;
+    }
+
     await setUserSubscription(
       externalId,
       {
-        plan: "pro",
+        plan,
 
         subscriptionStatus:
+          payload.data.status ??
           "active",
 
         currentPeriodEnd:
-          payload.data.currentPeriodEnd
-            ? new Date(
-                payload.data.currentPeriodEnd
-              ).getTime()
-            : null,
+          getPeriodEnd(
+            payload.data.currentPeriodEnd
+          ),
 
         cancelAtPeriodEnd: false,
       }
     );
+
+    console.log(
+      `Subscription uncanceled: ${externalId} → ${plan}`
+    );
   },
-      /*
+
+  /*
   ============================================================
   ORDER PAID
   ============================================================
-  
-  The Polar order ID is used as the idempotency key.
-
-  If Polar delivers the same webhook more than once,
-  purchase_success is recorded only once.
   */
 
   onOrderPaid: async (
@@ -221,80 +330,102 @@ export const POST = Webhooks({
     }
 
     const orderId =
-  payload.data.id;
+      payload.data.id;
 
-if (!orderId) {
-  console.error(
-    "Polar order.paid: order ID not found"
-  );
+    if (!orderId) {
+      console.error(
+        "Polar order.paid: order ID not found"
+      );
 
-  return;
-}
+      return;
+    }
 
-const productId =
-  payload.data.productId;
+    const productId =
+      payload.data.productId;
 
-if (
-  productId !==
-  process.env.POLAR_PRODUCT_ID
-) {
-  console.warn(
-    "Ignoring order.paid for unknown product:",
-    productId
-  );
+    const plan =
+      getPlanFromProductId(
+        productId
+      );
 
-  return;
-}
+    if (!plan) {
+      console.warn(
+        "Ignoring order.paid for unknown product:",
+        productId
+      );
 
-    console.log(
-      `💰 Polar order paid for ${externalId}: ${orderId}`
-    );
-
-    await trackServerEventOnce(
-  externalId,
-  "purchase_success",
-  orderId,
-  {
-    metadata: {
-      source: "polar",
-      polarEvent: "order.paid",
-
-      orderId,
-
-      totalAmount:
-        payload.data.totalAmount,
-
-      netAmount:
-        payload.data.netAmount,
-
-      currency:
-        payload.data.currency,
-
-      billingReason:
-        payload.data.billingReason,
-
-      subscriptionId:
-        payload.data.subscriptionId ??
-        null,
-
-      productId:
-        payload.data.productId ??
-        null,
-    },
-  }
-);
-  },
+      return;
+    }
 
     /*
+    ==========================================================
+    ENSURE PLAN IS CORRECT
+    ==========================================================
+    */
+
+    await setUserSubscription(
+      externalId,
+      {
+        plan,
+        subscriptionStatus:
+          "active",
+        cancelAtPeriodEnd:
+          false,
+      }
+    );
+
+    console.log(
+      `Polar order paid: ${externalId} → ${plan}`
+    );
+
+    /*
+    ==========================================================
+    ANALYTICS
+    ==========================================================
+    */
+
+    await trackServerEventOnce(
+      externalId,
+      "purchase_success",
+      orderId,
+      {
+        metadata: {
+          source: "polar",
+          polarEvent:
+            "order.paid",
+
+          orderId,
+
+          plan,
+
+          totalAmount:
+            payload.data.totalAmount,
+
+          netAmount:
+            payload.data.netAmount,
+
+          currency:
+            payload.data.currency,
+
+          billingReason:
+            payload.data.billingReason,
+
+          subscriptionId:
+            payload.data.subscriptionId ??
+            null,
+
+          productId:
+            payload.data.productId ??
+            null,
+        },
+      }
+    );
+  },
+
+  /*
   ============================================================
   ORDER REFUNDED
   ============================================================
-
-  Polar sends this event for both full and partial refunds.
-
-  The order ID + refunded amount are included in the
-  idempotency key so repeated webhook deliveries do not
-  create duplicate analytics events.
   */
 
   onOrderRefunded: async (
@@ -312,60 +443,70 @@ if (
     }
 
     const orderId =
-  payload.data.id;
+      payload.data.id;
 
-if (!orderId) {
-  console.error(
-    "Polar order.paid: order ID not found"
-  );
+    if (!orderId) {
+      console.error(
+        "Polar order.refunded: order ID not found"
+      );
 
-  return;
-}
+      return;
+    }
 
-const productId =
-  payload.data.productId;
+    const productId =
+      payload.data.productId;
 
-if (
-  productId !==
-  process.env.POLAR_PRODUCT_ID
-) {
-  console.warn(
-    "Ignoring order.paid for unknown product:",
-    productId
-  );
+    const plan =
+      getPlanFromProductId(
+        productId
+      );
 
-  return;
-}
+    if (!plan) {
+      console.warn(
+        "Ignoring order.refunded for unknown product:",
+        productId
+      );
+
+      return;
+    }
 
     const refundedAmount =
-      payload.data.refundedAmount ?? 0;
+      payload.data.refundedAmount ??
+      0;
 
     console.log(
-      `💸 Polar order refunded for ${externalId}: ${orderId}`
+      `Polar order refunded: ${externalId} → ${plan}`
     );
 
     await trackServerEventOnce(
-  externalId,
-  "purchase_refunded",
-  `${orderId}:refund:${refundedAmount}`,
-  {
-    metadata: {
-      source: "polar",
-      polarEvent:
-        "order.refunded",
+      externalId,
+      "purchase_refunded",
+      `${orderId}:refund:${refundedAmount}`,
+      {
+        metadata: {
+          source: "polar",
 
-      orderId,
+          polarEvent:
+            "order.refunded",
 
-      refundedAmount,
+          orderId,
 
-      currency:
-        payload.data.currency,
+          plan,
 
-      subscriptionId:
-        payload.data.subscriptionId ??
-        null,
-    },
-  }
-);
+          refundedAmount,
+
+          currency:
+            payload.data.currency,
+
+          subscriptionId:
+            payload.data.subscriptionId ??
+            null,
+
+          productId:
+            payload.data.productId ??
+            null,
+        },
+      }
+    );
   },
 });
